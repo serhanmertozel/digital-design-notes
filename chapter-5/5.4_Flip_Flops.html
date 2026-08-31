@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yalnızca Kenarda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);color:var(--ink);font-family:var(--serif);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  .masthead{border-bottom:1px solid var(--rule);padding:44px 0 28px;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-2);max-width:62ch;margin:0}
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;margin:34px 0 8px}
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  .book .src{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--seq);margin-bottom:6px;font-weight:600}
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  figure{margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;box-shadow:var(--shadow);overflow:hidden}
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:560px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  /* function tables */
+  .fn table{min-width:420px;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .fn td{padding:8px 16px}
+  .fn thead th{font-size:11px}
+  .fn td.note{font-family:var(--serif);font-size:14px;color:var(--ink-3);font-style:italic}
+  .fn tr.bad td{color:var(--seq);background:var(--seq-bg)}
+  .fn-cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:-14px 0 26px;padding-left:2px}
+
+  details{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:0;margin-bottom:10px;max-width:74ch}
+  summary{cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:flex-start}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px}
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  .next{margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;font-family:var(--cond);font-size:18px;color:var(--ink-2)}
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span lang="en">Digital Design · Mano</span><span class="dot"></span>
+      <span>Bölüm 5 — <span lang="en">Synchronous Sequential Logic</span></span><span class="dot"></span>
+      <span>Kısım 5.4</span>
+    </div>
+    <h1>Yalnızca Kenarda</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18"
+        fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="standfirst">5.3'te bir bit'i tutmayı öğrendik ama latch, kontrol sinyali 1'de kaldığı sürece açık kalıyordu. 5.4 o kapıyı bir <em>ana</em> indiriyor: clock'un kenarına. Flip-flop budur.</p>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Kitap tam olarak ne diyor</h2></div>
+
+    <div class="book">
+      <div class="src"><span lang="en">Mano · Section 5.4, Storage Elements: Flip-Flops</span> — kısaltılmış</div>
+      <p lang="en">The state of a latch or flip-flop is switched by a change in the control input. This momentary change is called a trigger, and the transition it causes is said to trigger the flip-flop.</p>
+      <p lang="en">The state transitions of the latches start as soon as the clock pulse changes to the logic-1 level. […] If the inputs applied to the latches change while the clock pulse is still at the logic-1 level, the latches will respond to new values and a new output state may occur. The result is an unpredictable situation, since the state of the latches may keep changing for as long as the clock pulse stays at the active level.</p>
+      <p lang="en">The key to the proper operation of a flip-flop is to trigger it only during a signal transition. […] There are two ways that a latch can be modified to form a flip-flop. One way is to employ two latches in a special configuration that isolates the output of the flip-flop and prevents it from being affected while the input to the flip-flop is changing. Another way is to produce a flip-flop that triggers only during a signal transition of the synchronizing signal (clock) and is disabled during the rest of the clock pulse.</p>
+      <div class="tr">
+        <div class="src">Türkçesi</div>
+        <p>Bir latch ya da flip-flop'un durumu, kontrol girişindeki bir değişimle değiştirilir. Bu anlık değişime <em>trigger</em> (tetikleme) denir; yol açtığı geçişin flip-flop'u tetiklediği söylenir.</p>
+        <p>Latch'lerin state geçişleri, clock pulse logic-1 seviyesine çıkar çıkmaz başlar. […] Latch'lere uygulanan girişler clock pulse hâlâ logic-1'deyken değişirse, latch'ler yeni değerlere tepki verir ve yeni bir çıkış state'i oluşabilir. Sonuç öngörülemeyen bir durumdur, çünkü latch'lerin state'i clock pulse aktif seviyede kaldığı sürece değişmeye devam edebilir.</p>
+        <p>Flip-flop'un düzgün çalışmasının anahtarı, onu <em>yalnızca bir sinyal geçişi sırasında</em> tetiklemektir. […] Bir latch'i flip-flop'a dönüştürmenin iki yolu var. Biri, iki latch'i özel bir düzende kullanarak flip-flop'un çıkışını yalıtmak ve giriş değişirken çıkışın etkilenmesini engellemek. Diğeri, yalnızca senkronizasyon sinyalinin (clock) geçişi sırasında tetiklenen ve pulse'ın geri kalanında devre dışı kalan bir flip-flop üretmek.</p>
+      </div>
+    </div>
+
+    <p>Üç aşamalı bir hikâye: <strong>(1)</strong> latch'in sorununu tanımla, <strong>(2)</strong> iki farklı çözüm göster, <strong>(3)</strong> elde edilen flip-flop'un türlerini ve tablolarını ver.</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Latch neden yetmiyor</h2></div>
+
+    <p>5.2'deki blok diyagramda sequential circuit'in flip-flop çıkışlarından combinational circuit'in girişine bir feedback path'i vardı. Yani flip-flop girişleri, kısmen aynı ve diğer flip-flop'ların çıkışlarından türetiliyor. Storage element olarak latch kullanılırsa <strong>ciddi bir sorun</strong> çıkıyor:</p>
+
+    <ul>
+      <li>Latch'lerin state geçişleri, clock pulse logic-1'e çıkar çıkmaz başlar.</li>
+      <li>Latch'in yeni state'i, pulse hâlâ aktifken çıkışta belirir.</li>
+      <li>Bu çıkış, combinational circuit üzerinden yine latch'lerin girişine bağlıdır.</li>
+      <li>Girişler pulse hâlâ 1'deyken değişirse latch yeni değerlere tepki verir ve yeni bir çıkış state'i oluşur.</li>
+      <li>Sonuç öngörülemez: pulse aktif kaldığı sürece state değişmeye devam edebilir.</li>
+    </ul>
+
+    <p>Kitabın buradan çıkardığı kural net: <strong>bütün latch'ler ortak bir clock kaynağıyla tetikleniyorsa, bir latch'in çıkışı doğrudan ya da combinational logic üzerinden aynı veya başka bir latch'in girişine uygulanamaz.</strong></p>
+
+    <p>Sorunun kaynağı latch'in <em>seviyeye</em> tepki vermesi. Çözüm de oradan geliyor: elemanı yalnızca <em>geçiş</em> sırasında tetiklemek. Bir clock pulse iki geçişten geçer — 0'dan 1'e ve 1'den 0'a dönüş. Pozitif geçişe <strong>positive edge</strong>, negatif geçişe <strong>negative edge</strong> denir.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 300" role="img" aria-label="Üç satır clock dalga şekli. Birinci satırda seviyeye tepki: her yüksek seviye boyunca çıkışın değişebileceği aralık taralı. İkinci satırda pozitif kenar tepkisi: yalnızca yükselen kenarlarda yukarı ok var. Üçüncü satırda negatif kenar tepkisi: yalnızca düşen kenarlarda aşağı ok var.">
+          <!-- (a) level -->
+          <text x="20" y="46" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">(a) seviye</text>
+          <text x="20" y="62" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity=".7">latch</text>
+          <rect x="200" y="44" width="80" height="46" fill="var(--seq)" fill-opacity=".16"/>
+          <rect x="360" y="44" width="80" height="46" fill="var(--seq)" fill-opacity=".16"/>
+          <rect x="520" y="44" width="80" height="46" fill="var(--seq)" fill-opacity=".16"/>
+          <rect x="680" y="44" width="80" height="46" fill="var(--seq)" fill-opacity=".16"/>
+          <path d="M 170 82 L 200 82 L 200 54 L 280 54 L 280 82 L 360 82 L 360 54 L 440 54 L 440 82 L 520 82 L 520 54 L 600 54 L 600 82 L 680 82 L 680 54 L 760 54 L 760 82 L 860 82"
+                fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <text x="440" y="112" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">taralı aralık boyunca çıkış değişebilir</text>
+
+          <!-- (b) positive edge -->
+          <text x="20" y="166" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">(b) pozitif</text>
+          <text x="20" y="182" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity=".7">kenar</text>
+          <path d="M 170 192 L 200 192 L 200 164 L 280 164 L 280 192 L 360 192 L 360 164 L 440 164 L 440 192 L 520 192 L 520 164 L 600 164 L 600 192 L 680 192 L 680 164 L 760 164 L 760 192 L 860 192"
+                fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <polygon points="200,150 194,162 206,162" fill="var(--seq)"/>
+          <polygon points="360,150 354,162 366,162" fill="var(--seq)"/>
+          <polygon points="520,150 514,162 526,162" fill="var(--seq)"/>
+          <polygon points="680,150 674,162 686,162" fill="var(--seq)"/>
+          <text x="440" y="222" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">yalnızca bu anlarda</text>
+
+          <!-- (c) negative edge -->
+          <text x="20" y="266" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">(c) negatif</text>
+          <text x="20" y="282" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity=".7">kenar</text>
+          <path d="M 170 282 L 200 282 L 200 254 L 280 254 L 280 282 L 360 282 L 360 254 L 440 254 L 440 282 L 520 282 L 520 254 L 600 254 L 600 282 L 680 282 L 680 254 L 760 254 L 760 282 L 860 282"
+                fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <polygon points="280,296 274,284 286,284" fill="var(--seq)"/>
+          <polygon points="440,296 434,284 446,284" fill="var(--seq)"/>
+          <polygon points="600,296 594,284 606,284" fill="var(--seq)"/>
+          <polygon points="760,296 754,284 766,284" fill="var(--seq)"/>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 1 — kitabın Fig. 5.8'i.</b> Aynı clock, üç farklı eleman. (a) latch: pulse 1'de kaldığı sürece D değişirse çıkış da değişir. (b) ve (c) flip-flop: çıkışın değişebileceği tek an, okla gösterilen geçiş anı — geri kalan sürede eleman kapalı.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Birinci çözüm: master–slave D flip-flop</h2></div>
+
+    <p>İki D latch ve bir inverter. İlk latch'e <strong>master</strong>, ikincisine <strong>slave</strong> deniyor. Devre D girişini örnekler ve Q çıkışını yalnızca clock'un <strong>negatif kenarında</strong> değiştirir.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 240" role="img" aria-label="Master-slave D flip-flop. D girişi master D latch'e gider, master'ın En girişi doğrudan Clk'e bağlıdır. Master'ın Y çıkışı slave D latch'in D girişine gider; slave'in En girişi Clk'in inverter'dan geçmiş hâline bağlıdır. Slave'in çıkışı Q'dur.">
+          <defs>
+            <marker id="f1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text x="24" y="80" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D</text>
+          <line x1="48" y1="76" x2="200" y2="76" stroke="currentColor" stroke-width="1.6" marker-end="url(#f1)"/>
+
+          <!-- master -->
+          <rect x="210" y="46" width="150" height="110" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="224" y="82" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">D</text>
+          <text x="224" y="132" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">En</text>
+          <text x="290" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">D latch</text>
+          <text x="290" y="124" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">(master)</text>
+
+          <line x1="360" y1="76" x2="520" y2="76" stroke="currentColor" stroke-width="1.6" marker-end="url(#f1)"/>
+          <text x="440" y="66" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Y</text>
+
+          <!-- slave -->
+          <rect x="530" y="46" width="150" height="110" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="544" y="82" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">D</text>
+          <text x="544" y="132" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">En</text>
+          <text x="610" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">D latch</text>
+          <text x="610" y="124" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">(slave)</text>
+
+          <line x1="680" y1="76" x2="800" y2="76" stroke="currentColor" stroke-width="1.6" marker-end="url(#f1)"/>
+          <text x="812" y="81" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q</text>
+
+          <!-- clock -->
+          <text x="24" y="204" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Clk</text>
+          <line x1="62" y1="200" x2="150" y2="200" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="150" cy="200" r="3.5" fill="var(--seq)"/>
+          <path d="M 150 200 L 150 128 L 206 128" fill="none" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#f1)"/>
+          <line x1="150" y1="200" x2="404" y2="200" stroke="var(--seq)" stroke-width="1.6"/>
+
+          <!-- inverter -->
+          <path d="M 404 182 L 404 218 L 440 200 Z" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="445" cy="200" r="5" fill="var(--surface)" stroke="var(--seq)" stroke-width="1.6"/>
+          <path d="M 450 200 L 500 200 L 500 128 L 526 128" fill="none" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#f1)"/>
+          <text x="470" y="192" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Clk&#8242;</text>
+
+          <text x="290" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" fill-opacity=".7">Clk = 1 iken açık</text>
+          <text x="610" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" fill-opacity=".7">Clk = 0 iken açık</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 2 — kitabın Fig. 5.9'u.</b> İki latch hiçbir zaman aynı anda açık değil: biri açıkken diğeri kapalı. Bilginin dışarı çıkması için clock'un 1'den 0'a dönmesi gerekiyor — bu yüzden devre <b>negatif kenar</b> tetiklemeli.</figcaption>
+    </figure>
+
+    <p>Adım adım:</p>
+    <ul>
+      <li><strong>Clk = 0:</strong> inverter'ın çıkışı 1, yani slave açık ve Q, master çıkışı Y'ye eşit. Master kapalı (En = Clk = 0).</li>
+      <li><strong>Clk 1'e çıkınca:</strong> dış D girişindeki veri master'a aktarılır. Slave ise kapalıdır, çünkü enable girişi 0'dır. Girişteki her değişiklik Y'yi değiştirir <em>ama slave çıkışını etkileyemez</em>.</li>
+      <li><strong>Clk 0'a dönünce:</strong> master kapanır ve D girişinden yalıtılır. Aynı anda slave açılır ve Y'nin değeri flip-flop çıkışı Q'ya aktarılır.</li>
+    </ul>
+
+    <div class="key">
+      <div class="lab">Master–slave davranışının üç kuralı</div>
+      <p><strong>(1)</strong> Çıkış yalnızca bir kez değişebilir. <strong>(2)</strong> Değişimi clock'un negatif kenarı tetikler. <strong>(3)</strong> Değişim yalnızca clock'un negatif seviyesi sırasında olabilir. Çıkışta beliren değer, negatif kenar oluşmadan hemen önce master aşamasında saklı olan değerdir.</p>
+    </div>
+
+    <p>Devreyi pozitif kenarda değişecek şekilde tasarlamak da mümkün: Clk terminali ile master latch'in En girişi arasına <em>bir inverter daha</em> konur. Böyle bir flip-flop negatif pulse ile tetiklenir; negatif kenar master'ı, pozitif kenar slave'i ve çıkış terminalini etkiler.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 260" role="img" aria-label="Master-slave zamanlama diyagramı. Clock, D, master çıkışı Y ve flip-flop çıkışı Q. Y, clock yüksekken D'yi takip ediyor. Q ise yalnızca clock'un düşen kenarlarında Y'nin o anki değerini alıyor.">
+          <line x1="280" y1="34" x2="280" y2="230" stroke="var(--seq)" stroke-opacity=".45" stroke-dasharray="4 4"/>
+          <line x1="520" y1="34" x2="520" y2="230" stroke="var(--seq)" stroke-opacity=".45" stroke-dasharray="4 4"/>
+          <line x1="760" y1="34" x2="760" y2="230" stroke="var(--seq)" stroke-opacity=".45" stroke-dasharray="4 4"/>
+          <text x="280" y="30" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">negatif kenar</text>
+          <text x="520" y="30" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">negatif kenar</text>
+          <text x="760" y="30" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">negatif kenar</text>
+
+          <text x="20" y="66" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Clk</text>
+          <path d="M 120 74 L 200 74 L 200 46 L 280 46 L 280 74 L 440 74 L 440 46 L 520 46 L 520 74 L 680 74 L 680 46 L 760 46 L 760 74 L 860 74"
+                fill="none" stroke="var(--seq)" stroke-width="1.8"/>
+
+          <text x="20" y="126" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D</text>
+          <path d="M 120 134 L 170 134 L 170 106 L 220 106 L 220 134 L 250 134 L 250 106 L 330 106 L 330 134 L 560 134 L 560 106 L 860 106"
+                fill="none" stroke="currentColor" stroke-width="1.8"/>
+
+          <text x="20" y="186" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">Y</text>
+          <text x="20" y="200" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--comb)" fill-opacity=".8">master</text>
+          <path d="M 120 194 L 200 194 L 200 166 L 220 166 L 220 194 L 250 194 L 250 166 L 440 166 L 440 194 L 680 194 L 680 166 L 860 166"
+                fill="none" stroke="var(--comb)" stroke-width="1.8"/>
+
+          <text x="20" y="240" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Q</text>
+          <path d="M 120 246 L 280 246 L 280 218 L 520 218 L 520 246 L 760 246 L 760 218 L 860 218"
+                fill="none" stroke="var(--seq)" stroke-width="1.8"/>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 3 — master ve slave sırayla çalışıyor.</b> Clock yüksekken master D'yi izler (Y hareketli). Q ise yalnızca kesikli çizgilerde, yani negatif kenarlarda Y'nin o anki değerini alır. D'nin pulse ortasındaki oynamaları Q'ya hiç yansımaz.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>İkinci çözüm: doğrudan kenar tetiklemeli D flip-flop</h2></div>
+
+    <p>Edge-triggered D flip-flop'un bir başka kurulumu <strong>üç SR latch</strong> kullanır (kitabın Fig. 5.10'u). İki latch dış D (data) ve Clk (clock) girişlerine tepki verir; üçüncü latch flip-flop'un çıkışlarını sağlar.</p>
+
+    <ul>
+      <li><strong>Clk = 0</strong> iken çıkış latch'inin S ve R girişleri logic-1 seviyesinde tutulur; bu da çıkışın mevcut state'inde kalmasını sağlar.</li>
+      <li><strong>D = 0 iken Clk 1 olursa:</strong> R 0'a döner, flip-flop reset state'e gider, Q = 0 olur. Clk = 1 iken D değişse bile R 0'da kalır (çünkü Q sıfırdır) — yani flip-flop <em>kilitlenir</em> ve girişteki başka değişikliklere tepki vermez.</li>
+      <li><strong>D = 1 iken Clk 0'dan 1'e giderse:</strong> S 0'a döner, devre set state'e gider, Q = 1 olur. Clk = 1 iken D'deki değişiklik çıkışı etkilemez.</li>
+      <li>Clock 0'a döndüğünde R tekrar 1 olur ve çıkış latch'i çıkışı değiştirmeden hareketsiz (quiescent) koşula girer.</li>
+    </ul>
+
+    <p>Özetle: pozitif kenar tetiklemeli flip-flop'ta clock pozitif geçiş yaptığında D'nin değeri Q'ya aktarılır. Negatif geçiş çıkışı etkilemez; Clk sabit 1 ya da sabit 0'dayken D'nin değişmesi de etkilemez. <strong>Bu flip-flop 0'dan 1'e geçişe tepki verir, başka hiçbir şeye değil.</strong></p>
+
+    <h3>Zamanlama: setup, hold ve propagation delay</h3>
+    <p>Edge-triggered flip-flop kullanırken üç süre hesaba katılmalı:</p>
+    <ul>
+      <li><span class="term">setup time</span> — clock geçişinden <em>önce</em> D girişinin sabit bir değerde tutulması gereken minimum süre.</li>
+      <li><span class="term">hold time</span> — clock'un pozitif geçişi uygulandıktan <em>sonra</em> D girişinin değişmemesi gereken minimum süre.</li>
+      <li><span class="term">propagation delay</span> — tetikleme kenarı ile çıkışın yeni state'e oturması arasındaki aralık.</li>
+    </ul>
+    <p>Bu parametreler, belirli logic aileleri için üretici veri kitaplarında belirtilir.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 250" role="img" aria-label="Tek bir clock kenarı çevresinde zamanlama. Clock yükselen kenarından önce setup time aralığı, sonrasında hold time aralığı işaretli; bu iki aralık boyunca D sabit kalmalı. Kenardan sonra propagation delay kadar bir gecikmeyle Q yeni değerine oturuyor.">
+          <defs>
+            <marker id="f2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <line x1="440" y1="40" x2="440" y2="215" stroke="var(--seq)" stroke-width="1.4" stroke-dasharray="4 4"/>
+          <text x="440" y="32" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">tetikleme kenarı</text>
+
+          <text x="20" y="72" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Clk</text>
+          <path d="M 120 80 L 440 80 L 440 52 L 700 52 L 700 80 L 860 80" fill="none" stroke="var(--seq)" stroke-width="1.8"/>
+
+          <!-- setup / hold window -->
+          <rect x="330" y="106" width="110" height="40" fill="var(--comb)" fill-opacity=".12"/>
+          <rect x="440" y="106" width="60" height="40" fill="var(--comb)" fill-opacity=".12"/>
+          <text x="20" y="132" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D</text>
+          <path d="M 120 146 L 260 146 L 260 112 L 860 112" fill="none" stroke="currentColor" stroke-width="1.8"/>
+
+          <path d="M 330 164 L 440 164" fill="none" stroke="var(--comb)" stroke-width="1.4" marker-start="url(#f2a)" marker-end="url(#f2a)"/>
+          <text x="385" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">setup</text>
+          <path d="M 440 164 L 500 164" fill="none" stroke="var(--comb)" stroke-width="1.4" marker-start="url(#f2a)" marker-end="url(#f2a)"/>
+          <text x="470" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">hold</text>
+
+          <text x="20" y="222" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Q</text>
+          <path d="M 120 228 L 486 228 L 486 200 L 860 200" fill="none" stroke="var(--seq)" stroke-width="1.8"/>
+          <path d="M 440 240 L 486 240" fill="none" stroke="var(--seq)" stroke-width="1.4" marker-start="url(#f2a)" marker-end="url(#f2a)"/>
+          <text x="560" y="244" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">propagation delay</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 4 — kenarın etrafındaki üç süre.</b> D, kenardan setup kadar önce oturmuş ve hold kadar sonra sabit kalmış olmalı (mavi pencere). Çıkış ise kenardan propagation delay kadar sonra yeni değerine oturur — 5.2'deki "minimum clock aralığı" hesabı bu sürelerden çıkar.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>JK ve T flip-flop</h2></div>
+
+    <p>Bir flip-flop ile yapılabilecek <strong>üç işlem</strong> var: 1'e set etmek, 0'a reset etmek, ya da çıkışı tümlemek (complement). Tek girişi olan D flip-flop yalnızca set ve reset yapabilir. <strong>JK flip-flop</strong>'un iki girişi vardır ve üç işlemi birden yapar.</p>
+
+    <p>Kitap JK'yı bir D flip-flop ve birkaç gate ile kuruyor. D girişine uygulanan ifade:</p>
+    <p style="font-family:var(--mono);font-size:16px;padding-left:2px"><strong>D = J·Q&#8242; + K&#8242;·Q</strong></p>
+    <ul>
+      <li>J = 1, K = 0 → D = Q&#8242; + Q = 1, sonraki clock kenarı çıkışı <strong>1 yapar</strong>.</li>
+      <li>J = 0, K = 1 → D = 0, sonraki kenar çıkışı <strong>0 yapar</strong>.</li>
+      <li>J = K = 1 → D = Q&#8242;, sonraki kenar çıkışı <strong>tümler</strong>.</li>
+      <li>J = K = 0 → D = Q, kenar çıkışı <strong>değiştirmez</strong>.</li>
+    </ul>
+
+    <p><strong>T (toggle) flip-flop</strong> tümleyici bir flip-flop'tur ve JK'nın J ile K girişleri birbirine bağlanarak elde edilir. T = 0 (J = K = 0) iken clock kenarı çıkışı değiştirmez; T = 1 (J = K = 1) iken kenar çıkışı tümler. Tümleyici flip-flop <em>binary counter</em> tasarımında çok işe yarar. T flip-flop bir D flip-flop ve bir exclusive-OR gate ile de kurulabilir:</p>
+    <p style="font-family:var(--mono);font-size:16px;padding-left:2px"><strong>D = T &#8853; Q = T·Q&#8242; + T&#8242;·Q</strong></p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 300" role="img" aria-label="Solda JK flip-flop: J ve Q' bir AND gate'e, K'nin tümleyeni ile Q başka bir AND gate'e girer; iki AND çıkışı bir OR gate'te birleşip D flip-flop'un D girişini besler. Sağda T flip-flop: T ile Q bir exclusive-OR gate'e girer, çıkışı D flip-flop'un D girişine gider.">
+          <defs>
+            <marker id="f3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <line x1="520" y1="14" x2="520" y2="292" stroke="currentColor" stroke-opacity=".18" stroke-width="1" stroke-dasharray="4 5"/>
+
+          <!-- ===== JK ===== -->
+          <text x="20" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--comb)" letter-spacing="1">JK &#8592; D + GATE</text>
+
+          <text x="20" y="70" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">J</text>
+          <line x1="40" y1="66" x2="120" y2="66" stroke="currentColor" stroke-width="1.5"/>
+          <text x="20" y="150" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">K</text>
+          <line x1="40" y1="146" x2="70" y2="146" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M 70 132 L 70 160 L 96 146 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <circle cx="101" cy="146" r="4.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="106" y1="146" x2="120" y2="146" stroke="currentColor" stroke-width="1.5"/>
+
+          <!-- AND 1 -->
+          <path d="M 120 54 L 140 54 A 20 20 0 0 1 140 94 L 120 94 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="160" y1="74" x2="200" y2="74" stroke="currentColor" stroke-width="1.5"/>
+          <!-- AND 2 -->
+          <path d="M 120 134 L 140 134 A 20 20 0 0 1 140 174 L 120 174 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="160" y1="154" x2="200" y2="154" stroke="currentColor" stroke-width="1.5"/>
+
+          <!-- OR -->
+          <path d="M 200 60 Q 234 60 254 114 Q 234 168 200 168 Q 214 114 200 60 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="254" y1="114" x2="310" y2="114" stroke="currentColor" stroke-width="1.5" marker-end="url(#f3)"/>
+          <text x="282" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">D</text>
+
+          <!-- D flip-flop -->
+          <rect x="316" y="70" width="90" height="90" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="328" y="98" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">D</text>
+          <path d="M 316 126 L 328 132 L 316 138" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="334" y="138" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">Clk</text>
+          <line x1="406" y1="92" x2="450" y2="92" stroke="currentColor" stroke-width="1.5"/>
+          <text x="458" y="97" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">Q</text>
+          <line x1="406" y1="140" x2="450" y2="140" stroke="currentColor" stroke-width="1.5"/>
+          <text x="458" y="145" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">Q&#8242;</text>
+          <line x1="270" y1="132" x2="316" y2="132" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="276" y="152" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Clk</text>
+
+          <!-- feedback -->
+          <path d="M 430 92 L 430 214 L 104 214 L 104 162 L 120 162" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#f3)"/>
+          <circle cx="430" cy="92" r="3" fill="currentColor"/>
+          <text x="270" y="228" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Q</text>
+          <path d="M 444 140 L 444 244 L 88 244 L 88 84 L 120 84" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#f3)"/>
+          <circle cx="444" cy="140" r="3" fill="currentColor"/>
+          <text x="270" y="258" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Q&#8242;</text>
+
+          <text x="255" y="286" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D = J&#183;Q&#8242; + K&#8242;&#183;Q</text>
+
+          <!-- ===== T ===== -->
+          <text x="548" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--comb)" letter-spacing="1">T &#8592; D + XOR</text>
+
+          <text x="548" y="98" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">T</text>
+          <line x1="566" y1="94" x2="620" y2="94" stroke="currentColor" stroke-width="1.5"/>
+
+          <!-- XOR -->
+          <path d="M 620 74 Q 650 74 668 114 Q 650 154 620 154 Q 632 114 620 74 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <path d="M 610 74 Q 622 114 610 154" fill="none" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="668" y1="114" x2="708" y2="114" stroke="currentColor" stroke-width="1.5" marker-end="url(#f3)"/>
+
+          <rect x="714" y="70" width="90" height="90" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="726" y="98" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">D</text>
+          <path d="M 714 126 L 726 132 L 714 138" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="732" y="138" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">Clk</text>
+          <line x1="804" y1="92" x2="836" y2="92" stroke="currentColor" stroke-width="1.5"/>
+          <text x="844" y="97" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">Q</text>
+          <line x1="668" y1="132" x2="714" y2="132" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="674" y="152" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Clk</text>
+
+          <path d="M 824 92 L 824 214 L 596 214 L 596 134 L 618 134" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#f3)"/>
+          <circle cx="824" cy="92" r="3" fill="currentColor"/>
+          <text x="700" y="228" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Q</text>
+
+          <text x="700" y="286" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D = T &#8853; Q</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 5 — kitabın Fig. 5.12 ve Fig. 5.13'ü.</b> İkisi de aynı numara: D flip-flop'un önüne küçük bir combinational devre koyup D girişini istediğin davranışı verecek şekilde üretmek. Amber çizgiler Q ve Q&#8242;'nün geri beslemesi — flip-flop kendi state'ini de hesaba katıyor.</figcaption>
+    </figure>
+
+    <p>Not: VLSI devrelerinde bu şekilde kurulan en ekonomik ve verimli flip-flop, en az gate gerektirdiği için <strong>edge-triggered D flip-flop</strong>'tur. Diğer türler D flip-flop ve dış logic kullanılarak elde edilir. JK ve T, dijital sistem tasarımında D'ye göre daha az yaygın kullanılır.</p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Characteristic table ve characteristic equation</h2></div>
+
+    <p>Bir <strong>characteristic table</strong>, flip-flop'un mantıksal özelliklerini tablo hâlinde tanımlar: girişlerin ve mevcut state'in fonksiyonu olarak <em>next state</em>'i verir. <span class="term">Q(t)</span> mevcut state'tir — clock kenarı uygulanmadan hemen önceki state. <span class="term">Q(t+1)</span> ise bir clock periyodu sonraki, yani kenarın sonucu olan state. Clock kenarı tabloda yer almaz; t ile t+1 arasında olduğu varsayılır.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>J</th><th>K</th><th>Q(t+1)</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>Q(t)</td><td class="note">değişiklik yok</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td class="note">reset</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td class="note">set</td></tr>
+          <tr><td>1</td><td>1</td><td>Q&#8242;(t)</td><td class="note">tümler (complement)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.1 — JK flip-flop characteristic table</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>D</th><th>Q(t+1)</th><th>Açıklama</th><th>T</th><th>Q(t+1)</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td class="note">reset</td><td>0</td><td>Q(t)</td><td class="note">değişiklik yok</td></tr>
+          <tr><td>1</td><td>1</td><td class="note">set</td><td>1</td><td>Q&#8242;(t)</td><td class="note">tümler</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.1 — D ve T flip-flop characteristic table'ları</p>
+
+    <p>D flip-flop'un next state'i yalnızca D girişine bağlıdır, mevcut state'ten bağımsızdır. Dikkat: <strong>D flip-flop'un "no-change" koşulu yoktur.</strong> Böyle bir davranış ya clock'u devre dışı bırakarak ya da flip-flop çıkışını D girişine bağlayarak elde edilir — her iki yöntem de state değişmemesi gerektiğinde çıkışı kendi üzerine dolaştırır.</p>
+
+    <h3>Characteristic equation</h3>
+    <p>Aynı mantıksal özellikler cebirsel olarak da yazılabilir:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Flip-flop</th><th>Characteristic equation</th><th>Okunuşu</th></tr></thead>
+        <tbody>
+          <tr><td class="tr-word">D</td><td class="tr-word">Q(t+1) = D</td><td>Next state, D'nin değerine eşittir.</td></tr>
+          <tr><td class="tr-word">JK</td><td class="tr-word">Q(t+1) = J·Q&#8242; + K&#8242;·Q</td><td>Q, kenardan hemen önceki çıkış değeri.</td></tr>
+          <tr><td class="tr-word">T</td><td class="tr-word">Q(t+1) = T &#8853; Q = T·Q&#8242; + T&#8242;·Q</td><td>T = 1 ise tümler, T = 0 ise korur.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="key">
+      <div class="lab">Bunlar 5.5 ve 5.8'in aletleri</div>
+      <p>Characteristic equation'lar süs değil: 5.5'te verilen bir devrenin state'lerini çıkarırken, 5.8'de istenen davranıştan devre kurarken doğrudan bunları kullanacaksın. Üçünü ezberle — özellikle <strong>Q(t+1) = J·Q&#8242; + K&#8242;·Q</strong>.</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Direct inputs: clock'u dinlemeyen girişler</h2></div>
+
+    <p>Bazı flip-flop'larda, clock'tan <em>bağımsız</em> olarak flip-flop'u belirli bir state'e zorlayan asynchronous girişler bulunur. Flip-flop'u 1'e set eden girişe <strong>preset</strong> (direct set), 0'a temizleyen girişe <strong>clear</strong> (direct reset) denir.</p>
+
+    <p>Neden gerekli: bir dijital sistemde güç açıldığında flip-flop'ların state'i <strong>bilinmez</strong>. Direct input'lar, saatli çalışma başlamadan önce sistemdeki bütün flip-flop'ları bilinen bir başlangıç state'ine getirmek için kullanılır.</p>
+
+    <p>Kitabın Fig. 5.14'ü, active-low asynchronous reset'li pozitif kenar tetiklemeli bir D flip-flop gösteriyor. Devre Fig. 5.10 ile aynı, tek fark üç NAND gate'e eklenen reset bağlantıları. Reset girişi 0 olduğunda Q&#8242; çıkışını 1'de kalmaya zorlar; bu da Q çıkışını 0'a temizler, yani flip-flop'u reset eder. Diğer iki bağlantı, reset 0'dayken üçüncü SR latch'in S girişinin — D ve Clk'in değeri ne olursa olsun — logic 1'de kalmasını garanti eder.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>R</th><th>Clk</th><th>D</th><th>Q</th><th>Q&#8242;</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>X</td><td>X</td><td>0</td><td>1</td><td class="note">clock'a bakmaksızın reset</td></tr>
+          <tr><td>1</td><td>&#8593;</td><td>0</td><td>0</td><td>1</td><td class="note">normal çalışma</td></tr>
+          <tr><td>1</td><td>&#8593;</td><td>1</td><td>1</td><td>0</td><td class="note">normal çalışma</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Fig. 5.14(b) — asynchronous reset'li D flip-flop'un function table'ı. &#8593; pozitif kenar demek.</p>
+
+    <p>R = 0 iken çıkış 0'a reset edilir ve bu, D ile Clk'in değerlerinden bağımsızdır. Normal clock işleyişi ancak reset girişi logic 1'e döndükten sonra sürdürülebilir. R = 1 olmak şartıyla, her pozitif kenarda D'deki değer Q'ya aktarılır.</p>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Grafik semboller</h2></div>
+
+    <p>Edge-triggered D flip-flop'un sembolü, D latch sembolüne benzer; tek fark Clk harfinin önündeki <strong>ok ucu benzeri işaret</strong>: dinamik giriş göstergesi. Bu gösterge (&gt;), flip-flop'un clock'un kenar geçişine tepki verdiğini anlatır. Dinamik göstergenin yanında blok <em>dışında</em> bir bubble varsa tetikleme <strong>negatif kenardır</strong>; bubble yoksa <strong>pozitif kenar</strong>.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 210" role="img" aria-label="Dört flip-flop sembolü. Birincisi pozitif kenar tetiklemeli D flip-flop: Clk girişinde ok ucu var, bubble yok. İkincisi negatif kenar: ok ucunun yanında bubble var. Üçüncüsü J ve K girişli JK flip-flop. Dördüncüsü T girişli T flip-flop. Sonuncuda ayrıca bubble'lı bir R direct reset girişi var.">
+          <!-- 1: D positive edge -->
+          <rect x="70" y="46" width="86" height="100" rx="2" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="82" y="80" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">D</text>
+          <path d="M 70 116 L 84 124 L 70 132" fill="none" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="90" y="130" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)">Clk</text>
+          <line x1="20" y1="72" x2="70" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="20" y1="124" x2="70" y2="124" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="156" y1="72" x2="196" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="161" cy="124" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="166" y1="124" x2="196" y2="124" stroke="currentColor" stroke-width="1.5"/>
+          <text x="113" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">D · pozitif kenar</text>
+
+          <!-- 2: D negative edge -->
+          <rect x="280" y="46" width="86" height="100" rx="2" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="292" y="80" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">D</text>
+          <path d="M 280 116 L 294 124 L 280 132" fill="none" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="300" y="130" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)">Clk</text>
+          <line x1="230" y1="72" x2="280" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="275" cy="124" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="230" y1="124" x2="270" y2="124" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="366" y1="72" x2="406" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="371" cy="124" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="376" y1="124" x2="406" y2="124" stroke="currentColor" stroke-width="1.5"/>
+          <text x="323" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">D · negatif kenar</text>
+
+          <!-- 3: JK -->
+          <rect x="490" y="46" width="86" height="100" rx="2" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="502" y="72" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">J</text>
+          <path d="M 490 92 L 504 100 L 490 108" fill="none" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="502" y="138" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">K</text>
+          <line x1="440" y1="66" x2="490" y2="66" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="440" y1="100" x2="490" y2="100" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="440" y1="132" x2="490" y2="132" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="576" y1="66" x2="616" y2="66" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="581" cy="132" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="586" y1="132" x2="616" y2="132" stroke="currentColor" stroke-width="1.5"/>
+          <text x="533" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">JK</text>
+
+          <!-- 4: T with direct reset -->
+          <rect x="700" y="46" width="86" height="100" rx="2" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="712" y="72" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">T</text>
+          <path d="M 700 92 L 714 100 L 700 108" fill="none" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="712" y="138" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">R</text>
+          <line x1="650" y1="66" x2="700" y2="66" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="650" y1="100" x2="700" y2="100" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="695" cy="132" r="5" fill="var(--surface)" stroke="var(--seq)" stroke-width="1.5"/>
+          <line x1="650" y1="132" x2="690" y2="132" stroke="var(--seq)" stroke-width="1.5"/>
+          <line x1="786" y1="66" x2="826" y2="66" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="791" cy="132" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="796" y1="132" x2="826" y2="132" stroke="currentColor" stroke-width="1.5"/>
+          <text x="743" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">T + direct reset</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 6 — kitabın Fig. 5.11, 5.12(b), 5.13(c) ve 5.14(b)'si.</b> Clk'in yanındaki ok ucu <b>dinamik gösterge</b>: eleman kenara tepki veriyor. Giriş tarafındaki bubble o girişin logic-0'da aktif olduğunu söyler — clock'ta negatif kenar, R'de active-low reset demek.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>Yan yana</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th lang="en">D latch (5.3)</th><th lang="en">D flip-flop</th><th lang="en">JK</th><th lang="en">T</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Tetikleme</td><td class="c">seviye</td><td class="s">kenar</td><td class="s">kenar</td><td class="s">kenar</td></tr>
+          <tr><td>Giriş sayısı</td><td>D, En</td><td>D, Clk</td><td>J, K, Clk</td><td>T, Clk</td></tr>
+          <tr><td>Yapabildikleri</td><td>set / reset</td><td>set / reset</td><td>set / reset / tümle</td><td>tümle / koru</td></tr>
+          <tr><td>Next state</td><td class="tr-word">Q = D (En = 1 iken)</td><td class="tr-word">Q(t+1) = D</td><td class="tr-word">Q(t+1) = JQ&#8242; + K&#8242;Q</td><td class="tr-word">Q(t+1) = T &#8853; Q</td></tr>
+          <tr><td>"No change" var mı</td><td>var (En = 0)</td><td class="s">yok</td><td>var (J = K = 0)</td><td>var (T = 0)</td></tr>
+          <tr><td>Tipik kullanım</td><td>geçici saklama</td><td>en yaygın, en az gate</td><td>üç işlem birden</td><td>binary counter</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>Hemen karşılaşacağın terimler</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>İngilizce terim</th><th>Türkçe karşılığı</th><th>Burada ne demek</th></tr></thead>
+        <tbody>
+          <tr><td class="tr-word">trigger</td><td class="tr-word">tetikleme</td><td>Kontrol girişindeki, durumu değiştiren anlık değişim.</td></tr>
+          <tr><td class="tr-word">positive / negative edge</td><td class="tr-word">pozitif / negatif kenar</td><td>Clock'un 0&#8594;1 ve 1&#8594;0 geçişleri.</td></tr>
+          <tr><td class="tr-word">master–slave</td><td class="tr-word">ana–uydu</td><td>Sırayla açılan iki latch'ten kurulu flip-flop.</td></tr>
+          <tr><td class="tr-word">edge-triggered</td><td class="tr-word">kenar tetiklemeli</td><td>Yalnızca clock geçişinde tepki veren.</td></tr>
+          <tr><td class="tr-word">dynamic indicator</td><td class="tr-word">dinamik gösterge</td><td>Sembolde Clk'in önündeki ok ucu.</td></tr>
+          <tr><td class="tr-word">setup time</td><td class="tr-word">kurulum süresi</td><td>Kenardan önce D'nin sabit kalması gereken süre.</td></tr>
+          <tr><td class="tr-word">hold time</td><td class="tr-word">tutma süresi</td><td>Kenardan sonra D'nin değişmemesi gereken süre.</td></tr>
+          <tr><td class="tr-word">characteristic table</td><td class="tr-word">karakteristik tablo</td><td>Next state'i giriş ve mevcut state cinsinden verir.</td></tr>
+          <tr><td class="tr-word">characteristic equation</td><td class="tr-word">karakteristik denklem</td><td>Aynı bilginin cebirsel hâli.</td></tr>
+          <tr><td class="tr-word">Q(t) / Q(t+1)</td><td class="tr-word">mevcut / sonraki durum</td><td>Kenardan hemen önceki ve sonraki state.</td></tr>
+          <tr><td class="tr-word">preset / direct set</td><td class="tr-word">doğrudan kurma</td><td>Clock'tan bağımsız olarak Q = 1 yapan giriş.</td></tr>
+          <tr><td class="tr-word">clear / direct reset</td><td class="tr-word">doğrudan silme</td><td>Clock'tan bağımsız olarak Q = 0 yapan giriş.</td></tr>
+          <tr><td class="tr-word">toggle</td><td class="tr-word">tümleme</td><td>Çıkışı tersine çevirme.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">11</span><h2>Kendini test et</h2></div>
+
+    <details>
+      <summary>Ortak clock'la sürülen bir devrede latch'lerin çıkışı neden başka bir latch'in girişine bağlanamaz?</summary>
+      <div class="ans"><p>Çünkü latch, pulse logic-1'e çıkar çıkmaz değişmeye başlar ve yeni state pulse hâlâ aktifken çıkışta belirir. Bu çıkış combinational logic üzerinden latch girişlerine döner; girişler pulse hâlâ 1'deyken değişince latch yeni değerlere tepki verir. State, pulse aktif kaldığı sürece değişmeye devam edebilir — sonuç öngörülemez.</p></div>
+    </details>
+
+    <details>
+      <summary>Master–slave flip-flop'ta master ile slave neden aynı anda açık olmaz?</summary>
+      <div class="ans"><p>Enable girişleri birbirinin tersidir: master'ınki Clk, slave'inki inverter'dan gelen Clk&#8242;. Clk = 1 iken master açık, slave kapalı; Clk = 0 iken tersi. Bu yalıtım sayesinde D'deki değişiklik pulse süresince Y'yi oynatsa da Q'ya geçemez; geçiş ancak clock 1'den 0'a düşünce olur.</p></div>
+    </details>
+
+    <details>
+      <summary>Pozitif kenar tetiklemeli D flip-flop'ta, Clk = 1 iken D'yi değiştirirsen çıkış ne olur?</summary>
+      <div class="ans"><p>Hiçbir şey. Kenar geçtikten sonra devre kilitlenir ve girişteki başka değişikliklere tepki vermez. Çıkış ne Clk sabit 1'deyken ne de sabit 0'dayken D'den etkilenir; bu flip-flop yalnızca 0&#8594;1 geçişine tepki verir, başka hiçbir şeye değil.</p></div>
+    </details>
+
+    <details>
+      <summary>D = J·Q&#8242; + K&#8242;·Q ifadesinde J = K = 1 koyarsan ne elde edersin, bu ne anlama gelir?</summary>
+      <div class="ans"><p>D = 1·Q&#8242; + 0·Q = Q&#8242;. Yani sonraki kenarda flip-flop kendi çıkışının tersini alır — <em>tümleme</em>. JK'nın D'den fazlası olan üçüncü işlemi tam olarak bu. J = K = 0 koyarsan D = Q çıkar, yani "değişiklik yok".</p></div>
+    </details>
+
+    <details>
+      <summary>D flip-flop'un characteristic table'ında neden "no change" satırı yok? Peki gerektiğinde ne yapılır?</summary>
+      <div class="ans"><p>Çünkü Q(t+1) = D; next state yalnızca D'ye bağlı, mevcut state hiç işin içinde değil. Her kenarda mutlaka D'nin değeri yazılır. Değişmemesi gerekiyorsa ya clock devre dışı bırakılır ya da flip-flop çıkışı D girişine bağlanarak değer kendi üzerine dolaştırılır.</p></div>
+    </details>
+
+    <details>
+      <summary>Direct input'lar clock'a bağlı olmadığına göre ne işe yarıyor?</summary>
+      <div class="ans"><p>Güç açıldığında flip-flop'ların state'i bilinmez. Preset (direct set) ve clear (direct reset), saatli çalışma başlamadan önce bütün flip-flop'ları bilinen bir başlangıç state'ine getirir. Active-low reset'te R = 0 çıkışı D ve Clk'e bakmaksızın 0'a çeker; normal işleyiş ancak R = 1 olduktan sonra devam eder.</p></div>
+    </details>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">12</span><h2>5.4'ün açık bıraktıkları</h2></div>
+
+    <p>Artık 5.2'nin istediği eleman elinde: yalnızca clock kenarında değişen, karakteristik denklemi bilinen bir storage element. Eksik olan tek şey <em>yöntem</em>:</p>
+
+    <ul>
+      <li><strong>Verilen bir devrenin ne yaptığını nasıl çıkarırsın?</strong> Flip-flop'ları ve gate'leri görüyorsun, ama devrenin davranışını tarif eden tabloyu nasıl kuracaksın? Kısım 5.5: state equation, state table, state diagram.</li>
+      <li><strong>Mealy mi Moore mu?</strong> Çıkışın girişlere de bağlı olup olmamasına göre iki model var; 5.5'in sonunda geliyor.</li>
+      <li><strong>Ters yön: istenen davranıştan devre kurmak.</strong> 5.7 gereksiz state'leri eleme, 5.8 ise tam tasarım prosedürü — ve orada characteristic table'ın tersi olan <em>excitation table</em> ile tanışacaksın.</li>
+    </ul>
+
+    <p class="next">Sırada: <b>5.5 Analysis of Clocked Sequential Circuits</b> — bir devreye bakıp state equation'larını çıkarmak, state table ve state diagram kurmak, D / JK / T ile analiz ve Mealy–Moore ayrımı.</p>
+  </section>
+
+</div>
+<style>.site-back{position:fixed;top:14px;right:16px;z-index:99;font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 11px;box-shadow:var(--shadow)}.site-back:hover{color:var(--seq);border-color:var(--seq)}@media(max-width:640px){.site-back{position:static;display:inline-block;margin:12px 0 0 16px}}</style><a class="site-back" href="../index.html">&#8592; İçindekiler</a>
+</body>
+</html>

@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>İki Gate, Bir Bit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);color:var(--ink);font-family:var(--serif);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  .masthead{border-bottom:1px solid var(--rule);padding:44px 0 28px;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-2);max-width:62ch;margin:0}
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;margin:34px 0 8px}
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  .book .src{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--seq);margin-bottom:6px;font-weight:600}
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  figure{margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;box-shadow:var(--shadow);overflow:hidden}
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:560px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  /* function tables */
+  .fn table{min-width:420px;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .fn td{padding:8px 16px}
+  .fn thead th{font-size:11px}
+  .fn td.note{font-family:var(--serif);font-size:14px;color:var(--ink-3);font-style:italic}
+  .fn tr.bad td{color:var(--seq);background:var(--seq-bg)}
+  .fn-cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:-14px 0 26px;padding-left:2px}
+
+  details{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:0;margin-bottom:10px;max-width:74ch}
+  summary{cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:flex-start}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px}
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  .next{margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;font-family:var(--cond);font-size:18px;color:var(--ink-2)}
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span lang="en">Digital Design · Mano</span><span class="dot"></span>
+      <span>Bölüm 5 — <span lang="en">Synchronous Sequential Logic</span></span><span class="dot"></span>
+      <span>Kısım 5.3</span>
+    </div>
+    <h1>İki Gate, Bir Bit</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18"
+        fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="standfirst">5.2 boyunca "storage element" diye bir kutu çizdik ve içine hiç bakmadık. 5.3 o kutuyu açıyor: iki tane sıradan gate, çıkışları birbirinin girişine bağlanmış. Bir bit'i tutmak için gereken her şey bu.</p>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Kitap tam olarak ne diyor</h2></div>
+
+    <div class="book">
+      <div class="src"><span lang="en">Mano · Section 5.3, Storage Elements: Latches</span> — kısaltılmış</div>
+      <p lang="en">A storage element in a digital circuit can maintain a binary state indefinitely (as long as power is delivered to the circuit), until directed by an input signal to switch states. The major differences among various types of storage elements are in the number of inputs they possess and in the manner in which the inputs affect the binary state.</p>
+      <p lang="en">Storage elements that operate with signal levels (rather than signal transitions) are referred to as latches; those controlled by a clock transition are flip-flops. Latches are said to be level sensitive devices; flip-flops are edge-sensitive devices. The two types of storage elements are related because latches are the basic circuits from which all flip-flops are constructed.</p>
+      <p lang="en">Although latches are useful for storing binary information and for the design of asynchronous sequential circuits, they are not practical for use as storage elements in synchronous sequential circuits. Because they are the building blocks of flip-flops, however, we will consider the fundamental storage mechanism used in latches before considering flip-flops in the next section.</p>
+      <div class="tr">
+        <div class="src">Türkçesi</div>
+        <p>Dijital bir devredeki storage element, bir binary state'i süresiz olarak koruyabilir (devreye güç geldiği sürece) — ta ki bir giriş sinyali ona durum değiştirmesini söyleyene kadar. Çeşitli storage element türleri arasındaki başlıca farklar, sahip oldukları giriş sayısında ve girişlerin binary state'i etkileme biçimindedir.</p>
+        <p>Sinyal <em>seviyeleriyle</em> (sinyal geçişleriyle değil) çalışan storage element'lere <em>latch</em> denir; bir clock geçişiyle kontrol edilenlere ise <em>flip-flop</em>. Latch'ler level sensitive (seviyeye duyarlı), flip-flop'lar edge-sensitive (kenara duyarlı) elemanlardır. İki tür birbiriyle ilişkilidir, çünkü latch'ler bütün flip-flop'ların kurulduğu temel devrelerdir.</p>
+        <p>Latch'ler binary bilgi saklamak ve asynchronous sequential circuit tasarımı için yararlı olsa da, synchronous sequential circuit'lerde storage element olarak kullanılmaları pratik değildir. Ama flip-flop'ların yapı taşları oldukları için, bir sonraki kısımda flip-flop'lara geçmeden önce latch'lerdeki temel saklama mekanizmasını ele alacağız.</p>
+      </div>
+    </div>
+
+    <p>Buradan dört şey çıkıyor:</p>
+
+    <ol>
+      <li><strong>Storage element'in tanımı.</strong> Güç geldiği sürece bir binary state'i süresiz tutabilen eleman. Kendiliğinden değişmez; değişmesi için bir giriş sinyalinin söylemesi gerekir.</li>
+      <li><strong>Türleri ayıran iki şey:</strong> kaç girişi var ve o girişler durumu <em>nasıl</em> etkiliyor.</li>
+      <li><strong>Latch mi flip-flop mu?</strong> Ayrım tek kelimede: <em>seviye</em> mi, <em>geçiş</em> mi. Seviye ile çalışan latch, clock geçişi ile çalışan flip-flop.</li>
+      <li><strong>Latch'ler synchronous devrelerde pratik değil</strong> — 5.2'de gördüğün sebeple. Ama her flip-flop bir latch'ten kurulduğu için önce burayı öğreniyoruz.</li>
+    </ol>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Seviye mi, geçiş mi: latch ile flip-flop'un tek farkı</h2></div>
+
+    <p>Bu iki kelimeyi şimdi oturtursan 5.4 çok kolay gelecek.</p>
+
+    <ul>
+      <li><strong>Level sensitive (latch)</strong> — kontrol sinyali <em>1 seviyesinde durduğu sürece</em> eleman girişlerine açıktır. Sinyal 1'de kaldığı boyunca girişteki her değişiklik içeri sızabilir.</li>
+      <li><strong>Edge-sensitive (flip-flop)</strong> — eleman yalnızca clock'un <em>geçiş anında</em> (0'dan 1'e ya da 1'den 0'a) tepki verir. Geçiş bitti mi, kapı kapalı.</li>
+    </ul>
+
+    <p>5.2'nin sonundaki "iki pulse arasında feedback loop fiilen kopuktur" cümlesi tam olarak edge-sensitive davranışı tarif ediyordu. Latch bunu vermiyor: kontrol sinyali 1'de kaldığı sürece döngü açık kalıyor. Latch'lerin synchronous devrelerde neden pratik olmadığı da bu — ayrıntısı 5.4'te.</p>
+
+    <div class="key">
+      <div class="lab">Terim uyarısı</div>
+      <p>Türkçe kaynaklarda ikisine birden "mandal" ya da "ikili saklama elemanı" dendiği oluyor, bu da kafa karıştırıyor. Kitabın ayrımına sadık kal: <strong>latch = level sensitive</strong>, <strong>flip-flop = edge-sensitive</strong>. Sınavda ayıran kelime "signal levels" ile "clock transition".</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>SR latch: iki gate, çapraz bağlı</h2></div>
+
+    <p>SR latch, <strong>iki cross-coupled NOR gate</strong> ya da <strong>iki cross-coupled NAND gate</strong>'ten oluşan, <em>S</em> (set) ve <em>R</em> (reset) diye iki girişi olan bir devre. Tek numara şu: her gate'in çıkışı diğerinin girişine bağlı. Başka hiçbir şey yok.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 300" role="img" aria-label="Solda iki NOR gate ile kurulmuş SR latch: R üstteki gate'e, S alttaki gate'e girer; üst gate'in Q çıkışı alt gate'in girişine, alt gate'in Q' çıkışı üst gate'in girişine bağlıdır. Sağda aynı devre iki NAND gate ile kurulmuştur; bu kez S üstteki, R alttaki gate'e girer ve aktif seviye 0'dır.">
+          <defs>
+            <marker id="l1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <line x1="440" y1="14" x2="440" y2="292" stroke="currentColor" stroke-opacity=".18" stroke-width="1" stroke-dasharray="4 5"/>
+
+          <!-- ================= A · NOR ================= -->
+          <text x="20" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--comb)" letter-spacing="1">A · NOR İLE SR LATCH</text>
+
+          <text x="24" y="92" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">R (reset)</text>
+          <line x1="98" y1="88" x2="176" y2="88" stroke="currentColor" stroke-width="1.5"/>
+          <text x="24" y="206" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">S (set)</text>
+          <line x1="98" y1="202" x2="176" y2="202" stroke="currentColor" stroke-width="1.5"/>
+
+          <!-- top NOR -->
+          <path d="M 170 74 Q 208 74 230 100 Q 208 126 170 126 Q 186 100 170 74 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="236" cy="100" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="192" y="104" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)">NOR</text>
+          <line x1="242" y1="100" x2="336" y2="100" stroke="currentColor" stroke-width="1.5"/>
+          <text x="344" y="105" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q</text>
+
+          <!-- bottom NOR -->
+          <path d="M 170 164 Q 208 164 230 190 Q 208 216 170 216 Q 186 190 170 164 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="236" cy="190" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="192" y="194" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)">NOR</text>
+          <line x1="242" y1="190" x2="336" y2="190" stroke="currentColor" stroke-width="1.5"/>
+          <text x="344" y="195" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q&#8242;</text>
+
+          <!-- cross coupling -->
+          <path d="M 300 100 L 300 150 L 158 150 L 158 178 L 176 178" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="300" cy="100" r="3" fill="currentColor"/>
+          <path d="M 272 190 L 272 138 L 142 138 L 142 112 L 176 112" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="272" cy="190" r="3" fill="currentColor"/>
+
+          <text x="205" y="256" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".8">aktif seviye 1 — kısa bir 1 ile kurulur</text>
+          <text x="205" y="280" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">yasak giriş: S = R = 1</text>
+
+          <!-- ================= B · NAND ================= -->
+          <text x="464" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--comb)" letter-spacing="1">B · NAND İLE SR LATCH</text>
+
+          <text x="468" y="92" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">S (set)</text>
+          <line x1="530" y1="88" x2="610" y2="88" stroke="currentColor" stroke-width="1.5"/>
+          <text x="468" y="206" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">R (reset)</text>
+          <line x1="542" y1="202" x2="610" y2="202" stroke="currentColor" stroke-width="1.5"/>
+
+          <!-- top NAND -->
+          <path d="M 610 74 L 636 74 A 26 26 0 0 1 636 126 L 610 126 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="667" cy="100" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="630" y="104" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)">NAND</text>
+          <line x1="673" y1="100" x2="762" y2="100" stroke="currentColor" stroke-width="1.5"/>
+          <text x="770" y="105" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q</text>
+
+          <!-- bottom NAND -->
+          <path d="M 610 164 L 636 164 A 26 26 0 0 1 636 216 L 610 216 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="667" cy="190" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="630" y="194" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)">NAND</text>
+          <line x1="673" y1="190" x2="762" y2="190" stroke="currentColor" stroke-width="1.5"/>
+          <text x="770" y="195" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q&#8242;</text>
+
+          <path d="M 730 100 L 730 150 L 598 150 L 598 178 L 610 178" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="730" cy="100" r="3" fill="currentColor"/>
+          <path d="M 703 190 L 703 138 L 582 138 L 582 112 L 610 112" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="703" cy="190" r="3" fill="currentColor"/>
+
+          <text x="645" y="256" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".8">aktif seviye 0 — kısa bir 0 ile kurulur</text>
+          <text x="645" y="280" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">yasak giriş: S = R = 0</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 1 — kitabın Fig. 5.3 ve Fig. 5.4'ü yan yana.</b> Amber çizgiler cross-coupling: her gate'in çıkışı diğerinin girişinde. Dikkat, NAND sürümünde S ile R yer değiştirir ve aktif seviye tersine döner — bu yüzden bazen <b>S&#8242;R&#8242; latch</b> diye anılır.</figcaption>
+    </figure>
+
+    <h3>NOR sürümü nasıl çalışıyor</h3>
+    <p>Latch'in <strong>iki kullanışlı durumu</strong> var. Q = 1 ve Q&#8242; = 0 ise latch <em>set state</em>'tedir; Q = 0 ve Q&#8242; = 1 ise <em>reset state</em>'te. Q ile Q&#8242; normalde birbirinin tümleyenidir.</p>
+    <p>Normal koşullarda <strong>her iki giriş de 0'da durur</strong>, ta ki durumun değişmesi gerekene kadar. S girişine <em>anlık</em> bir 1 uygulamak latch'i set state'e götürür. Başka bir değişiklik olmadan önce S girişinin tekrar 0'a dönmesi gerekir — yasak giriş koşulundan doğacak tanımsız bir next state ile karşılaşmamak için. R için de aynısı geçerli.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>S</th><th>R</th><th>Q</th><th>Q&#8242;</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>0</td><td>1</td><td>0</td><td class="note">set</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>0</td><td class="note">S = 1, R = 0'dan sonra — tutuyor</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>1</td><td class="note">reset</td></tr>
+          <tr><td>0</td><td>0</td><td>0</td><td>1</td><td class="note">S = 0, R = 1'den sonra — tutuyor</td></tr>
+          <tr class="bad"><td>1</td><td>1</td><td>0</td><td>0</td><td class="note">yasak (forbidden)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Fig. 5.3(b) — NOR ile SR latch'in function table'ı</p>
+
+    <h3>NAND sürümü nasıl çalışıyor</h3>
+    <p>NAND latch'te her iki giriş de <strong>normalde 1'dedir</strong>. S girişine 0 uygulamak Q'yu 1'e götürür, yani latch'i set state'e sokar. S tekrar 1'e döndüğünde devre set state'te kalır. Her iki giriş de 1'e döndükten sonra R girişine 0 koyarak durumu değiştirebiliriz: devre reset state'e gider ve girişler 1'e dönse bile orada kalır.</p>
+    <p>Kitabın ifadesiyle: NAND için giriş sinyalleri, NOR'da kullanılan değerlerin <em>tümleyeni</em>dir. NAND latch durumunu değiştirmek için 0 sinyaline ihtiyaç duyduğundan bazen <span class="term">S&#8242;R&#8242; latch</span> diye anılır — üstteki çizgiler (ya da kesme işaretleri), girişlerin devreyi aktive etmek için tümleyen biçiminde olması gerektiğini gösterir.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>S</th><th>R</th><th>Q</th><th>Q&#8242;</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>0</td><td>0</td><td>1</td><td class="note">reset</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>1</td><td class="note">S = 1, R = 0'dan sonra — tutuyor</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>0</td><td class="note">set</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>0</td><td class="note">S = 0, R = 1'den sonra — tutuyor</td></tr>
+          <tr class="bad"><td>0</td><td>0</td><td>1</td><td>1</td><td class="note">yasak (forbidden)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Fig. 5.4(b) — NAND ile SR latch'in function table'ı</p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Neden hatırlıyor: iki kararlı durum</h2></div>
+
+    <p>5.1'de "aynı giriş, farklı çıkış" testini koymuştuk. SR latch bunun en saf hâli: <strong>S = R = 0 iken devre iki farklı durumda da mutlu mutlu durabilir.</strong> Hangisinde olduğunu belirleyen şey, en son hangi girişin 1 olduğu — yani geçmiş.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 320" role="img" aria-label="Aynı NOR SR latch iki kez çizilmiş. Solda set durumu: S ve R sıfırken Q bir, Q' sıfır; her gate'in çıkışı diğerinin girişini bu değerlerde tutuyor. Sağda reset durumu: yine S ve R sıfırken Q sıfır, Q' bir. İki durum da kendi kendini besliyor.">
+          <!-- ============ SET ============ -->
+          <text x="20" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--seq)" letter-spacing="1">SET DURUMU — Q = 1</text>
+
+          <text x="24" y="92" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">R</text>
+          <line x1="98" y1="88" x2="176" y2="88" stroke="currentColor" stroke-width="1.5"/>
+          <text x="130" y="80" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">0</text>
+          <text x="24" y="206" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">S</text>
+          <line x1="98" y1="202" x2="176" y2="202" stroke="currentColor" stroke-width="1.5"/>
+          <text x="130" y="194" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">0</text>
+
+          <path d="M 170 74 Q 208 74 230 100 Q 208 126 170 126 Q 186 100 170 74 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="236" cy="100" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <line x1="242" y1="100" x2="336" y2="100" stroke="currentColor" stroke-width="1.5"/>
+          <text x="344" y="105" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q</text>
+          <text x="266" y="92" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">1</text>
+
+          <path d="M 170 164 Q 208 164 230 190 Q 208 216 170 216 Q 186 190 170 164 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="236" cy="190" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <line x1="242" y1="190" x2="336" y2="190" stroke="currentColor" stroke-width="1.5"/>
+          <text x="344" y="195" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q&#8242;</text>
+          <text x="310" y="182" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">0</text>
+
+          <path d="M 300 100 L 300 150 L 158 150 L 158 178 L 176 178" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="300" cy="100" r="3" fill="currentColor"/>
+          <path d="M 272 190 L 272 138 L 142 138 L 142 112 L 176 112" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="272" cy="190" r="3" fill="currentColor"/>
+
+          <text x="205" y="250" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".8">üst NOR( R=0 , Q&#8242;=0 ) = 1 = Q</text>
+          <text x="205" y="270" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".8">alt NOR( S=0 , Q=1 ) = 0 = Q&#8242;</text>
+
+          <!-- ============ RESET ============ -->
+          <text x="464" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--seq)" letter-spacing="1">RESET DURUMU — Q = 0</text>
+
+          <text x="468" y="92" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">R</text>
+          <line x1="542" y1="88" x2="620" y2="88" stroke="currentColor" stroke-width="1.5"/>
+          <text x="574" y="80" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">0</text>
+          <text x="468" y="206" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">S</text>
+          <line x1="542" y1="202" x2="620" y2="202" stroke="currentColor" stroke-width="1.5"/>
+          <text x="574" y="194" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">0</text>
+
+          <path d="M 614 74 Q 652 74 674 100 Q 652 126 614 126 Q 630 100 614 74 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="680" cy="100" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <line x1="686" y1="100" x2="780" y2="100" stroke="currentColor" stroke-width="1.5"/>
+          <text x="788" y="105" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q</text>
+          <text x="710" y="92" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">0</text>
+
+          <path d="M 614 164 Q 652 164 674 190 Q 652 216 614 216 Q 630 190 614 164 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="680" cy="190" r="5.5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <line x1="686" y1="190" x2="780" y2="190" stroke="currentColor" stroke-width="1.5"/>
+          <text x="788" y="195" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q&#8242;</text>
+          <text x="754" y="182" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">1</text>
+
+          <path d="M 744 100 L 744 150 L 602 150 L 602 178 L 620 178" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="744" cy="100" r="3" fill="currentColor"/>
+          <path d="M 716 190 L 716 138 L 586 138 L 586 112 L 620 112" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="716" cy="190" r="3" fill="currentColor"/>
+
+          <text x="649" y="250" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".8">üst NOR( R=0 , Q&#8242;=1 ) = 0 = Q</text>
+          <text x="649" y="270" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".8">alt NOR( S=0 , Q=0 ) = 1 = Q&#8242;</text>
+
+          <line x1="440" y1="14" x2="440" y2="282" stroke="currentColor" stroke-opacity=".18" stroke-width="1" stroke-dasharray="4 5"/>
+          <text x="440" y="308" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">iki durumda da S = R = 0 — memory tam olarak bu</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 2 — aynı giriş, iki farklı kararlı durum.</b> Her iki resimde de S ve R sıfır. Devre birinde de öbüründe de kendi kendini besliyor: her gate'in çıkışı, diğerinin o çıkışı üretmesi için gereken girişi sağlıyor. Bir bit'in saklanması bundan ibaret.</figcaption>
+    </figure>
+
+    <div class="key">
+      <div class="lab">Yasak giriş ve metastable durum</div>
+      <p>Her iki giriş <em>aynı anda</em> 1 olursa (NOR sürümünde) her iki çıkış da 0 olur — yani Q ile Q&#8242; artık birbirinin tümleyeni değildir. Asıl tehlike sonrasında: girişler aynı anda 0'a çekilirse devre <strong>öngörülemeyen, tanımsız ya da metastable</strong> bir duruma girer. Pratikte iki girişi birden 1 yapmak bu yüzden <em>yasaktır</em>. NAND sürümünde yasak olan, iki girişin birden 0 olmasıdır.</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Control input: latch'e "şimdi" demek</h2></div>
+
+    <p>Temel SR latch'in davranışı, durumun <em>ne zaman</em> değişebileceğini belirleyen ek bir sinyalle değiştirilebilir. Bu sinyal S ve R'nin (ya da S&#8242; ve R&#8242;'nin) devreyi etkileyip etkilemeyeceğine karar verir. Control input'lu SR latch — kitabın Fig. 5.5'i — temel SR latch'e <strong>iki NAND gate daha</strong> eklenerek kurulur.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 290" role="img" aria-label="Dört NAND gate'ten oluşan, control input'lu SR latch. Soldaki iki NAND gate S ile En'i ve En ile R'yi alır; çıkışları sağdaki cross-coupled NAND çiftine gider. En sıfırken soldaki iki gate'in çıkışı sabit bir kalır ve latch etkilenmez.">
+          <defs>
+            <marker id="l3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <!-- grouping box for the enable gates -->
+          <rect x="176" y="52" width="82" height="196" rx="4" fill="none" stroke="var(--seq)" stroke-width="1.3" stroke-dasharray="5 4" stroke-opacity=".8"/>
+
+          <!-- inputs -->
+          <text x="24" y="84" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">S</text>
+          <line x1="46" y1="80" x2="196" y2="80" stroke="currentColor" stroke-width="1.5"/>
+          <text x="24" y="154" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">En</text>
+          <line x1="52" y1="150" x2="130" y2="150" stroke="var(--seq)" stroke-width="1.6"/>
+          <circle cx="130" cy="150" r="3" fill="var(--seq)"/>
+          <path d="M 130 150 L 130 100 L 196 100" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <path d="M 130 150 L 130 200 L 196 200" fill="none" stroke="var(--seq)" stroke-width="1.6"/>
+          <text x="24" y="224" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">R</text>
+          <line x1="46" y1="220" x2="196" y2="220" stroke="currentColor" stroke-width="1.5"/>
+
+          <!-- gate 1 -->
+          <path d="M 190 68 L 212 68 A 22 22 0 0 1 212 112 L 190 112 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <circle cx="239" cy="90" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="244" y1="90" x2="300" y2="90" stroke="currentColor" stroke-width="1.5"/>
+          <!-- gate 2 -->
+          <path d="M 190 188 L 212 188 A 22 22 0 0 1 212 232 L 190 232 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <circle cx="239" cy="210" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="244" y1="210" x2="300" y2="210" stroke="currentColor" stroke-width="1.5"/>
+
+          <path d="M 300 90 L 300 108 L 406 108" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M 300 210 L 300 192 L 406 192" fill="none" stroke="currentColor" stroke-width="1.5"/>
+
+          <!-- gate 3 -->
+          <path d="M 400 96 L 422 96 A 22 22 0 0 1 422 140 L 400 140 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <circle cx="449" cy="118" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="454" y1="118" x2="556" y2="118" stroke="currentColor" stroke-width="1.5"/>
+          <text x="564" y="123" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q</text>
+          <!-- gate 4 -->
+          <path d="M 400 160 L 422 160 A 22 22 0 0 1 422 204 L 400 204 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.5"/>
+          <circle cx="449" cy="182" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="454" y1="182" x2="556" y2="182" stroke="currentColor" stroke-width="1.5"/>
+          <text x="564" y="187" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q&#8242;</text>
+
+          <!-- cross coupling -->
+          <path d="M 524 118 L 524 172 L 406 172" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <circle cx="524" cy="118" r="3" fill="currentColor"/>
+          <path d="M 496 182 L 496 128 L 406 128" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <circle cx="496" cy="182" r="3" fill="currentColor"/>
+
+          <!-- annotation -->
+          <text x="620" y="80" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">En = 0 iken:</text>
+          <text x="620" y="100" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">bu iki gate'in çıkışı</text>
+          <text x="620" y="120" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">sabit 1 &#8594; latch</text>
+          <text x="620" y="140" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">dokunulmadan kalır</text>
+          <path d="M 264 44 L 300 30 L 596 30 L 596 68" fill="none" stroke="var(--seq)" stroke-width="1.2" stroke-dasharray="4 4"/>
+          <path d="M 596 68 L 616 74" fill="none" stroke="var(--seq)" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+          <text x="620" y="186" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".8">En = 1 iken:</text>
+          <text x="620" y="206" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".8">S ve R latch'e geçer</text>
+
+          <text x="290" y="272" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">soldaki iki gate = kapı · sağdaki iki gate = temel SR latch</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 3 — kitabın Fig. 5.5'i.</b> Sağdaki cross-coupled NAND çifti zaten bildiğin SR latch. Soldaki iki gate onun önüne konmuş bir kapı: <b>En</b> 0'da olduğu sürece çıkışları logic-1 seviyesinde kalır, bu da SR latch için hareketsiz (quiescent) koşuldur.</figcaption>
+    </figure>
+
+    <p>En = 1 olduğunda S ya da R girişindeki bilginin latch'i etkilemesine izin verilir. Set state'e S = 1, R = 0 ve En = 1 ile ulaşılır (active-high enable). Reset state'e geçmek için S = 0, R = 1 ve En = 1 gerekir. Her iki durumda da <strong>En 0'a döndüğünde devre bulunduğu durumda kalır</strong>. Control input devreyi devre dışı bırakır: S ve R'nin değerleri ne olursa olsun çıkış değişmez. Ayrıca En = 1 iken S ve R'nin ikisi de 0 ise yine hiçbir şey değişmez.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>En</th><th>S</th><th>R</th><th>Q'nun next state'i</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>X</td><td>X</td><td class="note">değişiklik yok</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td class="note">değişiklik yok</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td class="note">Q = 0; reset state</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td class="note">Q = 1; set state</td></tr>
+          <tr class="bad"><td>1</td><td>1</td><td>1</td><td class="note">indeterminate (belirsiz)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Fig. 5.5(b) — control input'lu SR latch'in function table'ı</p>
+
+    <p><strong>Indeterminate durum</strong>, üç girişin de 1 olduğu hâlde ortaya çıkar. Bu koşul temel SR latch'in her iki girişine 0 koyar ve onu tanımsız duruma sokar. En tekrar 0'a döndüğünde next state kesin olarak belirlenemez, çünkü sonuç <em>S mi R mi önce 0'a gidiyor</em> ona bağlıdır. Bu belirsizlik devreyi yönetmeyi zorlaştırır; pratikte bu devre nadiren kullanılır. Yine de SR latch önemli bir devredir, çünkü diğer bütün kullanışlı latch'ler ve flip-flop'lar ondan kurulur.</p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>D latch: belirsizliği kökten silmek</h2></div>
+
+    <p>Indeterminate durumdan kurtulmanın bir yolu, <strong>S ve R'nin asla aynı anda 1 olmamasını garantilemek</strong>. D latch tam bunu yapıyor: tek bir <em>D</em> (data) girişi var, doğrudan S'ye gidiyor; <em>tümleyeni</em> ise R'ye. İkisi tanım gereği birbirinin tersi olduğu için "ikisi de 1" durumu fiziksel olarak imkânsız hâle geliyor.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 250" role="img" aria-label="D latch'in kurulumu. D girişi ikiye ayrılır: biri doğrudan S girişine gider, diğeri bir inverter'dan geçip R girişine gider. En girişi ayrıca latch'e bağlıdır. Böylece S ve R her zaman birbirinin tersidir.">
+          <text x="24" y="104" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D</text>
+          <line x1="48" y1="100" x2="150" y2="100" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="150" cy="100" r="3.5" fill="currentColor"/>
+          <path d="M 150 100 L 150 70 L 300 70" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M 150 100 L 150 150 L 198 150" fill="none" stroke="currentColor" stroke-width="1.6"/>
+
+          <!-- inverter -->
+          <path d="M 198 130 L 198 170 L 234 150 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <circle cx="239" cy="150" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.6"/>
+          <line x1="244" y1="150" x2="300" y2="150" stroke="currentColor" stroke-width="1.6"/>
+
+          <!-- En -->
+          <text x="24" y="189" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">En</text>
+          <line x1="52" y1="185" x2="300" y2="185" stroke="var(--seq)" stroke-width="1.6"/>
+
+          <!-- latch block -->
+          <rect x="300" y="46" width="210" height="160" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="316" y="75" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">S</text>
+          <text x="316" y="155" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">R</text>
+          <text x="316" y="190" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">En</text>
+          <text x="405" y="112" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">SR latch</text>
+          <text x="405" y="132" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">(Şekil 3'teki devre)</text>
+
+          <line x1="510" y1="80" x2="596" y2="80" stroke="currentColor" stroke-width="1.6"/>
+          <text x="604" y="85" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q</text>
+          <line x1="510" y1="172" x2="596" y2="172" stroke="currentColor" stroke-width="1.6"/>
+          <text x="604" y="177" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">Q&#8242;</text>
+
+          <text x="660" y="96" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor" fill-opacity=".85">D = 1 &#8594; S = 1, R = 0</text>
+          <text x="660" y="120" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor" fill-opacity=".85">D = 0 &#8594; S = 0, R = 1</text>
+          <text x="660" y="152" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">S = R = 1 imkânsız</text>
+
+          <text x="270" y="232" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">tek giriş, biri düz biri tümleyen — belirsizlik yok</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 4 — kitabın Fig. 5.6'sı, sadeleştirilmiş.</b> D girişi doğrudan S'ye, tümleyeni R'ye gider. İkisi hiçbir zaman aynı anda 1 olamayacağı için, 05'teki indeterminate satırı tabloda hiç yer bulamaz.</figcaption>
+    </figure>
+
+    <p>En girişi 0'da olduğu sürece cross-coupled SR latch'in her iki girişi de 1 seviyesindedir ve devre, D'nin değeri ne olursa olsun durumunu değiştiremez. <strong>D, En = 1 olduğunda örneklenir (sampled).</strong> D = 1 ise Q çıkışı 1'e gider ve devre set state'e girer; D = 0 ise Q 0'a gider ve reset state'e girer.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>En</th><th>D</th><th>Q'nun next state'i</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>X</td><td class="note">değişiklik yok</td></tr>
+          <tr><td>1</td><td>0</td><td class="note">Q = 0; reset state</td></tr>
+          <tr><td>1</td><td>1</td><td class="note">Q = 1; set state</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Fig. 5.6(b) — D latch'in function table'ı. Üç satır, hiç yasak giriş yok.</p>
+
+    <h3>Neden "transparent"?</h3>
+    <p>D latch adını, <em>data</em>'yı kendi iç saklama alanında tutabilmesinden alıyor. Bir birim ile çevresi arasında binary bilgi için geçici saklama görevine uygun: D girişindeki bilgi, enable girişi asserted (etkin) olduğunda Q çıkışına aktarılır. Ve <strong>enable etkin kaldığı sürece çıkış, data girişindeki değişiklikleri takip eder</strong>. Bu durum D girişinden çıkışa doğrudan bir yol açar; devreye bu yüzden <span class="term">transparent latch</span> (şeffaf mandal) denir.</p>
+    <p>Enable de-asserted (etkisiz) olduğunda, geçişin olduğu andaki data girişi değeri Q'da tutulur — yani saklanır — ve enable tekrar etkin olana kadar orada kalır.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 250" role="img" aria-label="Zamanlama diyagramı. En sinyali iki kez yüksek oluyor. D sinyali birkaç kez değişiyor. Q, En yüksekken D'yi birebir takip ediyor; En düşükken son değerini koruyor. Ortadaki bir noktada D değişiyor ama En sıfır olduğu için Q kımıldamıyor.">
+          <!-- transparent windows -->
+          <rect x="220" y="40" width="180" height="175" fill="var(--seq)" fill-opacity=".1"/>
+          <rect x="560" y="40" width="140" height="175" fill="var(--seq)" fill-opacity=".1"/>
+          <text x="310" y="32" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">En = 1 · şeffaf</text>
+          <text x="480" y="32" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">En = 0 · kilitli</text>
+
+          <text x="20" y="72" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">En</text>
+          <path d="M 160 80 L 220 80 L 220 52 L 400 52 L 400 80 L 560 80 L 560 52 L 700 52 L 700 80 L 860 80"
+                fill="none" stroke="var(--seq)" stroke-width="1.8"/>
+
+          <text x="20" y="132" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D</text>
+          <path d="M 160 140 L 260 140 L 260 112 L 340 112 L 340 140 L 460 140 L 460 112 L 620 112 L 620 140 L 760 140 L 760 112 L 860 112"
+                fill="none" stroke="currentColor" stroke-width="1.8"/>
+
+          <text x="20" y="192" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">Q</text>
+          <path d="M 160 200 L 260 200 L 260 172 L 340 172 L 340 200 L 560 200 L 560 172 L 620 172 L 620 200 L 860 200"
+                fill="none" stroke="var(--comb)" stroke-width="1.8"/>
+
+          <!-- the teaching moment -->
+          <line x1="460" y1="104" x2="460" y2="212" stroke="var(--seq)" stroke-width="1.3" stroke-dasharray="4 4"/>
+          <text x="470" y="234" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">D değişti ama Q kımıldamadı — En = 0</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 5 — şeffaflık ve kilit.</b> Taralı aralıklarda En = 1: Q, D'nin bire bir kopyası. Aralık bitince Q, o andaki değeri donduruyor. Kesikli çizgide D yükseliyor ama En = 0 olduğu için Q duruyor — saklama tam olarak burada gerçekleşiyor.</figcaption>
+    </figure>
+
+    <p>Son bir ayrıntı: enable girişine bir inverter konabilir. O zaman fiziksel devreye göre dış enable sinyali <strong>active low (0)</strong> ya da <strong>active high (1)</strong> olur.</p>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Grafik semboller</h2></div>
+
+    <p>Devreyi her seferinde gate gate çizmek yerine kutu sembolleri kullanılır. Kural basit: girişler solda, çıkışlar sağda; çıkışlardan biri normal, üzerinde <em>bubble</em> (küçük daire) olan diğeri tümleyen çıkıştır.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 200" role="img" aria-label="Üç latch sembolü. Birincisi S ve R girişli SR latch. İkincisi girişlerinde bubble olan NAND tipi S'R' latch. Üçüncüsü D ve En girişli D latch. Her sembolde üstteki çıkış normal, alttaki çıkışta bubble var.">
+          <!-- 1 SR -->
+          <rect x="120" y="46" width="90" height="100" rx="2" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="134" y="80" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">S</text>
+          <text x="134" y="130" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">R</text>
+          <line x1="62" y1="72" x2="120" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="62" y1="122" x2="120" y2="122" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="210" y1="72" x2="264" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="215" cy="122" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="220" y1="122" x2="264" y2="122" stroke="currentColor" stroke-width="1.5"/>
+          <text x="165" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">SR</text>
+
+          <!-- 2 S'R' -->
+          <rect x="400" y="46" width="90" height="100" rx="2" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="414" y="80" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">S</text>
+          <text x="414" y="130" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">R</text>
+          <circle cx="395" cy="72" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <circle cx="395" cy="122" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="342" y1="72" x2="390" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="342" y1="122" x2="390" y2="122" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="490" y1="72" x2="544" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="495" cy="122" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="500" y1="122" x2="544" y2="122" stroke="currentColor" stroke-width="1.5"/>
+          <text x="445" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">S&#8242;R&#8242;</text>
+
+          <!-- 3 D -->
+          <rect x="680" y="46" width="90" height="100" rx="2" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="694" y="80" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">D</text>
+          <text x="694" y="130" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--comb)">En</text>
+          <line x1="622" y1="72" x2="680" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="622" y1="122" x2="680" y2="122" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="770" y1="72" x2="824" y2="72" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="775" cy="122" r="5" fill="var(--surface)" stroke="var(--comb)" stroke-width="1.5"/>
+          <line x1="780" y1="122" x2="824" y2="122" stroke="currentColor" stroke-width="1.5"/>
+          <text x="725" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">D</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 6 — kitabın Fig. 5.7'si.</b> Ortadaki sembolde girişlerdeki bubble'lar, set ve reset işleminin <b>logic-0</b> sinyaliyle olduğunu söyler — yani NAND gate latch'i. Sağdaki D latch'te girişler D ve En olarak blok içinde yazılır.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Yan yana</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th lang="en">SR (NOR)</th><th lang="en">SR (NAND)</th><th lang="en">D latch</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Girişler</td><td>S, R</td><td>S, R (S&#8242;R&#8242;)</td><td>D, En</td></tr>
+          <tr><td>Aktif seviye</td><td>1</td><td>0</td><td>En = 1 iken D örneklenir</td></tr>
+          <tr><td>Boşta bekleme</td><td>S = R = 0</td><td>S = R = 1</td><td>En = 0</td></tr>
+          <tr class="bad"><td>Yasak / belirsiz</td><td class="s">S = R = 1</td><td class="s">S = R = 0</td><td class="c">yok</td></tr>
+          <tr><td>Kaç gate</td><td>2 NOR</td><td>2 NAND</td><td>4 NAND + 1 inverter</td></tr>
+          <tr><td>Kontrol girişi</td><td>yok</td><td>yok</td><td>var (En)</td></tr>
+          <tr><td>Öne çıkan özelliği</td><td colspan="2">bütün latch ve flip-flop'ların temeli</td><td>transparent: En = 1 iken Q, D'yi takip eder</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Üçü de <strong>level sensitive</strong>. Yani hiçbiri henüz 5.2'nin istediği şeyi vermiyor: "yalnızca clock geçişinde değiş." O adım 5.4'te atılacak.</p>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>Hemen karşılaşacağın terimler</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>İngilizce terim</th><th>Türkçe karşılığı</th><th>Burada ne demek</th></tr></thead>
+        <tbody>
+          <tr><td class="tr-word">latch</td><td class="tr-word">mandal</td><td>Sinyal seviyeleriyle çalışan storage element.</td></tr>
+          <tr><td class="tr-word">level sensitive</td><td class="tr-word">seviyeye duyarlı</td><td>Kontrol sinyali 1'de kaldığı sürece giriş etkili.</td></tr>
+          <tr><td class="tr-word">edge-sensitive</td><td class="tr-word">kenara duyarlı</td><td>Yalnızca geçiş anında etkili — flip-flop'lar böyle (5.4).</td></tr>
+          <tr><td class="tr-word">cross-coupled</td><td class="tr-word">çapraz bağlı</td><td>Her gate'in çıkışı diğerinin girişinde.</td></tr>
+          <tr><td class="tr-word">set / reset</td><td class="tr-word">kurmak / silmek</td><td>Q = 1 yapmak / Q = 0 yapmak.</td></tr>
+          <tr><td class="tr-word">set state / reset state</td><td class="tr-word">kurulu / silinmiş durum</td><td>Q = 1, Q&#8242; = 0 / Q = 0, Q&#8242; = 1.</td></tr>
+          <tr><td class="tr-word">forbidden input</td><td class="tr-word">yasak giriş</td><td>NOR'da S = R = 1, NAND'da S = R = 0.</td></tr>
+          <tr><td class="tr-word">metastable state</td><td class="tr-word">yarı kararlı durum</td><td>Devrenin 0 ya da 1'e oturamadığı, öngörülemeyen hâl.</td></tr>
+          <tr><td class="tr-word">control input / enable</td><td class="tr-word">kontrol / etkinleştirme girişi</td><td>Girişlerin latch'i ne zaman etkileyeceğini belirler.</td></tr>
+          <tr><td class="tr-word">indeterminate</td><td class="tr-word">belirsiz</td><td>En = S = R = 1 hâli; sonuç hangi girişin önce düştüğüne bağlı.</td></tr>
+          <tr><td class="tr-word">transparent latch</td><td class="tr-word">şeffaf mandal</td><td>En = 1 iken Q, D'yi anlık takip eder.</td></tr>
+          <tr><td class="tr-word">asserted / de-asserted</td><td class="tr-word">etkin / etkisiz</td><td>Bir sinyalin aktif ya da pasif seviyede olması.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>Kendini test et</h2></div>
+
+    <details>
+      <summary>NOR SR latch'te S = R = 0 iken çıkış ne olur?</summary>
+      <div class="ans"><p>Soru eksik: tek başına giriş yeterli değil. S = R = 0 "değişiklik yok" demektir — latch en son hangi duruma kurulduysa onu tutar. Bu yüzden function table'da 0 0 satırı iki kez geçer: biri "S = 1, R = 0'dan sonra", diğeri "S = 0, R = 1'den sonra". Çıkışı belirleyen şey geçmiş.</p></div>
+    </details>
+
+    <details>
+      <summary>NOR latch'te yasak giriş S = R = 1, NAND latch'te S = R = 0. Neden ters?</summary>
+      <div class="ans"><p>Çünkü NAND sürümü, NOR'da kullanılan değerlerin tümleyeniyle çalışır. NOR latch'te girişi aktif eden seviye 1, NAND latch'te 0. "İki girişi birden aktif etmek" ikisinde de yasak; sadece "aktif"in sayısal karşılığı farklı. NAND sürümünün S&#8242;R&#8242; latch diye anılmasının sebebi de bu.</p></div>
+    </details>
+
+    <details>
+      <summary>İki girişi birden 1 yapmak neden tek başına değil, asıl <em>sonrasında</em> tehlikeli?</summary>
+      <div class="ans"><p>S = R = 1 iken her iki çıkış da 0 olur — kural dışı ama en azından belirli bir durum. Tehlike, iki giriş <em>aynı anda</em> 0'a çekilirse başlar: devre öngörülemeyen, tanımsız ya da metastable bir duruma girer, çünkü hangi tarafın önce kazanacağı belli değildir. Kitabın "S girişi başka bir değişiklik olmadan önce 0'a dönmelidir" uyarısı tam olarak bunu önlemek için.</p></div>
+    </details>
+
+    <details>
+      <summary>Control input'lu SR latch'te En = 0 iken S ve R'yi istediğin gibi oynatırsan ne olur?</summary>
+      <div class="ans"><p>Hiçbir şey. En = 0 olduğu sürece soldaki iki NAND gate'in çıkışı logic-1 seviyesinde kalır; bu, temel SR latch için hareketsiz (quiescent) koşuldur. Latch bulunduğu durumda kalır. Bilgi ancak En = 1 olduğunda içeri geçer.</p></div>
+    </details>
+
+    <details>
+      <summary>D latch'te indeterminate satırı neden yok?</summary>
+      <div class="ans"><p>Çünkü S ile R aynı sinyalden türetiliyor: D doğrudan S'ye, tümleyeni R'ye gidiyor. İkisi tanım gereği her zaman birbirinin tersi olduğu için "ikisi de aktif" kombinasyonu hiç oluşamaz. Belirsizlik, bir kural koyarak değil, devre yapısıyla imkânsız hâle getirilmiş.</p></div>
+    </details>
+
+    <details>
+      <summary>"Transparent" kelimesi tam olarak neyi anlatıyor?</summary>
+      <div class="ans"><p>En = 1 olduğu sürece D girişinden Q çıkışına doğrudan bir yol açılır ve Q, D'deki her değişikliği anında takip eder — sanki latch orada yokmuş, cam gibi şeffafmış gibi. Saklama ancak En etkisiz hâle geldiğinde başlar: o geçiş anındaki değer Q'da tutulur. Bu şeffaflık, 5.4'te flip-flop'a geçmemizin de sebebi olacak.</p></div>
+    </details>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">11</span><h2>5.3'ün açık bıraktıkları</h2></div>
+
+    <p>Artık bir bit'i tutan devreyi gate seviyesinde biliyorsun. Ama 5.2'nin istediği şey hâlâ elimizde yok:</p>
+
+    <ul>
+      <li><strong>Şeffaflık sorunu.</strong> Latch, En = 1 olduğu sürece açık kalıyor. Böyle bir elemanı 5.2'deki feedback loop'a koyarsan, pulse süresince yeni değer tekrar tekrar dolaşabilir. Kitap bunu 5.4'ün başında açıkça ele alıyor.</li>
+      <li><strong>Seviye değil, geçiş gerekiyor.</strong> Çözüm, elemanı yalnızca clock'un <em>geçişinde</em> tetiklemek. İki yol var: iki latch'i özel bir düzende birleştirmek ya da doğrudan kenarla tetiklenen bir devre kurmak.</li>
+      <li><strong>Başka flip-flop türleri.</strong> D dışında JK ve T de var; characteristic table ve characteristic equation kavramları da 5.4'te geliyor.</li>
+    </ul>
+
+    <p class="next">Sırada: <b>5.4 Storage Elements: Flip-Flops</b> — edge-triggered D flip-flop, JK ve T flip-flop'lar, characteristic table ve equation'lar, bir de direct input'lar (asenkron preset/clear).</p>
+  </section>
+
+</div>
+<style>.site-back{position:fixed;top:14px;right:16px;z-index:99;font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 11px;box-shadow:var(--shadow)}.site-back:hover{color:var(--seq);border-color:var(--seq)}@media(max-width:640px){.site-back{position:static;display:inline-block;margin:12px 0 0 16px}}</style><a class="site-back" href="../index.html">&#8592; İçindekiler</a>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Design — Ders Notları</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);color:var(--ink);font-family:var(--serif);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  .masthead{border-bottom:1px solid var(--rule);padding:44px 0 28px;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-2);max-width:62ch;margin:0}
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;margin:34px 0 8px}
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  .book .src{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--seq);margin-bottom:6px;font-weight:600}
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  figure{margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;box-shadow:var(--shadow);overflow:hidden}
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:560px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  /* function tables */
+  .fn table{min-width:420px;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .fn td{padding:8px 16px}
+  .fn thead th{font-size:11px}
+  .fn td.note{font-family:var(--serif);font-size:14px;color:var(--ink-3);font-style:italic}
+  .fn tr.bad td{color:var(--seq);background:var(--seq-bg)}
+  .fn-cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:-14px 0 26px;padding-left:2px}
+
+  details{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:0;margin-bottom:10px;max-width:74ch}
+  summary{cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:flex-start}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px}
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  .next{margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;font-family:var(--cond);font-size:18px;color:var(--ink-2)}
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:6px 0 4px}
+  .card{display:flex;flex-direction:column;gap:3px;padding:16px 18px;background:var(--surface);
+    border:1px solid var(--rule);border-radius:5px;text-decoration:none;box-shadow:var(--shadow);
+    transition:border-color .12s,transform .12s}
+  .card:hover{border-color:var(--seq);transform:translateY(-1px)}
+  .card:focus-visible{outline:2px solid var(--seq);outline-offset:2px}
+  .card .num{font-family:var(--mono);font-size:12px;color:var(--seq);letter-spacing:.04em}
+  .card .tl{font-family:var(--cond);font-weight:600;font-size:19px;color:var(--ink);line-height:1.2}
+  .card .en{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+  .ch{padding-top:44px}
+  .lead{font-size:19px;color:var(--ink-2);max-width:60ch;margin:0}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+  <header class="masthead">
+    <div class="eyebrow"><span lang="en">Digital Design · Mano</span><span class="dot"></span><span>Ders notları</span></div>
+    <h1>Digital Design</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18" fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="lead">Kısım kısım Türkçe ders notları — teknik terimler İngilizce, her sayfada şekiller, tablolar ve kendini test et soruları.</p>
+  </header>
+  <section class="ch">
+    <div class="sec-head"><span class="sec-num">B5</span><h2>Bölüm 5</h2></div>
+    <div class="cards">
+      <a class="card" href="chapter-5/5.1_Introduction.html">
+        <span class="num">5.1</span>
+        <span class="tl">Hatırlayan Devreler</span>
+        <span class="en" lang="en">Introduction</span>
+      </a>
+      <a class="card" href="chapter-5/5.2_Sequential_Circuits.html">
+        <span class="num">5.2</span>
+        <span class="tl">Clock&#x27;un Ritmi</span>
+        <span class="en" lang="en">Sequential Circuits</span>
+      </a>
+      <a class="card" href="chapter-5/5.3_Latches.html">
+        <span class="num">5.3</span>
+        <span class="tl">İki Gate, Bir Bit</span>
+        <span class="en" lang="en">Latches</span>
+      </a>
+      <a class="card" href="chapter-5/5.4_Flip_Flops.html">
+        <span class="num">5.4</span>
+        <span class="tl">Yalnızca Kenarda</span>
+        <span class="en" lang="en">Flip Flops</span>
+      </a>
+      <a class="card" href="chapter-5/5.5_Analysis_of_Clocked_Sequential_Circuits.html">
+        <span class="num">5.5</span>
+        <span class="tl">Devreden Diyagrama</span>
+        <span class="en" lang="en">Analysis of Clocked Sequential Circuits</span>
+      </a>
+      <a class="card" href="chapter-5/5.7_State_Reduction_and_Assignment.html">
+        <span class="num">5.7</span>
+        <span class="tl">Yediden Beşe</span>
+        <span class="en" lang="en">State Reduction and Assignment</span>
+      </a>
+      <a class="card" href="chapter-5/5.8_Design_Procedure.html">
+        <span class="num">5.8</span>
+        <span class="tl">Şartnameden Devreye</span>
+        <span class="en" lang="en">Design Procedure</span>
+      </a>
+    </div>
+  </section>
+  <section style="padding-top:48px">
+    <p class="next" style="margin-top:0">Yeni bölümler çıkarıldıkça buraya eklenecek.</p>
+  </section>
+</div>
+</body>
+</html>

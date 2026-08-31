@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clock'un Ritmi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  .masthead{
+    border-bottom:1px solid var(--rule);
+    padding:44px 0 28px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{
+    font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);
+    line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance;
+  }
+  .standfirst{font-size:19px;color:var(--ink-2);max-width:62ch;margin:0}
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{
+    font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);
+    line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance;
+  }
+  h3{font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;margin:34px 0 8px}
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  .book .src{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-3);margin-bottom:10px;
+  }
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--seq);margin-bottom:6px;font-weight:600;
+  }
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  figure{
+    margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);
+    border-radius:5px;box-shadow:var(--shadow);overflow:hidden;
+  }
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:560px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:600;background:var(--surface-2);
+  }
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  details{
+    background:var(--surface);border:1px solid var(--rule);border-radius:4px;
+    padding:0;margin-bottom:10px;max-width:74ch;
+  }
+  summary{
+    cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;
+    list-style:none;display:flex;gap:12px;align-items:flex-start;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::before{
+    content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px;
+  }
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  .next{
+    margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;
+    font-family:var(--cond);font-size:18px;color:var(--ink-2);
+  }
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span lang="en">Digital Design · Mano</span><span class="dot"></span>
+      <span>Bölüm 5 — <span lang="en">Synchronous Sequential Logic</span></span><span class="dot"></span>
+      <span>Kısım 5.2</span>
+    </div>
+    <h1>Clock'un Ritmi</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18"
+        fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="standfirst">5.1, sequential circuit'in memory'si olduğunu söylemişti. 5.2 asıl soruyu yanıtlıyor: saklanan değer <em>tam olarak ne zaman</em> değişir? Cevap tek bir sinyalin adı — <em>clock</em> — ve bölümün geri kalanı bu cevabın üstüne kuruluyor.</p>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Kitap tam olarak ne diyor</h2></div>
+
+    <div class="book">
+      <div class="src"><span lang="en">Mano · Section 5.2, Sequential Circuits</span> — kısaltılmış</div>
+      <p lang="en">It consists of a combinational circuit to which storage elements are connected to form a feedback path. The binary information stored in these elements at any given time defines the state of the sequential circuit at that time. […] The outputs in a sequential circuit are a function not only of the inputs, but also of the present state of the storage elements. The next state of the storage elements is also a function of external inputs and the present state. Thus, a sequential circuit is specified by a time sequence of inputs, outputs, and internal states.</p>
+      <p lang="en">There are two main types of sequential circuits, and their classification is a function of the timing of their signals. A synchronous sequential circuit is a system whose behavior can be defined from the knowledge of its signals at discrete instants of time. The behavior of an asynchronous sequential circuit depends upon the input signals at any instant of time and the order in which the inputs change.</p>
+      <p lang="en">Synchronization is achieved by a timing device called a clock generator, which provides a clock signal having the form of a periodic train of clock pulses. […] In practice, the clock pulses determine when computational activity will occur within the circuit, and other signals determine what changes will take place.</p>
+      <div class="tr">
+        <div class="src">Türkçesi</div>
+        <p>Devre, storage element'lerin bir feedback path oluşturacak şekilde bağlandığı bir combinational circuit'ten oluşur. Bu elemanlarda herhangi bir anda saklanan binary bilgi, devrenin o andaki <em>state</em>'ini tanımlar. […] Bir sequential circuit'te çıkışlar yalnızca girişlerin değil, storage element'lerin mevcut state'inin de fonksiyonudur. Storage element'lerin next state'i de dış girişlerin ve mevcut state'in fonksiyonudur. Yani bir sequential circuit; girişlerin, çıkışların ve iç state'lerin zaman dizisiyle belirlenir.</p>
+        <p>İki ana sequential circuit türü vardır ve sınıflandırma, sinyallerinin zamanlamasına göre yapılır. Synchronous sequential circuit, davranışı sinyallerinin ayrık zaman anlarındaki (discrete instants of time) bilgisinden tanımlanabilen bir sistemdir. Asynchronous sequential circuit'in davranışı ise girişlerin herhangi bir andaki değerine ve girişlerin hangi sırayla değiştiğine bağlıdır.</p>
+        <p>Senkronizasyon, clock generator denen bir zamanlama birimiyle sağlanır; bu birim, periyodik bir clock pulse dizisi biçiminde bir clock sinyali üretir. […] Pratikte clock pulse'ları devrede hesabın <em>ne zaman</em> olacağını, diğer sinyaller ise <em>ne</em> değişeceğini belirler.</p>
+      </div>
+    </div>
+
+    <p>Kısım 5.2 üç şey kuruyor ve üçü de bölümün geri kalanının temeli:</p>
+
+    <ol>
+      <li><strong>Anatomi.</strong> Sequential circuit = combinational circuit + storage element'ler + feedback path. Ve <em>state</em>'in resmî tanımı.</li>
+      <li><strong>İki aile.</strong> Synchronous ve asynchronous — ayrım tamamen zamanlamada. Kitap asynchronous'u gerekçesiyle birlikte kapsam dışı bırakıyor.</li>
+      <li><strong>Clock.</strong> Senkronizasyonu sağlayan sinyal; "ne zaman"ı belirleyen şey. Bundan sonra göreceğin her devre clocked sequential circuit.</li>
+    </ol>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Dört sinyal grubu, iki fonksiyon</h2></div>
+
+    <p>5.2'nin tek cümlelik özü şu: bir sequential circuit'te dört sinyal grubu vardır ve bunlar birbirine iki fonksiyonla bağlanır. Bölümün geri kalanında yapacağın her şey — state table, state diagram, tasarım prosedürü — bu iki fonksiyonu yazmaktan ibaret.</p>
+
+    <h3>Dört sinyal grubu</h3>
+    <ul>
+      <li><strong>Inputs</strong> — dışarıdan gelen binary bilgi.</li>
+      <li><strong>Present state</strong> — storage element'lerde <em>şu an</em> duran değer. "Devre şu an nerede?" sorusunun cevabı.</li>
+      <li><strong>Next state</strong> — combinational circuit'in ürettiği, bir sonraki adımda saklanacak olan değer. Henüz saklanmadı; kapıda bekliyor.</li>
+      <li><strong>Outputs</strong> — dışarı verilen binary bilgi.</li>
+    </ul>
+
+    <h3>İki fonksiyon</h3>
+    <p>Kitabın iki cümlesi doğrudan iki denkleme çevriliyor:</p>
+    <ul>
+      <li><span class="term">outputs = f( inputs , present state )</span> — çıkışlar yalnızca girişlerin değil, mevcut state'in de fonksiyonudur.</li>
+      <li><span class="term">next state = g( inputs , present state )</span> — next state de dış girişlerin ve mevcut state'in fonksiyonudur.</li>
+    </ul>
+
+    <div class="key">
+      <div class="lab">En sık karıştırılan yer</div>
+      <p><strong>Present state ile next state aynı yolun iki ucudur.</strong> Combinational circuit next state'i üretir; storage element onu clock gelene kadar tutar; clock geldiğinde o değer artık present state olur ve geri beslenir. Yani ikisi farklı iki sinyal değil, <em>aynı bilginin storage element'in iki tarafındaki hâlleri</em>.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Anatomi: Fig. 5.1'i sinyal sinyal okumak</h2></div>
+
+    <p>Kitabın Fig. 5.1'i dört kutu ve birkaç oktan ibaret, ama her ok bir isim taşıyor. O isimleri koyduğun anda diyagram, yukarıdaki iki denklemin resmi hâline geliyor.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 300" role="img" aria-label="Bir sequential circuit'in blok diyagramı. Dış girişler combinational circuit'e girer. Combinational circuit'ten çıkan iki yol vardır: biri doğrudan çıkışlara gider, diğeri next state olarak storage element'lere gider. Storage element'lerde saklanan değer present state olarak combinational circuit'in girişine geri beslenir.">
+          <defs>
+            <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+            <marker id="a1s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <!-- outputs (leaves the top of the combinational block) -->
+          <path d="M 295 76 L 295 36 L 790 36" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#a1)"/>
+          <text x="800" y="41" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Outputs</text>
+
+          <!-- external inputs -->
+          <text x="24" y="102" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Inputs</text>
+          <line x1="24" y1="114" x2="202" y2="114" stroke="currentColor" stroke-width="1.6" marker-end="url(#a1)"/>
+
+          <!-- combinational block -->
+          <rect x="210" y="76" width="170" height="72" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="295" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">Combinational</text>
+          <text x="295" y="124" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">circuit</text>
+
+          <!-- next state -->
+          <line x1="380" y1="112" x2="552" y2="112" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#a1s)"/>
+          <text x="466" y="100" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">next state</text>
+
+          <!-- storage block -->
+          <rect x="560" y="76" width="170" height="72" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="645" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Storage elements</text>
+          <text x="645" y="124" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">(flip-flops)</text>
+
+          <!-- present state feedback -->
+          <path d="M 645 148 L 645 214 L 180 214 L 180 132 L 202 132" fill="none" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#a1s)"/>
+          <text x="412" y="234" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">present state — saklanan, yani devrenin şu anki durumu</text>
+
+          <!-- formulas -->
+          <text x="250" y="276" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">outputs = f( inputs , present state )</text>
+          <text x="638" y="276" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">next state = g( inputs , present state )</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 1 — Fig. 5.1, okları adlandırılmış hâliyle.</b> Aynı bilgi storage element'in solunda <b>next state</b>, sağında (geri beslenirken) <b>present state</b> adını alır. Çıkışlar combinational circuit'ten gelir — yani hem girişlere hem present state'e bağlıdır.</figcaption>
+    </figure>
+
+    <p>Dikkat: bu diyagramda <em>clock yok</em>. Kitabın Fig. 5.1'i bilerek böyle; clock bir sonraki şekilde geliyor. Şu ana kadar anlatılan yapı, saklamanın ne zaman olduğuna hiç karışmıyor — sadece neyin neye bağlı olduğunu söylüyor.</p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>İki aile: synchronous ve asynchronous</h2></div>
+
+    <p>Kitap sequential circuit'leri ikiye ayırıyor ve ölçüt tek: <strong>sinyallerin zamanlaması</strong>.</p>
+
+    <ul>
+      <li><strong>Synchronous</strong>: davranışı, sinyallerinin <em>ayrık zaman anlarındaki</em> bilgisinden tanımlanabilen sistem. Yani "şu anlarda şu değerler" demek yeterli.</li>
+      <li><strong>Asynchronous</strong>: davranışı, girişlerin <em>herhangi bir andaki</em> değerine ve <em>girişlerin hangi sırayla değiştiğine</em> bağlı. Sıra bile sonucu değiştiriyor.</li>
+    </ul>
+
+    <p>Asynchronous devrelerde storage element olarak <em>time-delay device</em>'lar kullanılır. Bir gecikme elemanının saklama kapasitesi, sinyalin o elemandan geçme süresine göre değişir. Pratikte gate'lerin kendi iç propagation delay'i bu gecikmeyi zaten üretiyor, o yüzden ayrı gecikme birimlerine çoğu zaman gerek kalmıyor: gate tabanlı asynchronous sistemlerde storage element, propagation delay'i saklama işini gören logic gate'lerin ta kendisidir.</p>
+
+    <p>Kitabın bundan çıkardığı sonuç önemli: <em lang="en">"an asynchronous sequential circuit may be regarded as a combinational circuit with feedback"</em> — asynchronous bir sequential circuit, geri beslemeli bir combinational circuit sayılabilir. Ve gate'ler arasındaki bu geri besleme yüzünden devre <strong>zaman zaman unstable (kararsız) hâle gelebilir</strong>. Bu kararsızlık tasarımcıya çok sayıda zorluk çıkarıyor; kitap tam da bu yüzden asynchronous devreleri kapsam dışı bırakıyor.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 320" role="img" aria-label="Yan yana iki devre. Solda asynchronous: combinational circuit'in çıkışı, gate'lerin kendi gecikmesi üzerinden doğrudan girişine geri döner; saklama işini bu gecikme yapar ve devre kararsız olabilir. Sağda synchronous: aynı geri besleme yolu flip-flop'ların içinden geçer ve flip-flop'lar bir clock sinyaliyle sürülür, böylece değer yalnızca clock pulse'ında değişir.">
+          <defs>
+            <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+            <marker id="a2s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <line x1="430" y1="14" x2="430" y2="310" stroke="currentColor" stroke-opacity=".18" stroke-width="1" stroke-dasharray="4 5"/>
+
+          <!-- ===== LEFT: asynchronous ===== -->
+          <text x="20" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="currentColor" fill-opacity=".65" letter-spacing="1">A · ASYNCHRONOUS</text>
+
+          <text x="24" y="102" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Inputs</text>
+          <line x1="24" y1="114" x2="112" y2="114" stroke="currentColor" stroke-width="1.6" marker-end="url(#a2)"/>
+
+          <rect x="120" y="80" width="150" height="64" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="195" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">Combinational</text>
+          <text x="195" y="124" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">circuit</text>
+
+          <line x1="270" y1="112" x2="386" y2="112" stroke="currentColor" stroke-width="1.6" marker-end="url(#a2)"/>
+          <text x="394" y="102" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Outputs</text>
+
+          <path d="M 330 112 L 330 200 L 262 200" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#a2)"/>
+          <rect x="160" y="183" width="100" height="34" rx="3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 4"/>
+          <text x="210" y="204" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">time delay</text>
+          <path d="M 158 200 L 75 200 L 75 132 L 112 132" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#a2)"/>
+
+          <text x="205" y="262" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".75">storage = gate'lerin propagation delay'i</text>
+          <text x="205" y="286" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".75">unstable olabilir — kitap kapsam dışı</text>
+
+          <!-- ===== RIGHT: synchronous ===== -->
+          <text x="460" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--seq)" letter-spacing="1">B · SYNCHRONOUS</text>
+
+          <text x="464" y="102" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Inputs</text>
+          <line x1="464" y1="114" x2="552" y2="114" stroke="currentColor" stroke-width="1.6" marker-end="url(#a2)"/>
+
+          <rect x="560" y="80" width="150" height="64" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="635" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">Combinational</text>
+          <text x="635" y="124" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">circuit</text>
+
+          <line x1="710" y1="112" x2="796" y2="112" stroke="currentColor" stroke-width="1.6" marker-end="url(#a2)"/>
+          <text x="806" y="116" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Outputs</text>
+
+          <path d="M 770 112 L 770 200 L 702 200" fill="none" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#a2s)"/>
+          <rect x="600" y="183" width="100" height="34" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="650" y="204" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Flip-flops</text>
+          <path d="M 598 200 L 515 200 L 515 132 L 552 132" fill="none" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#a2s)"/>
+
+          <path d="M 650 252 L 650 221" fill="none" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#a2s)"/>
+          <text x="666" y="243" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">Clock</text>
+
+          <text x="660" y="286" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">state yalnızca clock pulse'ında değişir</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 2 — fark, döngünün nereden geçtiğinde.</b> İki devrede de aynı feedback path var. Asynchronous'ta döngü gate'lerin kendi gecikmesinden geçiyor ve hiçbir şey onu durdurmuyor. Synchronous'ta döngü flip-flop'ların içinden geçiyor ve flip-flop'lar yalnızca clock söylediğinde açılıyor.</figcaption>
+    </figure>
+
+    <p>Synchronous devrelerin tasarımının yapılabilir olmasının sebebi de bu: kararsızlık nadiren ortaya çıkıyor ve zamanlama, her biri ayrı ayrı düşünülebilen ayrık adımlara kolayca bölünebiliyor.</p>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Clock: "ne zaman"ı belirleyen sinyal</h2></div>
+
+    <p>Senkronizasyon, <strong>clock generator</strong> denen bir zamanlama birimiyle sağlanıyor. Bu birim, periyodik bir <em>clock pulse</em> dizisi biçiminde bir clock sinyali üretir; sinyal genelde <span class="term">clock</span> ya da <span class="term">clk</span> diye adlandırılır. Pulse'lar sistemin her yerine öyle dağıtılır ki storage element'ler yalnızca her pulse'ın gelişiyle etkilenir.</p>
+
+    <div class="key">
+      <div class="lab">Bölümün en çok işine yarayacak cümlesi</div>
+      <p><strong>Clock pulse'ları <em>ne zaman</em>'ı belirler; diğer sinyaller (dış girişler ve devrenin kendi sinyalleri) <em>ne</em> değişeceğini belirler.</strong> İki soruyu ayrı ayrı sormaya alış: "hangi değer?" sorusunun cevabı combinational logic'te, "hangi anda?" sorusunun cevabı clock'ta.</p>
+    </div>
+
+    <p>Kitabın verdiği örnek doğrudan 5.1'deki accumulator: iki binary sayıyı toplayıp saklayacak bir devre, toplamı sayıların değerlerinden hesaplar ve <em>bir clock pulse'ın oluştuğu anda</em> saklar. Aşağıda bu devrenin zaman içindeki hâli var.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 340" role="img" aria-label="Zamanlama diyagramı. En üstte clock sinyali kare dalga olarak üç yükselen kenarla çizilmiş. Altında giriş değerleri 3, 5 ve 2. Onun altında adder çıkışı yani next state: 3, 8, 10 — her clock kenarından hemen sonra kısa bir yerleşme aralığı var. En altta flip-flop'larda saklanan state basamak basamak 0, 3, 8, 10 olarak yalnızca yükselen kenarlarda değişiyor.">
+          <defs>
+            <marker id="a3s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <!-- guides at rising edges -->
+          <line x1="260" y1="34" x2="260" y2="288" stroke="currentColor" stroke-opacity=".16" stroke-dasharray="3 4"/>
+          <line x1="460" y1="34" x2="460" y2="288" stroke="currentColor" stroke-opacity=".16" stroke-dasharray="3 4"/>
+          <line x1="660" y1="34" x2="660" y2="288" stroke="currentColor" stroke-opacity=".16" stroke-dasharray="3 4"/>
+
+          <!-- row labels -->
+          <text x="20" y="68" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Clock</text>
+          <text x="20" y="126" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">Giriş</text>
+          <text x="20" y="142" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity=".7">eklenecek sayı</text>
+          <text x="20" y="191" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">Adder çıkışı</text>
+          <text x="20" y="207" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)" fill-opacity=".85">= next state</text>
+          <text x="20" y="256" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">State</text>
+          <text x="20" y="272" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--seq)" fill-opacity=".85">flip-flop'larda</text>
+
+          <!-- clock waveform -->
+          <path d="M 180 76 L 260 76 L 260 48 L 320 48 L 320 76 L 460 76 L 460 48 L 520 48 L 520 76 L 660 76 L 660 48 L 720 48 L 720 76 L 860 76"
+                fill="none" stroke="var(--seq)" stroke-width="1.8"/>
+          <polygon points="260,42 255,52 265,52" fill="var(--seq)"/>
+          <polygon points="460,42 455,52 465,52" fill="var(--seq)"/>
+          <polygon points="660,42 655,52 665,52" fill="var(--seq)"/>
+
+          <!-- input values -->
+          <rect x="192" y="105" width="56" height="32" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="220" y="127" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="currentColor">3</text>
+          <rect x="332" y="105" width="56" height="32" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="360" y="127" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="currentColor">5</text>
+          <rect x="532" y="105" width="56" height="32" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="560" y="127" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="currentColor">2</text>
+
+          <!-- settling bands -->
+          <rect x="260" y="170" width="34" height="32" fill="var(--seq)" fill-opacity=".18"/>
+          <rect x="460" y="170" width="34" height="32" fill="var(--seq)" fill-opacity=".18"/>
+
+          <!-- adder output values -->
+          <rect x="192" y="170" width="56" height="32" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.4"/>
+          <text x="220" y="192" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--comb)">3</text>
+          <rect x="332" y="170" width="56" height="32" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.4"/>
+          <text x="360" y="192" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--comb)">8</text>
+          <rect x="532" y="170" width="56" height="32" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.4"/>
+          <text x="560" y="192" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--comb)">10</text>
+
+          <!-- store arrows -->
+          <path d="M 260 204 L 260 254 L 326 254" fill="none" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#a3s)"/>
+          <path d="M 460 204 L 460 254 L 526 254" fill="none" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#a3s)"/>
+          <path d="M 660 204 L 660 254 L 726 254" fill="none" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#a3s)"/>
+          <text x="272" y="224" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">kenarda saklanır</text>
+
+          <!-- state values -->
+          <rect x="192" y="238" width="56" height="32" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="220" y="260" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">0</text>
+          <rect x="332" y="238" width="56" height="32" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="360" y="260" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">3</text>
+          <rect x="532" y="238" width="56" height="32" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="560" y="260" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">8</text>
+          <rect x="732" y="238" width="56" height="32" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="760" y="260" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">10</text>
+
+          <!-- bottom note -->
+          <text x="520" y="312" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor" fill-opacity=".8">clock &#8594; ne zaman &#183; girişler &#8594; ne</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 3 — aynı accumulator, bu kez saatli.</b> Adder toplamı sürekli hesaplıyor (mavi satır), ama state yalnızca yükselen kenarlarda güncelleniyor (amber satır). Kenardan hemen sonraki taralı aralık, adder çıkışının yeni state'e göre yerleşmesi için geçen süre — bir sonraki kenara kadar bitmek zorunda.</figcaption>
+    </figure>
+
+    <p>Clock pulse'larıyla storage element'leri kontrol eden synchronous devrelere <strong>clocked sequential circuit</strong> deniyor ve pratikte en sık karşılaşılan tür bu. "Synchronous" adı da buradan geliyor: devredeki etkinlik ve saklanan değerlerin güncellenmesi, clock pulse'larının oluşumuyla senkronize.</p>
+
+    <p>Bir de bu kısımda ilk kez geçen tanım: clocked sequential circuit'lerde kullanılan storage element'lere <strong>flip-flop</strong> denir. Flip-flop, <em>bir bit</em> bilgi saklayabilen binary bir saklama elemanıdır; kararlı bir durumdayken çıkışı ya 0'dır ya 1. Kaç bit gerekiyorsa o kadar flip-flop kullanılır. Nasıl kurulduğu 5.3 ve 5.4'ün konusu.</p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>İnce nokta: iki pulse arasında döngü kopuktur</h2></div>
+
+    <p>5.2'nin sonundaki iki cümle, bu bölümün en kolay atlanan ama en çok işe yarayan kısmı. İkisi birlikte, synchronous tasarımın neden <em>mümkün</em> olduğunu anlatıyor.</p>
+
+    <h3>1. Combinational logic yetişmek zorunda</h3>
+    <p>Clock pulse gelmeden önce, flip-flop'un yeni değerini üreten combinational logic <strong>kararlı bir değere ulaşmış olmalı</strong>. Dolayısıyla combinational devrelerin çalışma hızı kritik: pulse'lar düzenli aralıklarla geliyorsa, combinational logic flip-flop'un state değişimine bir sonraki pulse gelmeden yetişecek kadar hızlı tepki vermek zorunda. <span class="term">propagation delay</span>'ler, devrenin doğru çalışmasına izin verecek <em>minimum pulse aralığını</em> belirler.</p>
+
+    <h3>2. Pulse yokken geri besleme fiilen kopuktur</h3>
+    <p>Flip-flop'ların state'indeki değişim yalnızca bir clock pulse geçişiyle başlar — örneğin clock sinyalinin değeri 0'dan 1'e çıktığında. Clock pulse aktif değilken, flip-flop'ta saklanan değer ile flip-flop girişinde oluşan değer arasındaki feedback loop <strong>fiilen kopuktur</strong>: flip-flop çıkışları, girişlerini süren combinational devrenin çıkışları değişse bile değişemez. Böylece bir state'ten diğerine geçiş yalnızca clock pulse'larının dayattığı önceden belirli aralıklarda olur.</p>
+
+    <div class="key">
+      <div class="lab">5.1'deki soruya cevap</div>
+      <p>5.1'de "feedback loop kendi kuyruğunu kovalayabilir" demiştik. Çözüm işte bu: döngü sürekli açık değil. İki pulse arasında flip-flop bir kapı gibi kapalı duruyor, combinational logic rahat rahat hesabını yapıyor; kapı yalnızca clock kenarında bir anlığına açılıyor ve o anda hazır olan değer içeri giriyor.</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Yan yana</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th lang="en">Synchronous</th><th lang="en">Asynchronous</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sınıflandırma ölçütü</td><td class="s">Sinyaller ayrık zaman anlarında bilinir</td><td class="c">Girişlerin her anki değeri + değişim sırası</td></tr>
+          <tr><td>Storage element</td><td class="s">Flip-flop</td><td class="c">Time-delay device (çoğu zaman gate'in kendi gecikmesi)</td></tr>
+          <tr><td>State ne zaman değişir</td><td class="s">Clock pulse geçişinde (ör. 0 → 1)</td><td class="c">Bir giriş değiştiği anda</td></tr>
+          <tr><td>Kararlılık</td><td class="s">Nadiren instability sorunu</td><td class="c">Feedback yüzünden unstable olabilir</td></tr>
+          <tr><td>Tasarım</td><td class="s">Ayrık adımlara bölünür, adım adım tasarlanır</td><td class="c">Tasarımcı için çok sayıda zorluk</td></tr>
+          <tr><td>Başka adı</td><td class="s">Clocked sequential circuit</td><td class="c">Geri beslemeli combinational circuit sayılabilir</td></tr>
+          <tr><td>Bu kitapta</td><td class="s">Bölümün tamamı bunun üstüne</td><td class="c">Kapsam dışı</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Renkler tesadüf değil: asynchronous sütununun combinational rengiyle yazılmış olması, kitabın kendi tespitini hatırlatıyor — asynchronous bir devre, sonuçta geri beslemeli bir combinational circuit.</p>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Hemen karşılaşacağın terimler</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>İngilizce terim</th><th>Türkçe karşılığı</th><th>Burada ne demek</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="tr-word">state</td><td class="tr-word">durum</td><td>Storage element'lerde o an saklanan binary bilgi.</td></tr>
+          <tr><td class="tr-word">present state</td><td class="tr-word">mevcut durum</td><td>Şu an saklı olan, combinational circuit'e geri beslenen değer.</td></tr>
+          <tr><td class="tr-word">next state</td><td class="tr-word">sonraki durum</td><td>Combinational circuit'in ürettiği, bir sonraki clock'ta saklanacak değer.</td></tr>
+          <tr><td class="tr-word">synchronous</td><td class="tr-word">eşzamanlı</td><td>Davranışı ayrık zaman anlarındaki sinyallerden tanımlanabilen.</td></tr>
+          <tr><td class="tr-word">asynchronous</td><td class="tr-word">eşzamansız</td><td>Girişlerin anına ve değişim sırasına bağlı; kitapta işlenmiyor.</td></tr>
+          <tr><td class="tr-word">clock generator</td><td class="tr-word">saat üreteci</td><td>Periyodik clock pulse dizisini üreten zamanlama birimi.</td></tr>
+          <tr><td class="tr-word">clock pulse</td><td class="tr-word">saat darbesi</td><td>Storage element'leri etkileyen tek bir darbe; geçişi state'i değiştirir.</td></tr>
+          <tr><td class="tr-word">clocked sequential circuit</td><td class="tr-word">saatli ardışıl devre</td><td>Storage element'leri clock ile kontrol edilen synchronous devre.</td></tr>
+          <tr><td class="tr-word">flip-flop</td><td class="tr-word">flip-flop</td><td>Bir bit saklayan binary saklama elemanı; çıkışı 0 ya da 1.</td></tr>
+          <tr><td class="tr-word">time-delay device</td><td class="tr-word">gecikme elemanı</td><td>Asynchronous devrelerde storage işini gören eleman.</td></tr>
+          <tr><td class="tr-word">propagation delay</td><td class="tr-word">yayılım gecikmesi</td><td>Sinyalin gate'ten geçme süresi; minimum clock aralığını belirler.</td></tr>
+          <tr><td class="tr-word">unstable</td><td class="tr-word">kararsız</td><td>Devrenin yerleşik bir değere oturamaması hâli.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>Kendini test et</h2></div>
+
+    <details>
+      <summary>Elindeki bir devrenin synchronous mu asynchronous mu olduğunu neye bakarak söylersin?</summary>
+      <div class="ans"><p>Sinyallerin zamanlamasına. State yalnızca clock pulse geçişlerinde değişiyorsa synchronous; herhangi bir giriş değiştiği anda, üstelik girişlerin değişim sırasına göre farklı sonuç verecek şekilde değişiyorsa asynchronous. Ölçüt "hangi gate'ler kullanılmış" değil, "değişim ne zaman oluyor".</p></div>
+    </details>
+
+    <details>
+      <summary>Kitap neden "asynchronous sequential circuit, geri beslemeli bir combinational circuit sayılabilir" diyor?</summary>
+      <div class="ans"><p>Çünkü orada ayrı bir saklama elemanı yok. Saklama işini time-delay device'lar yapıyor ve pratikte bu gecikmeyi gate'lerin kendi propagation delay'i sağlıyor. Geriye kalan şey sadece gate'ler ve aralarındaki geri besleme — yani feedback'li bir combinational circuit. Kararsızlık da tam bu yüzden ortaya çıkıyor.</p></div>
+    </details>
+
+    <details>
+      <summary>Çalışan bir devrenin clock frekansını iki katına çıkarırsan neden bozulabilir?</summary>
+      <div class="ans"><p>Frekans iki katına çıkınca pulse'lar arasındaki aralık yarıya iner. Combinational logic, next state değerini bir sonraki pulse gelmeden kararlı hâle getiremezse flip-flop o anda hazır olmayan, yerleşmemiş bir değeri saklar. Kitabın söylediği tam da bu: minimum pulse aralığını propagation delay'ler belirler.</p></div>
+    </details>
+
+    <details>
+      <summary>Clock pulse aktif değilken combinational circuit'in çıkışı değişirse state değişir mi?</summary>
+      <div class="ans"><p>Hayır. İki pulse arasında flip-flop çıkışı ile flip-flop girişi arasındaki feedback loop fiilen kopuktur; girişleri süren combinational devrenin çıkışları değişse bile flip-flop çıkışları değişemez. Geçişler yalnızca clock'un dayattığı önceden belirli anlarda olur.</p></div>
+    </details>
+
+    <details>
+      <summary>"Clock ne zaman'ı, girişler ne'yi belirler" cümlesini Şekil 3'teki accumulator üzerinde açıkla.</summary>
+      <div class="ans"><p><em>Ne</em>: hangi sayının ekleneceğini ve dolayısıyla toplamın kaç olacağını girişler ve mevcut state belirliyor — adder çıkışı bunun sonucu. <em>Ne zaman</em>: o toplamın state'e yazıldığı an tamamen clock'un yükselen kenarı. Giriş 5 iken toplam 8 zaten hesaplanmış hâlde bekliyor; state'e girmesi için kenarın gelmesi gerekiyor.</p></div>
+    </details>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>5.2'nin açık bıraktıkları</h2></div>
+
+    <p>Bu kısım "değişim clock pulse geçişinde olur" diyor ve orada duruyor. Üç soruyu bilerek yanıtsız bırakıyor:</p>
+
+    <ul>
+      <li><strong>Flip-flop fiziksel olarak nasıl kuruluyor?</strong> Kısım 5.3 önce latch'leri sıradan gate'lerden kuruyor; 5.4 latch'in neden yetmediğini gösterip flip-flop'a geçiyor.</li>
+      <li><strong>"Clock pulse geçişi" tam olarak hangi an?</strong> 0 → 1 mi, 1 → 0 mı? Seviye mi kenar mı? Kısım 5.4'ün konusu: level-sensitive latch'ler ile edge-triggered flip-flop'lar arasındaki fark.</li>
+      <li><strong>Verilen bir devrenin state'lerini nasıl çıkarırsın?</strong> Kısım 5.5: state equation, state table, state diagram — yani 02'deki iki fonksiyonu kâğıda dökmenin sistemli yolu.</li>
+    </ul>
+
+    <p class="next">Sırada: <b>5.3 Storage Elements: Latches</b> — SR latch (NOR ve NAND ile), control input'lu SR latch ve D latch. Yani bu bölümde hep "storage element" diye geçen kutunun içini açıyoruz.</p>
+  </section>
+
+</div>
+<style>.site-back{position:fixed;top:14px;right:16px;z-index:99;font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 11px;box-shadow:var(--shadow)}.site-back:hover{color:var(--seq);border-color:var(--seq)}@media(max-width:640px){.site-back{position:static;display:inline-block;margin:12px 0 0 16px}}</style><a class="site-back" href="../index.html">&#8592; İçindekiler</a>
+</body>
+</html>

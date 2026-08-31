@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yediden Beşe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);color:var(--ink);font-family:var(--serif);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  .masthead{border-bottom:1px solid var(--rule);padding:44px 0 28px;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-2);max-width:62ch;margin:0}
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;margin:34px 0 8px}
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  .book .src{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--seq);margin-bottom:6px;font-weight:600}
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  figure{margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;box-shadow:var(--shadow);overflow:hidden}
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:560px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  /* function tables */
+  .fn table{min-width:420px;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .fn td{padding:8px 16px}
+  .fn thead th{font-size:11px}
+  .fn td.note{font-family:var(--serif);font-size:14px;color:var(--ink-3);font-style:italic}
+  .fn tr.bad td{color:var(--seq);background:var(--seq-bg)}
+  .fn-cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:-14px 0 26px;padding-left:2px}
+
+  details{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:0;margin-bottom:10px;max-width:74ch}
+  summary{cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:flex-start}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px}
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  .next{margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;font-family:var(--cond);font-size:18px;color:var(--ink-2)}
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span lang="en">Digital Design · Mano</span><span class="dot"></span>
+      <span>Bölüm 5 — <span lang="en">Synchronous Sequential Logic</span></span><span class="dot"></span>
+      <span>Kısım 5.7</span>
+    </div>
+    <h1>Yediden Beşe</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18"
+        fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="standfirst">İki devre dışarıdan tıpatıp aynı davranabilir ama içlerinde farklı sayıda state taşıyabilir. 5.7 iki iş yapıyor: fazlalık state'leri elemek ve kalanlara ikili kod atamak. İkisi de 5.8'deki tasarımın hazırlığı.</p>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Kitap tam olarak ne diyor</h2></div>
+
+    <div class="book">
+      <div class="src"><span lang="en">Mano · Section 5.7, State Reduction and Assignment</span> — kısaltılmış</div>
+      <p lang="en">Two sequential circuits may exhibit the same input–output behavior, but have a different number of internal states in their state diagram. […] In general, reducing the number of flip-flops reduces the cost of a circuit.</p>
+      <p lang="en">Two states are said to be equivalent if, for each member of the set of inputs, they give exactly the same output and send the circuit either to the same state or to an equivalent state. When two states are equivalent, one of them can be removed without altering the input–output relationships.</p>
+      <p lang="en">In order to design a sequential circuit with physical components, it is necessary to assign unique coded binary values to the states. For a circuit with m states, the codes must contain n bits, where 2<sup>n</sup> &#8805; m. […] Unused states are treated as don't-care conditions during the design.</p>
+      <div class="tr">
+        <div class="src">Türkçesi</div>
+        <p>İki sequential circuit aynı giriş–çıkış davranışını gösterip state diagram'larında farklı sayıda iç state'e sahip olabilir. […] Genel olarak flip-flop sayısını azaltmak devrenin maliyetini düşürür.</p>
+        <p>İki state, girişler kümesinin <em>her bir üyesi</em> için tıpatıp aynı çıkışı veriyor ve devreyi ya aynı state'e ya da eşdeğer bir state'e gönderiyorsa <em>eşdeğer</em> (equivalent) sayılır. İki state eşdeğer olduğunda, giriş–çıkış ilişkilerini bozmadan biri kaldırılabilir.</p>
+        <p>Bir sequential circuit'i fiziksel bileşenlerle tasarlamak için state'lere benzersiz kodlanmış ikili değerler atamak gerekir. m state'li bir devrede kodlar n bit içermelidir; burada 2<sup>n</sup> &#8805; m. […] Kullanılmayan state'ler tasarım sırasında <em>don't-care</em> koşulu olarak ele alınır.</p>
+      </div>
+    </div>
+
+    <p>İki ayrı iş var ve karıştırmamak lazım:</p>
+    <ol>
+      <li><strong>State reduction</strong> — dışarıdan görünen davranışı bozmadan state <em>sayısını</em> azaltmak. Harflerle çalışılır, henüz bit yok.</li>
+      <li><strong>State assignment</strong> — kalan state'lerin her birine bir ikili <em>kod</em> vermek. Bit burada devreye girer.</li>
+    </ol>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>State-reduction problemi</h2></div>
+
+    <p>Sequential circuit'te flip-flop sayısını azaltmaya <strong>state-reduction problemi</strong> deniyor. State-reduction algoritmaları, dış giriş–çıkış gereksinimlerini <em>değiştirmeden</em> state table'daki state sayısını azaltma prosedürleriyle ilgilenir.</p>
+
+    <div class="key">
+      <div class="lab">Dürüst uyarı — kitap bunu açıkça söylüyor</div>
+      <p>m flip-flop 2<sup>m</sup> state ürettiğine göre, state sayısını azaltmak flip-flop sayısını azaltabilir <strong>ama azaltmayabilir de</strong>. Üstelik öngörülemeyen bir yan etki var: daha az flip-flop'lu eşdeğer devre, next state ve output mantığını gerçeklemek için bazen <em>daha fazla</em> combinational gate isteyebilir. Kitap ayrıca, hedef cihazlar kaynak açısından zengin olduğu için pratikte tasarımcıların bu adımı atlayabildiğini de söylüyor.</p>
+    </div>
+
+    <p>Örnekte <strong>yalnızca giriş–çıkış dizileri önemli</strong>; iç state'ler sadece istenen dizileri üretmek için var. Bu yüzden dairelerin içine ikili değerler değil <em>harfler</em> yazılıyor. (Binary counter'da durum tersineydi: orada state'lerin ikili değer dizisi doğrudan çıkış sayılıyordu.)</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 420" role="img" aria-label="Yedi state'li state diagram: a, b, c, d, f üstte ve altta c, e, g. a kendinde kalıyor, giriş 1 ile b'ye gidiyor; b giriş 0 ile c'ye, 1 ile d'ye; c giriş 0 ile a'ya, 1 ile d'ye; d giriş 0 ile e'ye, 1 ile f'ye; e giriş 0 ile a'ya, 1 ile f'ye; f giriş 0 ile g'ye, 1 ile kendinde; g giriş 0 ile a'ya, 1 ile f'ye. Çıkış d, e, f ve g state'lerinde giriş 1 iken 1, diğer bütün durumlarda 0.">
+          <defs>
+            <marker id="r1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+            <marker id="r1s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <!-- states -->
+          <circle cx="110" cy="120" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="110" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">a</text>
+          <circle cx="300" cy="120" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="300" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">b</text>
+          <circle cx="500" cy="120" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="500" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">d</text>
+          <circle cx="700" cy="120" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="700" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">f</text>
+          <circle cx="300" cy="290" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="300" y="296" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">c</text>
+          <circle cx="500" cy="290" r="30" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="2"/>
+          <text x="500" y="296" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--comb)">e</text>
+          <circle cx="700" cy="290" r="30" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="2"/>
+          <text x="700" y="296" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--comb)">g</text>
+
+          <!-- a self -->
+          <path d="M 92 96 C 78 46, 142 46, 128 96" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="110" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <!-- f self -->
+          <path d="M 682 96 C 668 46, 732 46, 718 96" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="700" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/1</text>
+
+          <!-- top chain -->
+          <line x1="140" y1="120" x2="268" y2="120" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="204" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/0</text>
+          <line x1="330" y1="120" x2="468" y2="120" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="399" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/0</text>
+          <line x1="530" y1="120" x2="668" y2="120" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="599" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/1</text>
+
+          <!-- verticals -->
+          <line x1="300" y1="150" x2="300" y2="256" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="316" y="205" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="500" y1="150" x2="500" y2="256" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="516" y="205" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="690" y1="150" x2="690" y2="256" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="664" y="205" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="710" y1="256" x2="710" y2="150" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="726" y="205" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/1</text>
+
+          <!-- diagonals -->
+          <line x1="274" y1="272" x2="134" y2="140" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="222" y="238" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="326" y1="272" x2="474" y2="140" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="360" y="266" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/0</text>
+          <line x1="474" y1="275" x2="138" y2="140" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="452" y="276" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="526" y1="272" x2="674" y2="140" stroke="currentColor" stroke-width="1.5" marker-end="url(#r1)"/>
+          <text x="580" y="240" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/1</text>
+
+          <!-- g -> a long arc -->
+          <path d="M 700 320 Q 400 500 112 152" fill="none" stroke="var(--comb)" stroke-width="1.6" marker-end="url(#r1)"/>
+          <text x="403" y="392" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">0/0</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 1 — kitabın Fig. 5.25'i: yedi state.</b> Mavi çizilen <b>e</b> ve <b>g</b> state'lerine dikkat: ikisi de giriş 0 ile a'ya, giriş 1 ile f'ye gidiyor ve çıkışları da aynı. Birazdan bunun ne anlama geldiğini göreceğiz.</figcaption>
+    </figure>
+
+    <h3>Aynı diziyi izlemek</h3>
+    <p>Devreye uygulanabilecek sonsuz sayıda giriş dizisi var ve her biri benzersiz bir çıkış dizisi üretiyor. Başlangıç state'i a iken <span class="term">01010110100</span> girişini izleyelim. Her sütunda mevcut state, giriş ve çıkış var; next state bir sonraki sütunun başında:</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>state</th><td>a</td><td>a</td><td>b</td><td>c</td><td>d</td><td>e</td><td>f</td><td>f</td><td>g</td><td>f</td><td>g</td><td>a</td></tr></thead>
+        <tbody>
+          <tr><th>input</th><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td></td></tr>
+          <tr><th>output</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Yedi state'li makinenin 01010110100 girişine verdiği yanıt</p>
+
+    <p>Şimdi kritik soru: aynı giriş dizilerine <em>aynı çıkış dizilerini</em> veren, ama daha az state'i olan bir devre bulabilir miyiz? Bulursak iki devre (giriş–çıkış açısından) <strong>eşdeğerdir</strong> ve biri diğerinin yerine konabilir. State reduction problemi tam olarak bu: giriş–çıkış ilişkilerini değiştirmeden state sayısını azaltmanın yollarını bulmak.</p>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>İndirgeme: tabloyla çalışmak</h2></div>
+
+    <p>Önce state table lazım — indirgeme prosedürlerini diyagram yerine tabloyla uygulamak çok daha kolay.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead>
+          <tr><th>Present state</th><th>Next state<br>x = 0</th><th>Next state<br>x = 1</th><th>Output<br>x = 0</th><th>Output<br>x = 1</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>a</td><td>a</td><td>b</td><td>0</td><td>0</td></tr>
+          <tr><td>b</td><td>c</td><td>d</td><td>0</td><td>0</td></tr>
+          <tr><td>c</td><td>a</td><td>d</td><td>0</td><td>0</td></tr>
+          <tr><td>d</td><td>e</td><td>f</td><td>0</td><td>1</td></tr>
+          <tr class="bad"><td>e</td><td>a</td><td>f</td><td>0</td><td>1</td></tr>
+          <tr><td>f</td><td>g</td><td>f</td><td>0</td><td>1</td></tr>
+          <tr class="bad"><td>g</td><td>a</td><td>f</td><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.6 — orijinal state table. İşaretli iki satır birebir aynı.</p>
+
+    <div class="key">
+      <div class="lab">Eşdeğerlik kuralı</div>
+      <p>"İki state, <strong>girişler kümesinin her bir üyesi için</strong> tıpatıp aynı çıkışı veriyor ve devreyi ya aynı state'e ya da eşdeğer bir state'e gönderiyorsa eşdeğerdir." İki state eşdeğerse, giriş–çıkış ilişkilerini bozmadan biri kaldırılabilir.</p>
+    </div>
+
+    <p><strong>Birinci eleme.</strong> Tabloda aynı next state'lere giden ve her iki giriş kombinasyonu için aynı çıkışı veren iki present state arıyoruz. <em>e</em> ve <em>g</em> tam olarak böyle: ikisi de a ve f'ye gidiyor, x = 0 için 0 ve x = 1 için 1 çıkışı veriyor. Demek ki g ile e eşdeğer; biri kaldırılabilir. <strong>g satırı siliniyor</strong> ve "Next state" sütunlarında g geçen her yer <strong>e</strong> ile değiştiriliyor.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead>
+          <tr><th>Present state</th><th>Next state<br>x = 0</th><th>Next state<br>x = 1</th><th>Output<br>x = 0</th><th>Output<br>x = 1</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>a</td><td>a</td><td>b</td><td>0</td><td>0</td></tr>
+          <tr><td>b</td><td>c</td><td>d</td><td>0</td><td>0</td></tr>
+          <tr><td>c</td><td>a</td><td>d</td><td>0</td><td>0</td></tr>
+          <tr class="bad"><td>d</td><td>e</td><td>f</td><td>0</td><td>1</td></tr>
+          <tr><td>e</td><td>a</td><td>f</td><td>0</td><td>1</td></tr>
+          <tr class="bad"><td>f</td><td>e</td><td>f</td><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.7 — g elendi. Şimdi f satırı, d satırıyla birebir aynı oldu.</p>
+
+    <p><strong>İkinci eleme.</strong> f'nin next state'leri artık e ve f, çıkışları x = 0 ve x = 1 için 0 ve 1. Aynı next state'ler ve aynı çıkışlar <em>d</em> satırında da var. Demek ki f ile d eşdeğer; f kaldırılıp yerine d yazılabilir.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead>
+          <tr><th>Present state</th><th>Next state<br>x = 0</th><th>Next state<br>x = 1</th><th>Output<br>x = 0</th><th>Output<br>x = 1</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>a</td><td>a</td><td>b</td><td>0</td><td>0</td></tr>
+          <tr><td>b</td><td>c</td><td>d</td><td>0</td><td>0</td></tr>
+          <tr><td>c</td><td>a</td><td>d</td><td>0</td><td>0</td></tr>
+          <tr><td>d</td><td>e</td><td>d</td><td>0</td><td>1</td></tr>
+          <tr><td>e</td><td>a</td><td>d</td><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.8 — indirgenmiş state table: yedi state yerine beş.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 400" role="img" aria-label="Beş state'li indirgenmiş state diagram. a kendinde kalıyor ve giriş 1 ile b'ye gidiyor; b giriş 0 ile c'ye, 1 ile d'ye; c giriş 0 ile a'ya, 1 ile d'ye; d giriş 0 ile e'ye, 1 ile kendinde kalıyor ve çıkış 1 veriyor; e giriş 0 ile a'ya, 1 ile d'ye gidiyor ve çıkış 1 veriyor.">
+          <defs>
+            <marker id="r2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <circle cx="140" cy="120" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="140" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">a</text>
+          <circle cx="360" cy="120" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="360" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">b</text>
+          <circle cx="660" cy="120" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="660" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">d</text>
+          <circle cx="360" cy="290" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="360" y="296" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">c</text>
+          <circle cx="660" cy="290" r="30" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="660" y="296" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">e</text>
+
+          <path d="M 122 96 C 108 46, 172 46, 158 96" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="140" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <path d="M 642 96 C 628 46, 692 46, 678 96" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="660" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/1</text>
+
+          <line x1="170" y1="120" x2="328" y2="120" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="249" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/0</text>
+          <line x1="390" y1="120" x2="628" y2="120" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="509" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/0</text>
+
+          <line x1="360" y1="150" x2="360" y2="256" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="376" y="205" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="650" y1="150" x2="650" y2="256" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="624" y="205" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="670" y1="256" x2="670" y2="150" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="686" y="205" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/1</text>
+
+          <line x1="334" y1="272" x2="164" y2="140" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="268" y="238" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+          <line x1="386" y1="272" x2="634" y2="142" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="446" y="262" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">1/0</text>
+
+          <path d="M 660 320 Q 400 470 146 152" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#r2)"/>
+          <text x="401" y="372" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0/0</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 2 — kitabın Fig. 5.26'sı: indirgenmiş diyagram.</b> Beş state kaldı ve diyagram orijinal giriş–çıkış şartnamesini hâlâ karşılıyor. Şekil 1'deki g'yi e ile, f'yi d ile değiştirirsen bu diyagramı elde edersin.</figcaption>
+    </figure>
+
+    <p>Aynı giriş dizisini indirgenmiş makineye verelim. <strong>State dizisi farklı, ama çıkış dizisi birebir aynı</strong> — istenen de buydu:</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>state</th><td>a</td><td>a</td><td>b</td><td>c</td><td>d</td><td>e</td><td>d</td><td>d</td><td>e</td><td>d</td><td>e</td><td>a</td></tr></thead>
+        <tbody>
+          <tr><th>input</th><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td></td></tr>
+          <tr><th>output</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Beş state'li makine, aynı giriş, aynı çıkış</p>
+
+    <p>Her state çiftini eşdeğerlik açısından tek tek kontrol etmek sistemli olarak da yapılabilir: <strong>implication table</strong> denen, olası eşdeğer state çiftlerinin her biri için bir kare içeren bir yöntemle. Tabloyu ustaca kullanarak bir state table'daki bütün eşdeğer state çiftlerini belirlemek mümkün.</p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>State assignment: harflerden bitlere</h2></div>
+
+    <p>Devreyi fiziksel bileşenlerle tasarlamak için state'lere <strong>benzersiz ikili kodlar</strong> atamak gerekiyor. m state için kodlar n bit içermeli, öyle ki <span class="term">2<sup>n</sup> &#8805; m</span>. Üç bitle 000'dan 111'e sekiz state kodlanabilir.</p>
+
+    <ul>
+      <li><strong>Table 5.6 kullanılsaydı</strong> (yedi state) yedi state'e değer atamamız gerekirdi; geriye bir kullanılmayan state kalırdı.</li>
+      <li><strong>Table 5.8 ile</strong> (beş state) yalnızca beş state kodlanır; geriye <em>üç</em> kullanılmayan state kalır.</li>
+    </ul>
+
+    <p>Kullanılmayan state'ler tasarım sırasında <strong>don't-care</strong> koşulu olarak ele alınır. Don't-care'ler genelde daha basit devre elde etmeye yardım ettiği için, beş state'li devrenin yedi state'liden daha az combinational gate istemesi <em>daha olası</em>dır — ama garanti değildir.</p>
+
+    <h3>Üç kodlama seçeneği</h3>
+    <ul>
+      <li><strong>Assignment 1 — Binary:</strong> en basiti; ilk beş tam sayı ikili sayma sırasıyla.</li>
+      <li><strong>Assignment 2 — Gray code:</strong> bir sayıdan diğerine geçerken kod grubunda <em>yalnızca bir bit</em> değişir. Bu, Boolean fonksiyonların sadeleştirme için haritaya yerleştirilmesini kolaylaştırır.</li>
+      <li><strong>Assignment 3 — One-hot:</strong> devrede kaç state varsa o kadar bit kullanır. Herhangi bir anda yalnızca bir bit 1, diğerleri 0'dır. Yani <em>state başına bir flip-flop</em>.</li>
+    </ul>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 340" role="img" aria-label="Beş state için üç kodlama yan yana. Binary kodlamada ardışık state'ler arasında bir, iki ve hatta üç bit birden değişiyor. Gray kodlamada her geçişte yalnızca bir bit değişiyor. One-hot kodlamada beş bit var ve her state'te yalnızca bir tanesi 1.">
+          <text x="20" y="34" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75" letter-spacing="1">STATE</text>
+          <text x="170" y="34" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)" letter-spacing="1">1 · BINARY</text>
+          <text x="400" y="34" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)" letter-spacing="1">2 · GRAY CODE</text>
+          <text x="630" y="34" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)" letter-spacing="1">3 · ONE-HOT</text>
+
+          <text x="26" y="80" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">a</text>
+          <text x="26" y="132" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">b</text>
+          <text x="26" y="184" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">c</text>
+          <text x="26" y="236" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">d</text>
+          <text x="26" y="288" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">e</text>
+
+          <!-- binary: 000 001 010 011 100 -->
+          <g stroke="var(--comb)" stroke-width="1.4">
+            <rect x="170" y="60" width="24" height="24" fill="none"/><rect x="200" y="60" width="24" height="24" fill="none"/><rect x="230" y="60" width="24" height="24" fill="none"/>
+            <rect x="170" y="112" width="24" height="24" fill="none"/><rect x="200" y="112" width="24" height="24" fill="none"/><rect x="230" y="112" width="24" height="24" fill="var(--comb)"/>
+            <rect x="170" y="164" width="24" height="24" fill="none"/><rect x="200" y="164" width="24" height="24" fill="var(--comb)"/><rect x="230" y="164" width="24" height="24" fill="none"/>
+            <rect x="170" y="216" width="24" height="24" fill="none"/><rect x="200" y="216" width="24" height="24" fill="var(--comb)"/><rect x="230" y="216" width="24" height="24" fill="var(--comb)"/>
+            <rect x="170" y="268" width="24" height="24" fill="var(--comb)"/><rect x="200" y="268" width="24" height="24" fill="none"/><rect x="230" y="268" width="24" height="24" fill="none"/>
+          </g>
+          <text x="276" y="104" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">1 bit</text>
+          <text x="276" y="156" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">2 bit</text>
+          <text x="276" y="208" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">1 bit</text>
+          <text x="276" y="260" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">3 bit</text>
+
+          <!-- gray: 000 001 011 010 110 -->
+          <g stroke="var(--comb)" stroke-width="1.4">
+            <rect x="400" y="60" width="24" height="24" fill="none"/><rect x="430" y="60" width="24" height="24" fill="none"/><rect x="460" y="60" width="24" height="24" fill="none"/>
+            <rect x="400" y="112" width="24" height="24" fill="none"/><rect x="430" y="112" width="24" height="24" fill="none"/><rect x="460" y="112" width="24" height="24" fill="var(--comb)"/>
+            <rect x="400" y="164" width="24" height="24" fill="none"/><rect x="430" y="164" width="24" height="24" fill="var(--comb)"/><rect x="460" y="164" width="24" height="24" fill="var(--comb)"/>
+            <rect x="400" y="216" width="24" height="24" fill="none"/><rect x="430" y="216" width="24" height="24" fill="var(--comb)"/><rect x="460" y="216" width="24" height="24" fill="none"/>
+            <rect x="400" y="268" width="24" height="24" fill="var(--comb)"/><rect x="430" y="268" width="24" height="24" fill="var(--comb)"/><rect x="460" y="268" width="24" height="24" fill="none"/>
+          </g>
+          <text x="506" y="104" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">1 bit</text>
+          <text x="506" y="156" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">1 bit</text>
+          <text x="506" y="208" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">1 bit</text>
+          <text x="506" y="260" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">1 bit</text>
+
+          <!-- one-hot -->
+          <g stroke="var(--comb)" stroke-width="1.4">
+            <rect x="630" y="60" width="24" height="24" fill="none"/><rect x="658" y="60" width="24" height="24" fill="none"/><rect x="686" y="60" width="24" height="24" fill="none"/><rect x="714" y="60" width="24" height="24" fill="none"/><rect x="742" y="60" width="24" height="24" fill="var(--comb)"/>
+            <rect x="630" y="112" width="24" height="24" fill="none"/><rect x="658" y="112" width="24" height="24" fill="none"/><rect x="686" y="112" width="24" height="24" fill="none"/><rect x="714" y="112" width="24" height="24" fill="var(--comb)"/><rect x="742" y="112" width="24" height="24" fill="none"/>
+            <rect x="630" y="164" width="24" height="24" fill="none"/><rect x="658" y="164" width="24" height="24" fill="none"/><rect x="686" y="164" width="24" height="24" fill="var(--comb)"/><rect x="714" y="164" width="24" height="24" fill="none"/><rect x="742" y="164" width="24" height="24" fill="none"/>
+            <rect x="630" y="216" width="24" height="24" fill="none"/><rect x="658" y="216" width="24" height="24" fill="var(--comb)"/><rect x="686" y="216" width="24" height="24" fill="none"/><rect x="714" y="216" width="24" height="24" fill="none"/><rect x="742" y="216" width="24" height="24" fill="none"/>
+            <rect x="630" y="268" width="24" height="24" fill="var(--comb)"/><rect x="658" y="268" width="24" height="24" fill="none"/><rect x="686" y="268" width="24" height="24" fill="none"/><rect x="714" y="268" width="24" height="24" fill="none"/><rect x="742" y="268" width="24" height="24" fill="none"/>
+          </g>
+
+          <text x="212" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">3 flip-flop</text>
+          <text x="442" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">3 flip-flop · geçişte hep 1 bit</text>
+          <text x="698" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">5 flip-flop · basit decode</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 3 — kitabın Table 5.9'u, görsel hâliyle.</b> Dolu kare 1, boş kare 0. Sağdaki küçük yazılar, bir üstteki state'ten geçerken kaç bitin değiştiğini söylüyor: binary'de bu sayı 3'e kadar çıkarken Gray kodda hep 1 kalıyor. One-hot ise beş bit harcayıp her state'i tek bir flip-flop'a bağlıyor.</figcaption>
+    </figure>
+
+    <p>One-hot atama özellikle data-path birimlerini kontrol eden state machine tasarımında sık kullanılır. State başına bir flip-flop harcamak, register açısından zengin FPGA'lerde sorun değildir. One-hot kodlama genellikle next state ve çıkış için <strong>daha basit decode mantığı</strong> doğurur; one-hot makineler ardışık binary kodlamalı makinelerden daha hızlı olabilir ve fazladan flip-flop'ların kapladığı silikon alanı, daha basit decode mantığının kazandırdığı alanla telafi edilebilir. Ama kitabın uyarısı net: <strong>bu takas garanti değildir, her tasarım için ayrıca değerlendirilmelidir.</strong></p>
+
+    <h3>Atamayı tabloya yerleştirmek</h3>
+    <p>Table 5.10, indirgenmiş state table'ın harf sembolleri yerine <em>binary assignment 1</em> konmuş hâli. Farklı bir atama, state'leri farklı ikili değerlerle gösteren bir tablo verir.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead>
+          <tr><th>Present state</th><th>Next state<br>x = 0</th><th>Next state<br>x = 1</th><th>Output<br>x = 0</th><th>Output<br>x = 1</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>000</td><td>000</td><td>001</td><td>0</td><td>0</td></tr>
+          <tr><td>001</td><td>010</td><td>011</td><td>0</td><td>0</td></tr>
+          <tr><td>010</td><td>000</td><td>011</td><td>0</td><td>0</td></tr>
+          <tr><td>011</td><td>100</td><td>011</td><td>0</td><td>1</td></tr>
+          <tr><td>100</td><td>000</td><td>011</td><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.10 — binary assignment 1 uygulanmış indirgenmiş state table</p>
+
+    <p>State table'ın bu ikili biçimi, sequential circuit'in next state ve çıkış üreten combinational kısmını türetmek için kullanılır. <strong>Combinational devrenin karmaşıklığı, seçilen ikili state atamasına bağlıdır.</strong></p>
+
+    <div class="key">
+      <div class="lab">İsimlendirme notu</div>
+      <p>İkili atama yapılmış bir state table'a bazen <em>transition table</em> denir; bu, state'leri sembolik adlarla gösteren tablodan ayırmak içindir. Kitap ise her iki tür için de aynı adı kullanıyor.</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Yan yana</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th lang="en">Binary</th><th lang="en">Gray code</th><th lang="en">One-hot</th></tr></thead>
+        <tbody>
+          <tr><td>5 state için bit</td><td>3</td><td>3</td><td class="s">5</td></tr>
+          <tr><td>Flip-flop sayısı</td><td>3</td><td>3</td><td class="s">state başına 1</td></tr>
+          <tr><td>Geçişte değişen bit</td><td>1–3</td><td class="c">hep 1</td><td>2</td></tr>
+          <tr><td>Avantajı</td><td>en az flip-flop</td><td class="c">harita sadeleştirmesi kolay</td><td class="s">decode mantığı basit, hızlı</td></tr>
+          <tr><td>Tipik yeri</td><td>genel amaçlı</td><td>K-map ile elle tasarım</td><td>FPGA, data-path kontrolü</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Hangisinin daha iyi olduğu devreye göre değişir — çünkü seçilen atama, next state ve output mantığının karmaşıklığını doğrudan belirler.</p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Hemen karşılaşacağın terimler</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>İngilizce terim</th><th>Türkçe karşılığı</th><th>Burada ne demek</th></tr></thead>
+        <tbody>
+          <tr><td class="tr-word">state reduction</td><td class="tr-word">durum indirgeme</td><td>Davranışı bozmadan state sayısını azaltmak.</td></tr>
+          <tr><td class="tr-word">equivalent states</td><td class="tr-word">eşdeğer durumlar</td><td>Her giriş için aynı çıkışı veren ve aynı (ya da eşdeğer) state'e giden state'ler.</td></tr>
+          <tr><td class="tr-word">implication table</td><td class="tr-word">çıkarım tablosu</td><td>Eşdeğer çiftleri sistemli bulmaya yarayan kareli yöntem.</td></tr>
+          <tr><td class="tr-word">state assignment</td><td class="tr-word">durum atama</td><td>Her state'e benzersiz ikili kod vermek.</td></tr>
+          <tr><td class="tr-word">unused state</td><td class="tr-word">kullanılmayan durum</td><td>Kodlanabilen ama kullanılmayan kombinasyon.</td></tr>
+          <tr><td class="tr-word">don't-care</td><td class="tr-word">önemsiz koşul</td><td>Tasarımda serbest bırakılan, sadeleştirmeye yardım eden değer.</td></tr>
+          <tr><td class="tr-word">Gray code</td><td class="tr-word">Gray kodu</td><td>Ardışık kodlar arasında yalnızca bir bitin değiştiği kodlama.</td></tr>
+          <tr><td class="tr-word">one-hot</td><td class="tr-word">tek-sıcak kodlama</td><td>Her state için bir bit; aynı anda yalnızca biri 1.</td></tr>
+          <tr><td class="tr-word">transition table</td><td class="tr-word">geçiş tablosu</td><td>İkili atama yapılmış state table.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Kendini test et</h2></div>
+
+    <details>
+      <summary>İki state'in eşdeğer olduğunu söylemek için tam olarak neyi kontrol edersin?</summary>
+      <div class="ans"><p>Girişler kümesinin <em>her bir üyesi</em> için iki şeyi: (1) çıkışlar tıpatıp aynı mı, (2) devreyi aynı state'e ya da eşdeğer bir state'e mi gönderiyorlar. İkisi de sağlanıyorsa state'ler eşdeğerdir ve biri kaldırılabilir. Yalnızca çıkışların aynı olması yetmez.</p></div>
+    </details>
+
+    <details>
+      <summary>State sayısını 7'den 5'e düşürdün. Flip-flop sayısı kesin azalır mı?</summary>
+      <div class="ans"><p>Hayır. 7 state için de 5 state için de 3 flip-flop gerekir (2<sup>3</sup> = 8 &#8805; 7 ve &#8805; 5). Kitabın uyarısı da bu: state sayısını azaltmak flip-flop sayısını azaltabilir ama garantisi yoktur; hatta daha az flip-flop'lu eşdeğer devre bazen <em>daha fazla</em> combinational gate isteyebilir.</p></div>
+    </details>
+
+    <details>
+      <summary>İndirgeme sonrası aynı giriş dizisini verdiğinde state dizisi değişti. Sorun mu?</summary>
+      <div class="ans"><p>Hayır — beklenen bu. Bu örnekte iç state'ler ikincil öneme sahip; ilgilendiğimiz tek şey giriş dizilerinin ürettiği <em>çıkış dizileri</em>. Yedi state'li ve beş state'li makineler farklı state dizileri izliyor ama aynı çıkış dizisini veriyor, dolayısıyla eşdeğerler.</p></div>
+    </details>
+
+    <details>
+      <summary>5 state'in 3 bitle kodlanmasından geriye kalan 3 kombinasyona ne olur?</summary>
+      <div class="ans"><p>Kullanılmayan state olarak kalır ve tasarım sırasında <strong>don't-care</strong> koşulu sayılır. Don't-care'ler K-map'te serbest kullanılabildiği için genelde daha sade bir combinational devre çıkar — bu yüzden 5 state'li tasarımın 7 state'liden daha az gate istemesi olasıdır, ama kesin değildir.</p></div>
+    </details>
+
+    <details>
+      <summary>Gray code atamanın pratik faydası ne?</summary>
+      <div class="ans"><p>Bir state'ten diğerine geçerken kod grubunda yalnızca bir bit değişir. Bu, next state fonksiyonlarının Boolean ifadelerini haritaya (K-map) yerleştirip sadeleştirmeyi kolaylaştırır — komşu state'ler haritada da komşu hücrelere düşer.</p></div>
+    </details>
+
+    <details>
+      <summary>One-hot kodlama 5 state için 5 flip-flop harcıyor. Neden yine de tercih edilir?</summary>
+      <div class="ans"><p>Çünkü next state ve çıkış için gereken decode mantığı genellikle çok daha basit oluyor; makine ardışık binary kodlamalı bir makineden daha hızlı çalışabiliyor. Fazladan flip-flop'ların kapladığı alan, basitleşen mantığın kazandırdığı alanla telafi edilebiliyor — özellikle register açısından zengin FPGA'lerde. Kitap yine de bu takasın garanti olmadığını, her tasarım için değerlendirilmesi gerektiğini söylüyor.</p></div>
+    </details>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>5.7'nin açık bıraktıkları</h2></div>
+
+    <p>Elinde indirgenmiş bir state table ve state'lere atanmış ikili kodlar var. Yani artık bir <em>şartname</em> var; eksik olan tek şey onu devreye çevirmek:</p>
+
+    <ul>
+      <li><strong>Hangi flip-flop girişleri bu geçişleri üretir?</strong> Table 5.10'un her satırı "şu state'ten şu state'e geç" diyor; peki D, JK ya da T girişlerine ne yazmalı? Kısım 5.8'de <em>excitation table</em> ile bu çeviri yapılıyor.</li>
+      <li><strong>Sadeleştirme.</strong> Elde edilen fonksiyonlar K-map ile sadeleştirilip flip-flop input equation'larına dönüşecek.</li>
+      <li><strong>Farklı flip-flop türleriyle aynı tasarım.</strong> 5.8 aynı problemi D, JK ve T ile ayrı ayrı çözüyor — ve sonuçların ne kadar farklılaştığını gösteriyor.</li>
+    </ul>
+
+    <p class="next">Sırada: <b>5.8 Design Procedure</b> — sequence detector'ı D flip-flop'larla tasarlamak, excitation table'lar, sonra JK ve T ile sentez ve üç bitlik binary counter.</p>
+  </section>
+
+</div>
+<style>.site-back{position:fixed;top:14px;right:16px;z-index:99;font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 11px;box-shadow:var(--shadow)}.site-back:hover{color:var(--seq);border-color:var(--seq)}@media(max-width:640px){.site-back{position:static;display:inline-block;margin:12px 0 0 16px}}</style><a class="site-back" href="../index.html">&#8592; İçindekiler</a>
+</body>
+</html>

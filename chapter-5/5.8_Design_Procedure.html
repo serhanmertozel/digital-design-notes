@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Şartnameden Devreye</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);color:var(--ink);font-family:var(--serif);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  .masthead{border-bottom:1px solid var(--rule);padding:44px 0 28px;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-2);max-width:62ch;margin:0}
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;margin:34px 0 8px}
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  .book .src{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--seq);margin-bottom:6px;font-weight:600}
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  figure{margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;box-shadow:var(--shadow);overflow:hidden}
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:560px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  /* function tables */
+  .fn table{min-width:420px;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .fn td{padding:8px 16px}
+  .fn thead th{font-size:11px}
+  .fn td.note{font-family:var(--serif);font-size:14px;color:var(--ink-3);font-style:italic}
+  .fn tr.bad td{color:var(--seq);background:var(--seq-bg)}
+  .fn-cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:-14px 0 26px;padding-left:2px}
+
+  details{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:0;margin-bottom:10px;max-width:74ch}
+  summary{cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:flex-start}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px}
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  .next{margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;font-family:var(--cond);font-size:18px;color:var(--ink-2)}
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span lang="en">Digital Design · Mano</span><span class="dot"></span>
+      <span>Bölüm 5 — <span lang="en">Synchronous Sequential Logic</span></span><span class="dot"></span>
+      <span>Kısım 5.8</span>
+    </div>
+    <h1>Şartnameden Devreye</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18"
+        fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="standfirst">5.5'te şemadan diyagrama inmiştik. Şimdi ters yön: sözle anlatılmış bir davranıştan başlayıp gate ve flip-flop'lara çıkmak. Bölümün bütün araçları burada bir araya geliyor.</p>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Kitap tam olarak ne diyor</h2></div>
+
+    <div class="book">
+      <div class="src"><span lang="en">Mano · Section 5.8, Design Procedure</span> — kısaltılmış</div>
+      <p lang="en">The design of a clocked sequential circuit starts from a set of specifications and culminates in a logic diagram or a list of Boolean functions from which the logic diagram can be obtained. In contrast to a combinational circuit, which is fully specified by a truth table, a sequential circuit requires a state table for its specification.</p>
+      <p lang="en">A synchronous sequential circuit is made up of flip-flops and combinational gates. The design of the circuit consists of choosing the flip-flops and then finding a combinational gate structure that, together with the flip-flops, produces a circuit which fulfills the stated specifications. […] Once the type and number of flip-flops are determined, the design process involves a transformation from a sequential circuit problem into a combinational circuit problem.</p>
+      <p lang="en">During the design process, we usually know the transition from the present state to the next state and wish to find the flip-flop input conditions that will cause the required transition. For this reason, we need a table that lists the required inputs for a given change of state. Such a table is called an excitation table.</p>
+      <div class="tr">
+        <div class="src">Türkçesi</div>
+        <p>Saatli bir sequential circuit'in tasarımı bir şartname kümesiyle başlar ve bir logic diagram'la — ya da ondan logic diagram'ın elde edilebileceği bir Boolean fonksiyon listesiyle — sonuçlanır. Truth table ile tamamen belirlenen combinational circuit'in aksine, sequential circuit'in şartnamesi için bir <em>state table</em> gerekir.</p>
+        <p>Synchronous sequential circuit, flip-flop'lardan ve combinational gate'lerden oluşur. Tasarım, flip-flop'ları seçmek ve ardından — flip-flop'larla birlikte belirtilen şartnameyi karşılayan bir devre üreten — combinational gate yapısını bulmaktan ibarettir. […] Flip-flop'ların tür ve sayısı belirlendikten sonra tasarım süreci, <strong>bir sequential circuit problemini combinational circuit problemine dönüştürmeye</strong> indirgenir.</p>
+        <p>Tasarım sürecinde genelde mevcut state'ten next state'e geçişi biliriz ve bu geçişi sağlayacak flip-flop giriş koşullarını bulmak isteriz. Bu yüzden, verilen bir state değişimi için gereken girişleri listeleyen bir tabloya ihtiyacımız var. Böyle bir tabloya <em>excitation table</em> denir.</p>
+      </div>
+    </div>
+
+    <div class="key">
+      <div class="lab">Bütün bölümün özeti tek cümlede</div>
+      <p>Flip-flop'ların tür ve sayısı seçildiği anda, elindeki problem artık sequential değil <strong>combinational</strong> bir problemdir. Yani Bölüm 4'te öğrendiğin her şey — truth table, K-map, sadeleştirme — buradan itibaren aynen kullanılabilir.</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Yedi adım</h2></div>
+
+    <p>Kitabın önerdiği prosedür:</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 300" role="img" aria-label="Yedi adımlık tasarım prosedürü akışı: sözlü şartname, state diagram, state indirgeme, ikili atama, ikili kodlanmış state table, flip-flop seçimi, sadeleştirilmiş denklemler ve logic diagram. Dördüncü adımdan sonrası sentez olarak işaretli ve otomatikleştirilebilir; ilk adım sezgi ve deneyim gerektiriyor.">
+          <defs>
+            <marker id="d1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <rect x="20" y="56" width="150" height="60" rx="4" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.7"/>
+          <text x="95" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">1 · sözlü</text>
+          <text x="95" y="99" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">şartname</text>
+
+          <rect x="200" y="56" width="150" height="60" rx="4" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.7"/>
+          <text x="275" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">state diagram</text>
+          <text x="275" y="99" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">2 · indirge</text>
+
+          <rect x="380" y="56" width="150" height="60" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="455" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">3 · ikili atama</text>
+          <text x="455" y="99" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">4 · state table</text>
+
+          <rect x="560" y="56" width="150" height="60" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="635" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">5 · flip-flop seç</text>
+          <text x="635" y="99" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">6 · denklemler</text>
+
+          <rect x="740" y="56" width="120" height="60" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="800" y="90" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">7 · şema</text>
+
+          <line x1="170" y1="86" x2="192" y2="86" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#d1)"/>
+          <line x1="350" y1="86" x2="372" y2="86" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#d1)"/>
+          <line x1="530" y1="86" x2="552" y2="86" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#d1)"/>
+          <line x1="710" y1="86" x2="732" y2="86" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#d1)"/>
+
+          <!-- brackets -->
+          <path d="M 20 148 L 20 162 L 350 162 L 350 148" fill="none" stroke="var(--comb)" stroke-width="1.5"/>
+          <text x="185" y="184" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">sezgi ve deneyim gerekir</text>
+          <text x="185" y="202" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)" fill-opacity=".8">2 ve 3 deneyimli tasarımcıda çoğu zaman atlanır</text>
+
+          <path d="M 380 148 L 380 162 L 860 162 L 860 148" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="620" y="184" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">SYNTHESIS — kesin algoritmalar</text>
+          <text x="620" y="202" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)" fill-opacity=".85">4–7 otomatikleştirilebilir</text>
+
+          <rect x="180" y="230" width="520" height="48" rx="4" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="1.3" stroke-dasharray="5 4"/>
+          <text x="440" y="252" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".8">flip-flop türü ve sayısı seçildiği an,</text>
+          <text x="440" y="269" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".8">problem artık bir combinational circuit problemidir</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 1 — kitabın yedi adımı.</b> İlk adım kritik, çünkü sonraki bütün adımlar ona dayanıyor — ve sözlü şartnameler <b>eksik ve kesin olmayabilir</b>, doğru yorum için sezgi ve deneyim gerekir. 4'ten 7'ye kadar olan kısım ise kesin algoritmalarla yürür; bu kısma <b>synthesis</b> denir ve otomatikleştirilebilir.</figcaption>
+    </figure>
+
+    <ol>
+      <li>İstenen işleyişin sözlü tarifinden ve şartnamesinden devrenin <strong>state diagram</strong>'ını çıkar.</li>
+      <li>Gerekiyorsa state sayısını <strong>indirge</strong>.</li>
+      <li>State'lere <strong>ikili değerler ata</strong>.</li>
+      <li><strong>İkili kodlanmış state table</strong>'ı elde et.</li>
+      <li>Kullanılacak <strong>flip-flop türünü seç</strong>.</li>
+      <li>Sadeleştirilmiş <strong>flip-flop input equation</strong>'larını ve output equation'ları türet.</li>
+      <li><strong>Logic diagram</strong>'ı çiz.</li>
+    </ol>
+
+    <p>Flip-flop sayısı, devrede gereken state sayısından ve seçilen state atama kodlarından belirlenir. Combinational devre ise state table'dan, flip-flop input equation'ları ve output equation'ları değerlendirilerek türetilir.</p>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Birinci adım: sözden diyagrama</h2></div>
+
+    <p>Örnek şartname: <em>bir giriş hattından gelen bit dizisinde (yani seri bit akışında) <strong>üç veya daha fazla ardışık 1</strong> algılayan bir devre tasarla.</em></p>
+
+    <p>State diagram'ı reset state'i S0'dan başlayarak kuruyoruz:</p>
+    <ul>
+      <li>Giriş 0 ise devre S0'da kalır; giriş 1 ise bir 1 algılandığını belirtmek üzere <strong>S1</strong>'e geçer.</li>
+      <li>Sonraki giriş de 1 ise iki ardışık 1'in geldiğini belirtmek üzere <strong>S2</strong>'ye geçilir; giriş 0 ise S0'a dönülür.</li>
+      <li>Üçüncü ardışık 1 devreyi <strong>S3</strong>'e gönderir. Daha fazla 1 gelirse devre S3'te kalır.</li>
+      <li><strong>Herhangi bir 0 girişi</strong> devreyi S0'a geri gönderir.</li>
+    </ul>
+
+    <p>Böylece devre, üç veya daha fazla ardışık 1 alındığı sürece S3'te kalır. Bu bir <strong>Moore modeli</strong> devredir: çıkış, devre S3'teyken 1, diğer bütün durumlarda 0.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 330" role="img" aria-label="Dört state'li sequence detector diyagramı. S0, S1, S2, S3 soldan sağa dizili. Giriş 1 ile S0'dan S1'e, S1'den S2'ye, S2'den S3'e geçiliyor ve S3'te kalınıyor. Giriş 0 ile hangi state'te olursa olsun S0'a dönülüyor. Çıkış yalnızca S3'te 1.">
+          <defs>
+            <marker id="d2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+            <marker id="d2s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <circle cx="140" cy="120" r="36" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="140" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--seq)">S0/0</text>
+          <circle cx="350" cy="120" r="36" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="350" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--seq)">S1/0</text>
+          <circle cx="560" cy="120" r="36" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="560" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--seq)">S2/0</text>
+          <circle cx="770" cy="120" r="36" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="2.2"/>
+          <text x="770" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--comb)">S3/1</text>
+
+          <line x1="178" y1="120" x2="306" y2="120" stroke="currentColor" stroke-width="1.6" marker-end="url(#d2)"/>
+          <text x="242" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <line x1="388" y1="120" x2="516" y2="120" stroke="currentColor" stroke-width="1.6" marker-end="url(#d2)"/>
+          <text x="452" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <line x1="598" y1="120" x2="726" y2="120" stroke="currentColor" stroke-width="1.6" marker-end="url(#d2)"/>
+          <text x="662" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+
+          <path d="M 118 88 C 104 34, 176 34, 162 88" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#d2)"/>
+          <text x="140" y="34" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">0</text>
+          <path d="M 748 88 C 734 34, 806 34, 792 88" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#d2)"/>
+          <text x="770" y="34" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+
+          <path d="M 340 156 Q 240 212 150 152" fill="none" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#d2s)"/>
+          <text x="243" y="212" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">0</text>
+          <path d="M 550 156 Q 350 266 146 156" fill="none" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#d2s)"/>
+          <text x="350" y="240" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">0</text>
+          <path d="M 762 158 Q 455 322 144 158" fill="none" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#d2s)"/>
+          <text x="454" y="262" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">0</text>
+
+          <text x="872" y="184" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">çıkış = 1</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 2 — kitabın Fig. 5.27'si: sequence detector.</b> Moore modeli olduğu için çıkış oklarda değil, dairelerin içinde: S3'te 1, diğerlerinde 0. Amber oklar "0 geldi, baştan başla" anlamına geliyor.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>D flip-flop ile sentez</h2></div>
+
+    <p>State diagram elde edildikten sonrası düz bir sentez prosedürü. Elle tasarlamak için state'lere ikili kod atayıp state table'ı listeliyoruz. Dört state'i temsil etmek için <strong>iki D flip-flop</strong> seçiyoruz ve çıkışlarını A ile B diye adlandırıyoruz. Bir giriş x, bir çıkış y var.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>A</th><th>B</th><th>x</th><th>A(t+1)</th><th>B(t+1)</th><th>y</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.11 — sequence detector'ın state table'ı (S0 = 00, S1 = 01, S2 = 10, S3 = 11)</p>
+
+    <p>D flip-flop'un characteristic equation'ı <span class="term">Q(t+1) = D<sub>Q</sub></span> olduğuna göre, <strong>state table'daki next-state değerleri doğrudan D giriş koşuludur</strong>. Input equation'lar A ve B'nin next-state sütunlarından, minterm toplamı biçiminde okunur:</p>
+
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>A(t + 1) = D<sub>A</sub>(A, B, x) = &#931;(3, 5, 7)</strong><br>
+      <strong>B(t + 1) = D<sub>B</sub>(A, B, x) = &#931;(1, 5, 7)</strong><br>
+      <strong>y(A, B, x) = &#931;(6, 7)</strong>
+    </p>
+
+    <p>Bu Boolean denklemler K-map ile sadeleştirilince (kitabın Fig. 5.28'i):</p>
+
+    <p style="font-family:var(--mono);font-size:16px;padding-left:2px">
+      <strong>D<sub>A</sub> = Ax + Bx</strong> &nbsp;&nbsp; <strong>D<sub>B</sub> = Ax + B&#8242;x</strong> &nbsp;&nbsp; <strong>y = AB</strong>
+    </p>
+
+    <div class="key">
+      <div class="lab">D flip-flop'un tasarım avantajı</div>
+      <p>Flip-flop girişlerini tarif eden Boolean denklemler <strong>doğrudan state table'dan</strong> okunur — arada hiçbir çeviri adımı yok. Yazılım araçları da düzgün yazılmış bir HDL modelinden otomatik olarak D tipi flip-flop çıkarımı yapar. Sanayinin D flip-flop'a yaslanmasının sebebi bu.</p>
+    </div>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 280" role="img" aria-label="Sequence detector'ın logic diagramı. x girişi ve A, B flip-flop çıkışları combinational gate'lere gidiyor; bir grup A flip-flop'unun D girişini, başka bir grup B'nin D girişini üretiyor; ayrı bir AND gate A ve B'den y çıkışını üretiyor. İki flip-flop ortak clock ile sürülüyor.">
+          <defs>
+            <marker id="d3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text x="20" y="60" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">x</text>
+          <line x1="38" y1="56" x2="150" y2="56" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="150" cy="56" r="3.5" fill="currentColor"/>
+          <line x1="150" y1="56" x2="190" y2="56" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M 150 56 L 150 200 L 190 200" fill="none" stroke="currentColor" stroke-width="1.6"/>
+
+          <rect x="190" y="30" width="150" height="54" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="265" y="53" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">Ax + Bx</text>
+          <text x="265" y="70" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)" fill-opacity=".85">2 AND + 1 OR</text>
+          <line x1="340" y1="56" x2="390" y2="56" stroke="currentColor" stroke-width="1.6" marker-end="url(#d3)"/>
+          <text x="365" y="46" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)">D</text>
+
+          <rect x="396" y="24" width="90" height="88" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="406" y="48" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">D</text>
+          <path d="M 396 76 L 408 82 L 396 88" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="441" y="70" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">A</text>
+          <line x1="486" y1="56" x2="540" y2="56" stroke="currentColor" stroke-width="1.6"/>
+          <text x="548" y="61" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">A</text>
+
+          <rect x="190" y="174" width="150" height="54" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="265" y="197" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">Ax + B&#8242;x</text>
+          <text x="265" y="214" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)" fill-opacity=".85">2 AND + 1 OR</text>
+          <line x1="340" y1="200" x2="390" y2="200" stroke="currentColor" stroke-width="1.6" marker-end="url(#d3)"/>
+          <text x="365" y="190" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)">D</text>
+
+          <rect x="396" y="168" width="90" height="88" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="406" y="192" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">D</text>
+          <path d="M 396 220 L 408 226 L 396 232" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="441" y="214" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">B</text>
+          <line x1="486" y1="188" x2="540" y2="188" stroke="currentColor" stroke-width="1.6"/>
+          <text x="548" y="193" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">B</text>
+          <line x1="486" y1="236" x2="540" y2="236" stroke="currentColor" stroke-width="1.6"/>
+          <text x="548" y="241" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">B&#8242;</text>
+
+          <!-- output AND -->
+          <path d="M 620 96 L 646 96 A 26 26 0 0 1 646 148 L 620 148 Z" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="636" y="127" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)">AND</text>
+          <line x1="672" y1="122" x2="760" y2="122" stroke="currentColor" stroke-width="1.6" marker-end="url(#d3)"/>
+          <text x="772" y="127" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">y = AB</text>
+          <path d="M 566 56 L 590 56 L 590 108 L 620 108" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <circle cx="566" cy="56" r="3" fill="currentColor"/>
+          <path d="M 566 188 L 600 188 L 600 136 L 620 136" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <circle cx="566" cy="188" r="3" fill="currentColor"/>
+
+          <!-- feedback -->
+          <path d="M 560 56 L 560 12 L 176 12 L 176 42 L 186 42" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#d3)"/>
+          <path d="M 574 188 L 574 152 L 360 152 L 360 118 L 168 118 L 168 70 L 186 70" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#d3)"/>
+          <path d="M 552 236 L 552 264 L 160 264 L 160 186 L 186 186" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#d3)"/>
+          <text x="600" y="266" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)">A, B, B&#8242; geri besleniyor</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 3 — kitabın Fig. 5.29'u: Moore tipi sequence detector.</b> Sol taraftaki gate yığınlarının yerine ürettikleri ifadeler yazılı. Çıkış y yalnızca A ve B'den geliyor, x'e dokunmuyor — Moore modeli tam olarak bu demek.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Excitation table: characteristic table'ın tersi</h2></div>
+
+    <p>D dışındaki flip-flop'larla tasarım, input equation'ların state table'dan <em>dolaylı</em> türetilmesi gerektiği için zorlaşıyor. D kullanıldığında denklemler doğrudan next state'ten okunuyordu; JK ve T'de böyle değil. State table ile input equation'lar arasında bir <strong>fonksiyonel ilişki</strong> kurmak gerekiyor.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 230" role="img" aria-label="İki tablo türünün yönünü gösteren şema. Characteristic table girişlerden ve mevcut state'ten next state'e doğru gidiyor ve analizde kullanılıyor. Excitation table ise ters yönde: mevcut state ile istenen next state'ten hangi girişlerin gerektiğine gidiyor ve tasarımda kullanılıyor.">
+          <defs>
+            <marker id="d4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--comb)"/>
+            </marker>
+            <marker id="d4s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <rect x="60" y="60" width="230" height="70" rx="4" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.7"/>
+          <text x="175" y="88" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">girişler (J, K / T / D)</text>
+          <text x="175" y="108" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">+ mevcut state Q(t)</text>
+
+          <rect x="590" y="60" width="230" height="70" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="705" y="98" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">next state Q(t+1)</text>
+
+          <path d="M 296 82 L 584 82" fill="none" stroke="var(--comb)" stroke-width="2" marker-end="url(#d4)"/>
+          <text x="440" y="72" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">characteristic table &#183; ANALİZ</text>
+
+          <path d="M 584 112 L 296 112" fill="none" stroke="var(--seq)" stroke-width="2" marker-end="url(#d4s)"/>
+          <text x="440" y="132" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">excitation table &#183; TASARIM</text>
+
+          <text x="175" y="170" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">"şu girişleri verdim,</text>
+          <text x="175" y="188" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">nereye giderim?"</text>
+          <text x="705" y="170" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">"şuraya gitmem lazım,</text>
+          <text x="705" y="188" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".75">hangi girişleri vermeliyim?"</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 4 — aynı bilgi, iki yön.</b> 5.4'teki characteristic table analiz için işe yarar. Tasarımda ise geçişi <em>biliriz</em> ve o geçişi sağlayacak giriş koşullarını ararız — bunu veren tabloya <b>excitation table</b> denir.</figcaption>
+    </figure>
+
+    <p>Excitation table'ın her satırında bir mevcut state Q(t), bir next state Q(t+1) ve istenen geçişin nasıl sağlanacağını gösteren giriş sütunları var. Mevcut state'ten next state'e dört olası geçiş var. Tablodaki <strong>X</strong> sembolü <em>don't-care</em> demek: girişin 0 mı 1 mi olduğu fark etmez.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>Q(t)</th><th>Q(t+1)</th><th>J</th><th>K</th><th></th><th>Q(t)</th><th>Q(t+1)</th><th>T</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>X</td><td></td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>X</td><td></td><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>X</td><td>1</td><td></td><td>1</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>X</td><td>0</td><td></td><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.12 — (a) JK flip-flop ve (b) T flip-flop excitation table'ları</p>
+
+    <p>JK tablosunun mantığı:</p>
+    <ul>
+      <li><strong>0 &#8594; 0:</strong> J 0'da kalmalı, K 0 da olabilir 1 de.</li>
+      <li><strong>1 &#8594; 1:</strong> K 0'da kalmalı, J 0 da olabilir 1 de.</li>
+      <li><strong>0 &#8594; 1:</strong> J = 1 olmalı (J flip-flop'u set eder). K ise 0 ya da 1 olabilir: K = 0 ise J = 1 zaten set eder; K = 1 ve J = 1 ise flip-flop tümlenir ve yine 0'dan 1'e gider. Bu yüzden K don't-care.</li>
+      <li><strong>1 &#8594; 0:</strong> K = 1 olmalı (K flip-flop'u siler). J ise 0 ya da 1 olabilir: J = 0'ın etkisi yok, J = 1 ile K = 1 birlikte tümler ve yine 1'den 0'a gider.</li>
+    </ul>
+    <p>T tablosu daha basit: state aynı kalacaksa T = 0, tümlenecekse T = 1.</p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>JK flip-flop ile sentez</h2></div>
+
+    <p>Prosedür D ile aynı, tek fark: input equation'lar <em>excitation table'dan türetilen</em> mevcut state &#8594; next state geçişinden değerlendirilir. Tabloya, alışıldık present state / input / next state sütunlarına ek olarak <strong>flip-flop giriş koşulları</strong> sütunları eklenir.</p>
+
+    <p>Nasıl dolduruluyor? İlk satırda A flip-flop'u için mevcut state 0'dan next state 0'a bir geçiş var. Excitation table'a bakıyoruz: 0 &#8594; 0 geçişi J = 0 ve K = don't-care istiyor. Yani J<sub>A</sub> sütununa 0, K<sub>A</sub> sütununa X yazılıyor. Aynı satırda B için de 0 &#8594; 0 geçişi var, J<sub>B</sub> = 0 ve K<sub>B</sub> = X. İkinci satırda B için 0 &#8594; 1 geçişi var; excitation table J = 1 ve K = X diyor.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>A</th><th>B</th><th>x</th><th>A(t+1)</th><th>B(t+1)</th><th>J<sub>A</sub></th><th>K<sub>A</sub></th><th>J<sub>B</sub></th><th>K<sub>B</sub></th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>X</td><td>0</td><td>X</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>X</td><td>1</td><td>X</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>X</td><td>X</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>X</td><td>X</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>X</td><td>0</td><td>0</td><td>X</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>X</td><td>0</td><td>1</td><td>X</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>X</td><td>0</td><td>X</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>X</td><td>1</td><td>X</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.13 — state table ve JK flip-flop girişleri</p>
+
+    <p>Bu dört sütun, input equation'ların A, B ve x'in fonksiyonu olarak truth table'ını veriyor. K-map ile sadeleştirilince (kitabın Fig. 5.30'u):</p>
+
+    <p style="font-family:var(--mono);font-size:16px;padding-left:2px">
+      <strong>J<sub>A</sub> = Bx&#8242;</strong> &nbsp;&nbsp; <strong>K<sub>A</sub> = Bx</strong> &nbsp;&nbsp; <strong>J<sub>B</sub> = x</strong> &nbsp;&nbsp; <strong>K<sub>B</sub> = (A &#8853; x)&#8242;</strong>
+    </p>
+
+    <div class="key">
+      <div class="lab">JK'nın elle tasarımdaki avantajı</div>
+      <p>Tablodaki <strong>don't-care sayısının çokluğuna</strong> dikkat et. Don't-care minterm'ler genelde daha sade ifadeler elde etmeye yardım ettiği için, input equation'ların combinational devresi büyük olasılıkla daha basit çıkar. State table'da kullanılmayan state'ler varsa haritada ek don't-care koşulları da oluşur. Yine de <em>otomatik tasarım akışına D tipi daha uygundur</em>.</p>
+    </div>
+
+    <p>Not: sadeleştirme sırasında next-state değerleri kullanılmaz — çünkü input equation'lar yalnızca mevcut state'in ve girişin fonksiyonudur.</p>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>T flip-flop ile sentez: üç bitlik sayıcı</h2></div>
+
+    <p>T ile sentez, bir <strong>binary counter</strong> tasarlanarak gösteriliyor. n-bit binary counter, 0'dan 2<sup>n</sup>−1'e kadar ikili sayabilen n flip-flop'tan oluşur.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 380" role="img" aria-label="Üç bitlik ikili sayıcının state diagramı: 000, 001, 010, 011, 100, 101, 110, 111 durumları bir halka üzerinde sırayla birbirine bağlı ve 111'den sonra 000'a dönülüyor. Oklarda giriş ya da çıkış değeri yazmıyor.">
+          <defs>
+            <marker id="d5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <circle cx="440" cy="60" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="440" y="66" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">000</text>
+          <circle cx="620" cy="120" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="620" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">001</text>
+          <circle cx="680" cy="200" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="680" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">010</text>
+          <circle cx="620" cy="280" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="620" y="286" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">011</text>
+          <circle cx="440" cy="340" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="440" y="346" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">100</text>
+          <circle cx="260" cy="280" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="260" y="286" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">101</text>
+          <circle cx="200" cy="200" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="200" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">110</text>
+          <circle cx="260" cy="120" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="260" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">111</text>
+
+          <line x1="470" y1="70" x2="590" y2="110" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+          <line x1="641" y1="147" x2="659" y2="173" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+          <line x1="680" y1="232" x2="650" y2="252" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+          <line x1="590" y1="290" x2="470" y2="330" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+          <line x1="410" y1="330" x2="290" y2="290" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+          <line x1="240" y1="252" x2="212" y2="230" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+          <line x1="200" y1="168" x2="238" y2="146" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+          <line x1="290" y1="110" x2="408" y2="70" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#d5)"/>
+
+          <text x="440" y="196" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".75">her clock kenarında</text>
+          <text x="440" y="214" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".75">bir sonraki sayıya</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 5 — kitabın Fig. 5.32'si: üç bitlik sayıcı.</b> Oklarda giriş/çıkış değeri <b>yok</b> — çünkü devrenin tek girişi clock ve çıkışları doğrudan flip-flop state'leri. Saatli devrelerde geçişler zaten clock kenarıyla başlatıldığı için clock, state diagram'da açık bir giriş değişkeni olarak görünmez.</figcaption>
+    </figure>
+
+    <p>Binary counter'lar, <em>tümleme</em> özellikleri sayesinde en verimli biçimde <strong>T flip-flop</strong> ile kurulur. T girişleri için flip-flop uyarımı, T'nin excitation table'ından ve mevcut state &#8594; next state geçişine bakılarak bulunur.</p>
+
+    <p>Örnek olarak 001 satırını düşün: mevcut state 001, next state 010. İkisini karşılaştıralım — A<sub>2</sub> 0'dan 0'a gidiyor, yani clock geldiğinde değişmemeli: T<sub>A2</sub> = 0. A<sub>1</sub> 0'dan 1'e gidiyor, tümlenmeli: T<sub>A1</sub> = 1. A<sub>0</sub> 1'den 0'a gidiyor, o da tümlenmeli: T<sub>A0</sub> = 1. Son satırda mevcut state 111, next state 000: hepsi 1'den 0'a gittiği için üç flip-flop da tümlenmeli.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>A<sub>2</sub></th><th>A<sub>1</sub></th><th>A<sub>0</sub></th><th>A<sub>2</sub>(t+1)</th><th>A<sub>1</sub>(t+1)</th><th>A<sub>0</sub>(t+1)</th><th>T<sub>A2</sub></th><th>T<sub>A1</sub></th><th>T<sub>A0</sub></th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.14 — üç bitlik sayıcının state table'ı ve T girişleri</p>
+
+    <p>K-map ile sadeleştirilince:</p>
+    <p style="font-family:var(--mono);font-size:16px;padding-left:2px">
+      <strong>T<sub>A2</sub> = A<sub>1</sub>A<sub>0</sub></strong> &nbsp;&nbsp; <strong>T<sub>A1</sub> = A<sub>0</sub></strong> &nbsp;&nbsp; <strong>T<sub>A0</sub> = 1</strong>
+    </p>
+
+    <p>T<sub>A0</sub>'ın sekiz minterm'in hepsinde 1 olmasına dikkat: sayıcının <em>en anlamsız biti her sayımda tümlenir</em>. Bütün minterm'leri içeren bir Boolean fonksiyon sabit 1 değerini tanımlar — yani en alt flip-flop'un T girişi doğrudan lojik 1'e bağlanır.</p>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Yan yana</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th lang="en">D ile</th><th lang="en">JK ile</th><th lang="en">T ile</th></tr></thead>
+        <tbody>
+          <tr><td>Denklemler nereden</td><td class="c">doğrudan next state'ten</td><td class="s">excitation table'dan</td><td class="s">excitation table'dan</td></tr>
+          <tr><td>Ara adım</td><td class="c">yok</td><td class="s">var</td><td class="s">var</td></tr>
+          <tr><td>Don't-care bolluğu</td><td>az</td><td class="s">çok — sadeleşmeye yarar</td><td>orta</td></tr>
+          <tr><td>Flip-flop başına giriş</td><td>1</td><td>2</td><td>1</td></tr>
+          <tr><td>Otomatik sentez</td><td class="c">en uygun</td><td>daha az</td><td>daha az</td></tr>
+          <tr><td>Parladığı yer</td><td class="c">genel amaçlı, HDL akışı</td><td class="s">elle tasarımda sade denklemler</td><td class="s">binary counter</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Kitabın pratik notu: sanayi otomatik sentez araçlarına dayanıyor ve bu araçların kullandığı ardışıl yapı taşı <strong>D flip-flop</strong>. Ek mantıkla JK ve T davranışını da gerçekleyebiliyor. Tasarımcılar genelde flip-flop türüyle uğraşmıyor; odakları, gerçeklenecek ardışıl işlevselliği doğru tarif etmek.</p>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>Hemen karşılaşacağın terimler</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>İngilizce terim</th><th>Türkçe karşılığı</th><th>Burada ne demek</th></tr></thead>
+        <tbody>
+          <tr><td class="tr-word">design procedure</td><td class="tr-word">tasarım prosedürü</td><td>Şartnameden şemaya giden yedi adım.</td></tr>
+          <tr><td class="tr-word">synthesis</td><td class="tr-word">sentez</td><td>Tasarımın kesin algoritmalarla yürüyen kısmı (adım 4–7).</td></tr>
+          <tr><td class="tr-word">excitation table</td><td class="tr-word">uyarma tablosu</td><td>İstenen geçiş için gereken flip-flop girişlerini verir.</td></tr>
+          <tr><td class="tr-word">sequence detector</td><td class="tr-word">dizi algılayıcı</td><td>Belirli bir bit dizisini tanıyan devre.</td></tr>
+          <tr><td class="tr-word">reset state</td><td class="tr-word">başlangıç durumu</td><td>Devrenin başladığı state (örnekte S0).</td></tr>
+          <tr><td class="tr-word">don't-care</td><td class="tr-word">önemsiz koşul</td><td>X ile gösterilir; giriş 0 da olsa 1 de olsa fark etmez.</td></tr>
+          <tr><td class="tr-word">binary counter</td><td class="tr-word">ikili sayıcı</td><td>0'dan 2<sup>n</sup>−1'e kadar sayan n flip-flop'luk devre.</td></tr>
+          <tr><td class="tr-word">sum of minterms</td><td class="tr-word">minterm toplamı</td><td>&#931;(3, 5, 7) gibi yazım.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>Kendini test et</h2></div>
+
+    <details>
+      <summary>Flip-flop türü ve sayısı seçildikten sonra elindeki problem ne tür bir problem oluyor?</summary>
+      <div class="ans"><p><strong>Combinational</strong> bir problem. Geriye kalan iş, state table'dan flip-flop input equation'larını ve output equation'ları türetip sadeleştirmek — yani truth table, K-map ve Bölüm 4'ün bütün teknikleri. Kitabın vurguladığı dönüşüm bu.</p></div>
+    </details>
+
+    <details>
+      <summary>D flip-flop'la tasarımda neden excitation table'a ihtiyaç yok?</summary>
+      <div class="ans"><p>Çünkü D'nin characteristic equation'ı Q(t+1) = D<sub>Q</sub>. State table'daki next-state değeri <em>doğrudan</em> D girişinin ne olması gerektiğini söylüyor; arada çeviri yok. JK ve T'de ise next state, girişlerin yanı sıra mevcut state'e de bağlı olduğu için excitation table gerekiyor.</p></div>
+    </details>
+
+    <details>
+      <summary>JK excitation table'ında 0 &#8594; 1 geçişi için K neden don't-care?</summary>
+      <div class="ans"><p>J = 1 olmak zorunda, çünkü J flip-flop'u set eder. K'nın değeri iki yolla da doğru sonucu verir: K = 0 ise J = 1 zaten set eder; K = 1 ve J = 1 ise flip-flop tümlenir ve 0'dan 1'e yine geçer. İki durumda da istenen geçiş oluyor, o yüzden K serbest bırakılır.</p></div>
+    </details>
+
+    <details>
+      <summary>Sequence detector'da y = AB çıktı. Bu neden Moore modeli olduğunu gösterir?</summary>
+      <div class="ans"><p>Çünkü çıkış ifadesinde <em>x yok</em>. y yalnızca flip-flop çıkışlarına — yani mevcut state'e — bağlı. Mealy olsaydı çıkış ifadesinde giriş de yer alırdı ve state diagram'da çıkış oklara yazılırdı; burada dairelerin içinde (S3/1).</p></div>
+    </details>
+
+    <details>
+      <summary>Üç bitlik sayıcıda T<sub>A0</sub> = 1 çıkması ne demek?</summary>
+      <div class="ans"><p>En anlamsız bitin her sayımda tümlendiği anlamına gelir. Sekiz minterm'in hepsinde 1 olan bir fonksiyon sabit 1'dir; yani o flip-flop'un T girişi hiçbir gate'e ihtiyaç duymadan doğrudan lojik 1'e bağlanır. Sayıcıların T flip-flop ile neden verimli kurulduğunun da güzel bir örneği.</p></div>
+    </details>
+
+    <details>
+      <summary>Neden yedi adımın ilki "kritik" sayılıyor?</summary>
+      <div class="ans"><p>Çünkü sonraki bütün adımlar ona dayanıyor ve bu adım otomatikleştirilemiyor. Sözlü şartnameler eksik ve kesin olmayabilir; doğru yorum için tasarımcının sezgisi ve deneyimi gerekiyor. State diagram bir kez doğru kurulduktan sonra 4–7 arası adımlar kesin algoritmalarla — hatta yazılımla — yürütülebilir.</p></div>
+    </details>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">11</span><h2>Bölüm 5 bitti — elindekiler</h2></div>
+
+    <p>Sekiz kısımda tek bir zincir kurduk. Geriye dönüp bakınca:</p>
+
+    <ul>
+      <li><strong>5.1–5.2</strong> — memory nedir, state nedir, clock ne işe yarar.</li>
+      <li><strong>5.3–5.4</strong> — o state'i fiziksel olarak tutan eleman: önce latch, sonra flip-flop. Characteristic table ve equation'lar.</li>
+      <li><strong>5.5</strong> — verilen devreden davranışa: state equation, state table, state diagram, Mealy ve Moore.</li>
+      <li><strong>5.7–5.8</strong> — ters yön: şartnameden devreye. State reduction, state assignment, excitation table ve sentez.</li>
+      <li><strong>5.6</strong> — atladığımız kısım: aynı makinelerin Verilog HDL ile modellenmesi. Dersin HDL istiyorsa buraya ayrıca bakman gerekir.</li>
+    </ul>
+
+    <div class="key">
+      <div class="lab">Sınavda en çok işine yarayacak dört şey</div>
+      <p><strong>1.</strong> Q(t+1) = D, Q(t+1) = JQ&#8242; + K&#8242;Q, Q(t+1) = T &#8853; Q. <strong>2.</strong> State diagram'da çıkışın nerede yazdığı (ok = Mealy, daire = Moore). <strong>3.</strong> Excitation table'ın JK satırları — özellikle don't-care'lerin nerede olduğu. <strong>4.</strong> "Latch seviye, flip-flop kenar."</p>
+    </div>
+
+    <p class="next">Bölüm 6 <b>Registers and Counters</b> ile devam ediyor: buradaki flip-flop'lardan register, shift register ve sayıcı kurmak. Hazır olduğunda aynı şekilde çıkarabilirim.</p>
+  </section>
+
+</div>
+<style>.site-back{position:fixed;top:14px;right:16px;z-index:99;font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 11px;box-shadow:var(--shadow)}.site-back:hover{color:var(--seq);border-color:var(--seq)}@media(max-width:640px){.site-back{position:static;display:inline-block;margin:12px 0 0 16px}}</style><a class="site-back" href="../index.html">&#8592; İçindekiler</a>
+</body>
+</html>

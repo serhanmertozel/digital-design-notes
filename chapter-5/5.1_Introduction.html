@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hatırlayan Devreler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    border-bottom:1px solid var(--rule);
+    padding:44px 0 28px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{
+    font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);
+    line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance;
+  }
+  .standfirst{
+    font-size:19px;color:var(--ink-2);max-width:62ch;margin:0;
+  }
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  /* ---------- sections ---------- */
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{
+    font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);
+    line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance;
+  }
+  h3{
+    font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;
+    margin:34px 0 8px;
+  }
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  /* ---------- quote from the book ---------- */
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);
+    max-width:74ch;
+  }
+  .book .src{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-3);margin-bottom:10px;
+  }
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  /* ---------- callouts ---------- */
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--seq);margin-bottom:6px;font-weight:600;
+  }
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  /* ---------- figures ---------- */
+  figure{
+    margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);
+    border-radius:5px;box-shadow:var(--shadow);overflow:hidden;
+  }
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:520px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  /* ---------- table ---------- */
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:600;background:var(--surface-2);
+  }
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  /* ---------- self check ---------- */
+  details{
+    background:var(--surface);border:1px solid var(--rule);border-radius:4px;
+    padding:0;margin-bottom:10px;max-width:74ch;
+  }
+  summary{
+    cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;
+    list-style:none;display:flex;gap:12px;align-items:flex-start;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::before{
+    content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px;
+  }
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  /* ---------- next ---------- */
+  .next{
+    margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;
+    font-family:var(--cond);font-size:18px;color:var(--ink-2);
+  }
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span lang="en">Digital Design · Mano</span><span class="dot"></span>
+      <span>Bölüm 5 — <span lang="en">Synchronous Sequential Logic</span></span><span class="dot"></span>
+      <span>Kısım 5.1</span>
+    </div>
+    <h1>Hatırlayan Devreler</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18"
+        fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="standfirst">Kısım 5.1 tek paragraf uzunluğunda, ama bütün bölümün çerçevesini kuruyor. Tek bir ayrım çiziyor: çıkışı <em>yalnızca</em> şu anda girişlerinde ne varsa ona bağlı olan devreler ve daha önce ne olduğunu hatırlayabilen devreler.</p>
+  </header>
+
+  <!-- ============ 1 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Kitap tam olarak ne diyor</h2></div>
+
+    <div class="book">
+      <div class="src"><span lang="en">Mano · Section 5.1, Introduction</span> — kısaltılmış</div>
+      <p lang="en">Hand-held devices, cell phones, navigation receivers, personal computers, digital cameras, personal media players, and virtually all electronic consumer products can send, receive, store, retrieve, and process information in binary format. The technology behind them is critically dependent on electronic components that can store information, i.e., have memory.</p>
+      <p lang="en">The digital circuits considered thus far have been combinational — their output depends only and immediately on their inputs — they have no memory, i.e., no dependence on past values of their inputs. Sequential circuits, however, act as storage elements and have memory. They can store, retain, and then retrieve information when needed at a later time.</p>
+      <div class="tr">
+        <div class="src">Türkçesi</div>
+        <p>El cihazları, cep telefonları, navigasyon alıcıları, kişisel bilgisayarlar, dijital kameralar, taşınabilir medya oynatıcılar ve neredeyse bütün elektronik tüketici ürünleri; binary biçimde temsil edilen bilgiyi gönderebilir, alabilir, saklayabilir, geri çağırabilir ve işleyebilir. Bunları mümkün kılan teknoloji, bilgi saklayabilen — yani memory'si olan — elektronik bileşenlere kritik biçimde bağlıdır.</p>
+        <p>Şimdiye kadar ele alınan dijital devreler combinational'dı — çıkışları girişlerine <em>yalnızca</em> ve <em>anında</em> bağlıdır — memory'leri yoktur, yani girişlerinin geçmiş değerlerine bağlılıkları yoktur. Sequential circuit'ler ise storage element gibi davranır ve memory'leri vardır. Bilgiyi saklayabilir, tutabilir ve sonradan gerektiğinde geri çağırabilirler.</p>
+      </div>
+    </div>
+
+    <p>Bu paragrafın içine dört iddia sıkıştırılmış ve her biri ayrı ayrı açılmayı hak ediyor:</p>
+
+    <ol>
+      <li><strong>Gerçek ürünlerin memory'ye ihtiyacı var.</strong> Binary bilgiyi saklamak, tutmak ve geri çağırmak bir telefonun ya da kameranın yan özelliği değil — onu telefon ya da kamera yapan şeyin ta kendisi.</li>
+      <li><strong>Bölüm 1–4'teki her şey combinational'dı.</strong> Adder, decoder, multiplexer, comparator — şimdiye kadar kurduğun her devre.</li>
+      <li><strong>Combinational demek "only and immediately" demek.</strong> İki kelime ve bütün ayrım bu ikisinde. Aşağıda tek tek açıyoruz.</li>
+      <li><strong>Sequential circuit'lerin memory'si vardır</strong> — içlerinde <em>storage element</em> bulunur, dolayısıyla davranışları yalnızca şu ana değil geçmişe de bağlıdır.</li>
+    </ol>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>"Only and immediately" — combinational'ı tanımlayan iki kelime</h2></div>
+
+    <p>Kitabın combinational circuit tanımı şu: <em>çıkış, girişlere yalnızca (only) ve anında (immediately) bağlıdır.</em> İki zarfı ayrı ayrı oku, çünkü ikisi farklı şeyleri dışarıda bırakıyor.</p>
+
+    <h3>"Only" geçmişi dışarıda bırakır</h3>
+    <p>Çıkış, şu anda mevcut olan girişlerin saf bir fonksiyonudur. Aynı giriş örüntüsünü bir hafta arayla iki kez ver; iki seferinde de aynı çıkışı alırsın. Bir combinational circuit "bunu daha önce kaç kez gördüm?" sorusunu yanıtlayamaz — sayıyı tutacak bir yeri yoktur.</p>
+
+    <h3>"Immediately" beklemeyi dışarıda bırakır</h3>
+    <p>Devrenin beklediği hiçbir şey yoktur. Ne bir trigger, ne bir clock, ne de "şimdi sakla" komutu. Bir girişi değiştirdiğinde çıkış kendiliğinden değişmeye başlar. Tek gecikme <span class="term">propagation delay</span>'dir — sinyallerin gate'lerden geçmesi için gereken fiziksel süre — ve bu, donanımın bir sınırı; davranışın tasarlanmış bir adımı değil.</p>
+
+    <div class="key">
+      <div class="lab">Bu kitapta memory'nin tanımı</div>
+      <p>Mano memory'yi tek bir ifadeyle tanımlıyor: <strong>girişlerin geçmiş değerlerine bağlılık</strong> (dependence on past values of the inputs). Fikrin tamamı bu. Bugünkü çıkış, dün gelmiş bir girişten etkilenebiliyorsa devrenin memory'si vardır. Etkilenemiyorsa yoktur.</p>
+    </div>
+  </section>
+
+  <!-- ============ 3 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Yapısal fark: geri dönen tek bir yol</h2></div>
+
+    <p>İki aile arasındaki fark, farklı bir gate türü değil. Bir sequential circuit, zaten bildiğin AND / OR / NOT gate'lerinden kurulur — üzerine <em>storage element</em>'ler eklenir ve devrenin kendi sinyallerinin bir kısmı girişlerine geri beslenecek şekilde bağlanır.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 320" role="img" aria-label="Yan yana iki blok diyagram. Solda combinational circuit: girişler gate bloğuna girer ve doğrudan çıkışlara gider; kesikli ve soluk çizilmiş memory bloğu ile feedback yolu, burada olmayanı gösterir. Sağda sequential circuit: aynı mantık bloğu, ama sonucun bir kısmı memory element'ler tarafından saklanır ve saklanan bu değer mantık bloğunun girişine geri beslenir, böylece çıkışlar hem şu anki girişlere hem de saklanan state'e bağlı olur.">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+            <marker id="ah-seq" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <!-- divider -->
+          <line x1="430" y1="14" x2="430" y2="310" stroke="currentColor" stroke-opacity=".18" stroke-width="1" stroke-dasharray="4 5"/>
+
+          <!-- ============ LEFT: combinational ============ -->
+          <text x="20" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--comb)" letter-spacing="1">A · COMBINATIONAL</text>
+
+          <text x="30" y="100" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Inputs</text>
+          <line x1="30" y1="112" x2="82" y2="112" stroke="currentColor" stroke-width="1.6" marker-end="url(#ah)"/>
+
+          <rect x="92" y="82" width="140" height="62" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="162" y="108" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">Combinational</text>
+          <text x="162" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">circuit</text>
+
+          <line x1="232" y1="112" x2="380" y2="112" stroke="currentColor" stroke-width="1.6" marker-end="url(#ah)"/>
+          <text x="388" y="100" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Outputs</text>
+
+          <!-- what is absent -->
+          <g stroke-opacity=".3" fill-opacity=".3">
+            <path d="M 272 112 L 272 168 L 288 168" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 4"/>
+            <rect x="296" y="146" width="104" height="44" rx="3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 4"/>
+            <path d="M 348 190 L 348 246 L 66 246 L 66 128 L 84 128" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 4"/>
+          </g>
+          <text x="348" y="172" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".45">storage yok</text>
+          <text x="205" y="268" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".6">hiçbir şey saklanmaz, geri dönen yol yok</text>
+
+          <text x="205" y="298" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">outputs = f( inputs now )</text>
+
+          <!-- ============ RIGHT: sequential ============ -->
+          <text x="460" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--seq)" letter-spacing="1">B · SEQUENTIAL</text>
+
+          <text x="470" y="100" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Inputs</text>
+          <line x1="470" y1="112" x2="522" y2="112" stroke="currentColor" stroke-width="1.6" marker-end="url(#ah)"/>
+
+          <rect x="532" y="82" width="140" height="62" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="602" y="108" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">Combinational</text>
+          <text x="602" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--comb)">circuit</text>
+
+          <line x1="672" y1="112" x2="846" y2="112" stroke="currentColor" stroke-width="1.6" marker-end="url(#ah)"/>
+          <text x="852" y="100" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Outputs</text>
+
+          <!-- tap down into memory -->
+          <path d="M 712 112 L 712 168 L 726 168" fill="none" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#ah-seq)"/>
+
+          <rect x="736" y="146" width="104" height="44" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="788" y="166" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Memory</text>
+          <text x="788" y="181" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">elements</text>
+
+          <!-- feedback path -->
+          <path d="M 788 190 L 788 246 L 506 246 L 506 128 L 524 128" fill="none" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#ah-seq)"/>
+          <text x="648" y="268" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--seq)">present state — devrenin hatırladığı şey</text>
+
+          <text x="648" y="298" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">outputs = f( inputs now , state )</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 1 — tek yapısal fark.</b> Aynı gate'ler, aynı girişler, aynı çıkışlar. A'yı B'ye çeviren şey storage element'lerin ve feedback path'in eklenmesi; o döngüyü kaldırırsan B yeniden A'ya iner. Bu, kitabın Fig. 5.1'i; Kısım 5.2 ayrıntısıyla açacak.</figcaption>
+    </figure>
+
+    <p>Döngünün aritmetiğe ne yaptığına dikkat et. A'da çıkışlar girişlerin bir fonksiyonu. B'de çıkışlar hem girişlerin <em>hem de</em> storage element'lerde duran değerin fonksiyonu — ve o saklanan değer, daha önceki girişlerden kalma. Kitap bu saklanan değere devrenin <strong>state</strong>'i diyor; bu kavram bütün bölümün merkezinde olacak.</p>
+  </section>
+
+  <!-- ============ 4 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Gözle görmek: aynı giriş, farklı çıkış</h2></div>
+
+    <p>Herhangi bir devreye uygulayabileceğin pratik test şu: aynı girişi iki farklı anda ver. Çıkış farklı olabiliyorsa devrenin memory'si vardır.</p>
+
+    <p>Aynı sayı akışıyla beslenen iki devreyi karşılaştıralım. Birincisi girişini ikiye katlıyor — saf combinational aritmetik. İkincisi bir <em>accumulator</em>: koşan bir toplam tutuyor. Bu tam olarak kitabın verdiği "iki binary sayıyı toplayıp saklayan devre" örneği.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 278" role="img" aria-label="Dört zaman adımlı bir zaman çizelgesi. Giriş değerleri 3, 5, 3, 2. İkiye katlayan devrenin çıkışları 6, 10, 6, 4 — iki 3 de 6 veriyor. Accumulator'ın çıkışları 3, 8, 11, 13 — ilk 3 için 3, ikinci 3 için 11, çünkü accumulator önceki sayıları hatırlıyor.">
+          <defs>
+            <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- time axis -->
+          <line x1="250" y1="34" x2="850" y2="34" stroke="currentColor" stroke-opacity=".35" stroke-width="1.2" marker-end="url(#ah2)"/>
+          <text x="250" y="22" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7" letter-spacing="1">ZAMAN</text>
+
+          <!-- column headers -->
+          <text x="310" y="22" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">t1</text>
+          <text x="450" y="22" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">t2</text>
+          <text x="600" y="22" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">t3</text>
+          <text x="750" y="22" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">t4</text>
+
+          <!-- row labels -->
+          <text x="20" y="72" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">Giriş değeri</text>
+          <text x="20" y="140" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">Doubler</text>
+          <text x="20" y="157" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)" fill-opacity=".8">combinational</text>
+          <text x="20" y="212" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">Accumulator</text>
+          <text x="20" y="229" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--seq)" fill-opacity=".8">memory'si var</text>
+
+          <!-- guide lines -->
+          <line x1="250" y1="88" x2="850" y2="88" stroke="currentColor" stroke-opacity=".12"/>
+          <line x1="250" y1="168" x2="850" y2="168" stroke="currentColor" stroke-opacity=".12"/>
+
+          <!-- inputs -->
+          <rect x="266" y="50" width="68" height="34" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="300" y="73" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="currentColor">3</text>
+          <rect x="416" y="50" width="68" height="34" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="450" y="73" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="currentColor">5</text>
+          <rect x="566" y="50" width="68" height="34" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="600" y="73" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="currentColor">3</text>
+          <rect x="716" y="50" width="68" height="34" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="750" y="73" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="currentColor">2</text>
+
+          <!-- combinational outputs -->
+          <rect x="266" y="118" width="68" height="34" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.4"/>
+          <text x="300" y="141" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--comb)">6</text>
+          <rect x="416" y="118" width="68" height="34" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.4"/>
+          <text x="450" y="141" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--comb)">10</text>
+          <rect x="566" y="118" width="68" height="34" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.4"/>
+          <text x="600" y="141" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--comb)">6</text>
+          <rect x="716" y="118" width="68" height="34" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.4"/>
+          <text x="750" y="141" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--comb)">4</text>
+
+          <!-- sequential outputs -->
+          <rect x="266" y="190" width="68" height="34" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="300" y="213" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">3</text>
+          <rect x="416" y="190" width="68" height="34" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="450" y="213" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">8</text>
+          <rect x="566" y="190" width="68" height="34" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="600" y="213" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">11</text>
+          <rect x="716" y="190" width="68" height="34" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="750" y="213" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--seq)">13</text>
+
+          <!-- highlight the two identical inputs -->
+          <path d="M 300 88 L 300 101 L 372 101" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <path d="M 528 101 L 600 101 L 600 88" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <text x="450" y="105" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">aynı giriş, iki kez</text>
+
+          <path d="M 300 236 L 300 248 L 600 248 L 600 236" fill="none" stroke="var(--seq)" stroke-width="1.4"/>
+          <text x="450" y="266" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">aynı 3 — ama bu kez cevap 11</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 2 — memory testi.</b> Doubler bir 3'e her seferinde 6 veriyor; t1 ile t3'ü ayırt edecek hiçbir yolu yok. Accumulator ilk seferde 3, ikinci seferde 11 veriyor, çünkü o ana kadar önceki 3 ve 5'i içinde taşıyor.</figcaption>
+    </figure>
+
+    <p>Peki accumulator, 8'i t2 ile t3 arasında nerede tutuyor? Storage element'lerinde. Davranışının değişmesinin bütün sebebi de o saklanan sayı.</p>
+  </section>
+
+  <!-- ============ 5 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>State: geçmişin kaydı değil, özeti</h2></div>
+
+    <p>Önemli bir incelik — bölümün ilerisinde çok insanı yanıltıyor: bir sequential circuit geçmişini <em>saklamaz</em>. Yukarıdaki accumulator, bir zamanlar 3 sonra 5 gördüğünü hatırlamıyor. Elinde yalnızca 8 sayısı var. O sayı, bundan sonra yapacağı her şeyi belirlemeye yetiyor — geçmişe dair geri kalan her şey atıldı.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 210" role="img" aria-label="Accumulator'ın sakladığı toplamı gösteren dört kutuluk bir zincir: 0, sonra 3, sonra 8, sonra 11. Aralarındaki etiketli oklar her değişime sebep olan 3, 5 ve 3 girişlerini gösteriyor. 3 etiketli iki ok farklı kutulardan başladığı için farklı kutularda bitiyor.">
+          <defs>
+            <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <text x="20" y="28" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".7" letter-spacing="1">STATE = ŞU AN SAKLANAN SAYI</text>
+
+          <!-- boxes -->
+          <rect x="40" y="72" width="110" height="56" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="95" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="var(--seq)">0</text>
+          <text x="95" y="150" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">başlangıç</text>
+
+          <rect x="270" y="72" width="110" height="56" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="325" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="var(--seq)">3</text>
+          <text x="325" y="150" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">t1 sonrası</text>
+
+          <rect x="500" y="72" width="110" height="56" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="555" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="var(--seq)">8</text>
+          <text x="555" y="150" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">t2 sonrası</text>
+
+          <rect x="730" y="72" width="110" height="56" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="785" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="var(--seq)">11</text>
+          <text x="785" y="150" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">t3 sonrası</text>
+
+          <!-- arrows -->
+          <line x1="152" y1="100" x2="262" y2="100" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#ah3)"/>
+          <text x="207" y="90" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">giriş 3</text>
+
+          <line x1="382" y1="100" x2="492" y2="100" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#ah3)"/>
+          <text x="437" y="90" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">giriş 5</text>
+
+          <line x1="612" y1="100" x2="722" y2="100" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#ah3)"/>
+          <text x="667" y="90" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">giriş 3</text>
+
+          <!-- the point -->
+          <path d="M 207 170 L 207 186 L 667 186 L 667 170" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <text x="437" y="203" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor" fill-opacity=".8">aynı giriş — farklı başlangıç state'i — farklı varış</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 3 — aynı giriş neden başka bir yere götürüyor.</b> Sonucu asla giriş tek başına belirlemez; giriş artı mevcut state belirler. Bunun gibi çizimler, Kısım 5.5'in <b>state diagram</b>'ları olacak; oradaki kutularda ondalık toplamlar yerine bit örüntüleri duracak.</figcaption>
+    </figure>
+
+    <div class="key">
+      <div class="lab">Bunu aklında tut</div>
+      <p><strong>State</strong>, devrenin geçmişten hâlâ taşıdığı her şeydir. Sonludur — sabit sayıda saklanan bit — bu yüzden bu makinelere <em>finite state machine</em> denir. Bir sequential circuit tasarlamak, büyük ölçüde "geçmişin en küçük işe yarar özeti nedir?" sorusuna karar vermektir.</p>
+    </div>
+  </section>
+
+  <!-- ============ 6 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Yan yana</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th lang="en">Combinational</th><th lang="en">Sequential</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Çıkış neye bağlı</td><td class="c">Yalnızca şu anki girişlere</td><td class="s">Şu anki girişlere + mevcut state'e</td></tr>
+          <tr><td>Memory</td><td class="c">Yok</td><td class="s">Var — storage element'ler</td></tr>
+          <tr><td>Feedback path</td><td class="c">Yok</td><td class="s">Var</td></tr>
+          <tr><td>Aynı giriş iki kez</td><td class="c">Çıkış hep aynı</td><td class="s">Çıkış farklı olabilir</td></tr>
+          <tr><td>Nasıl tarif edilir</td><td class="c">Truth table, Boolean denklemler</td><td class="s">State table, state diagram, zaman dizisi</td></tr>
+          <tr><td>Zamanlama</td><td class="c">Anında tepki verir (yalnızca gate delay)</td><td class="s">Belirli anlarda güncellenir (genelde bir clock edge'inde)</td></tr>
+          <tr><td>Neyden kurulur</td><td class="c">Gate'ler</td><td class="s">Gate'ler + latch / flip-flop</td></tr>
+          <tr><td>Örnekler</td><td class="c">Adder, decoder, multiplexer, comparator, ALU</td><td class="s">Counter, register, shift register, RAM, CPU control unit</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Kitaptan bir cümle ezberlenmeye değer, çünkü yukarıdaki her şeyin biçimsel hâli: <em lang="en">"a sequential circuit is specified by a time sequence of inputs, outputs, and internal states."</em> Yani bir sequential circuit; girişlerin, çıkışların ve iç state'lerin <strong>zaman dizisiyle</strong> belirlenir. Zaman, tanımın bir parçası. Combinational mantıkta hiçbir zaman değildi.</p>
+  </section>
+
+  <!-- ============ 7 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Hemen karşılaşacağın terimler</h2></div>
+
+    <p>Kısım 5.1 birkaç terimi gevşek kullanıp ilerleyen kısımlarda tam olarak tanımlıyor. Şimdiden şekillerini öğren ki sonraki kısımlar yepyeni bir konu gibi gelmesin. Derste ve kitapta İngilizce hâlleriyle geçecekler; Türkçe karşılıkları anlamı oturtmak için.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>İngilizce terim</th><th>Türkçe karşılığı</th><th>Burada ne demek</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="tr-word">combinational circuit</td><td class="tr-word">birleşimsel devre</td><td>Çıkış yalnızca şu anki girişlerin fonksiyonudur.</td></tr>
+          <tr><td class="tr-word">sequential circuit</td><td class="tr-word">ardışıl devre</td><td>Memory'si vardır; çıkış girişlere ve saklanan state'e bağlıdır.</td></tr>
+          <tr><td class="tr-word">storage element</td><td class="tr-word">saklama elemanı</td><td>Bir bit tutan eleman. 5.3–5.4'te tanımlanıyor.</td></tr>
+          <tr><td class="tr-word">memory</td><td class="tr-word">bellek</td><td>Bu bölümde: girişlerin geçmiş değerlerine bağlılık.</td></tr>
+          <tr><td class="tr-word">state</td><td class="tr-word">durum</td><td>Storage element'lerde o an tutulan binary bilgi.</td></tr>
+          <tr><td class="tr-word">feedback path</td><td class="tr-word">geri besleme yolu</td><td>Saklanan değeri mantığa geri taşıyan bağlantı.</td></tr>
+          <tr><td class="tr-word">latch</td><td class="tr-word">mandal</td><td>Seviyeye duyarlı storage element — Kısım 5.3.</td></tr>
+          <tr><td class="tr-word">flip-flop</td><td class="tr-word">flip-flop</td><td>Kenar tetiklemeli, 1 bitlik storage element — Kısım 5.4.</td></tr>
+          <tr><td class="tr-word">clock</td><td class="tr-word">saat işareti</td><td>Saklanan değerlerin <em>ne zaman</em> güncelleneceğini belirleyen sinyal — Kısım 5.2.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 8 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Kendini test et</h2></div>
+
+    <details>
+      <summary>4-bit adder combinational'dır. Tam olarak neden?</summary>
+      <div class="ans"><p>Çünkü çıkışları, tam olarak şu anda girişlerinde duran iki sayı ve carry-in tarafından belirlenir. İçinde önceki toplamadan kalan hiçbir şey yoktur. Şimdi 3 ile 5 ver, yarın yine ver — iki seferinde de 8 alırsın.</p></div>
+    </details>
+
+    <details>
+      <summary>Televizyonda "ses +" tuşuna basıyorsun, ses 12'den 13'e çıkıyor. Aynı tuşa bir daha basıyorsun, bu kez 14 oluyor. Bu, arkadaki devre hakkında ne kanıtlıyor?</summary>
+      <div class="ans"><p>Memory'si olduğunu. Giriş sinyali iki seferinde de aynıydı ama çıkış farklı oldu; demek ki sonucu şu anki girişten başka bir şey de etkiliyor — saklanan mevcut ses seviyesi. İşte o saklanan sayı state'tir.</p></div>
+    </details>
+
+    <details>
+      <summary>Kitap, combinational çıkışların girişlere "only and immediately" bağlı olduğunu söylüyor. "Immediately", "only"nin dışarıda bırakmadığı neyi dışarıda bırakıyor?</summary>
+      <div class="ans"><p><em>Only</em>, geçmiş girişlerin etkisini dışarıda bırakır. <em>Immediately</em> ise izin beklemeyi dışarıda bırakır — "şimdi güncelle" diyen bir clock pulse ya da trigger yoktur. Giriş kımıldar kımıldamaz çıkış da hareket etmeye başlar; tek gecikme gate'lerdeki propagation delay'dir.</p></div>
+    </details>
+
+    <details>
+      <summary>Neden yalnızca AND, OR ve NOT gate'leriyle bir counter kurulamaz?</summary>
+      <div class="ans"><p>Bir counter'ın bir sonraki çıkışı, şimdiye kadar kaç pulse geldiğine bağlıdır — yani geçmişe ait bir bilgiye. Saf gate'lerin bunu tutacak yeri yoktur: aynı giriş uygulandığında hep aynı çıkışı üretmek zorundadırlar. Sayının bir pulse'tan diğerine hayatta kalması için storage element'lere (ve bir feedback path'e) ihtiyaç var.</p></div>
+    </details>
+
+    <details>
+      <summary>Bir sequential circuit bütün giriş geçmişini hatırlar mı?</summary>
+      <div class="ans"><p>Hayır — ve bu önemli. Yalnızca sabit sayıda saklanan biti tutar: gelecekteki davranışını tamamen belirlemeye yetecek kadar bir özet. 8'i tutan accumulator, bunun 3 + 5'ten mi yoksa 8 + 0'dan mı geldiğini bilmez; bilmesine de gerek yoktur.</p></div>
+    </details>
+  </section>
+
+  <!-- ============ 9 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>5.1'in açık bıraktıkları</h2></div>
+
+    <p>Giriş kısmı sana sequential circuit'lerin memory'si olduğunu söylüyor. Üç şeyi bilerek söylemiyor ve her biri sonraki kısımların konusu:</p>
+
+    <ul>
+      <li><strong>Saklanan değer ne zaman değişir?</strong> Herhangi bir anda değişebiliyorsa feedback loop kendi kuyruğunu kovalayabilir ve devre kararsız (unstable) hâle gelir. Kısım 5.2 bunu <em>clock</em> ile yanıtlıyor ve sequential circuit'leri synchronous / asynchronous diye ikiye ayırıyor.</li>
+      <li><strong>Storage element fiziksel olarak nedir?</strong> Kısım 5.3 ve 5.4 bunu sıradan gate'lerden kuruyor — önce latch'ler, sonra flip-flop'lar.</li>
+      <li><strong>Böyle bir devre nasıl tarif edilip tasarlanır?</strong> İşin içine zaman girince truth table yetmez. Kısım 5.5'ten itibaren state equation, state table, state diagram ve tam bir tasarım prosedürü geliyor.</li>
+    </ul>
+
+    <p class="next">Sırada: <b>5.2 Sequential Circuits</b> — Şekil 1'deki blok diyagramın tam hâli; synchronous ve asynchronous ayrımı; ve bütün bu işi tasarlanabilir kılan clock sinyali.</p>
+  </section>
+
+</div>
+<style>.site-back{position:fixed;top:14px;right:16px;z-index:99;font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 11px;box-shadow:var(--shadow)}.site-back:hover{color:var(--seq);border-color:var(--seq)}@media(max-width:640px){.site-back{position:static;display:inline-block;margin:12px 0 0 16px}}</style><a class="site-back" href="../index.html">&#8592; İçindekiler</a>
+</body>
+</html>

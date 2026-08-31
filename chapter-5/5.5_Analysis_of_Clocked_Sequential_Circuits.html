@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Devreden Diyagrama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F5;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8FA;
+    --ink:#121A21;
+    --ink-2:#4E5D69;
+    --ink-3:#71818D;
+    --rule:#D3DAE2;
+    --rule-soft:#E3E8EE;
+    --comb:#1C6786;
+    --comb-bg:#E4F0F6;
+    --seq:#AC560A;
+    --seq-bg:#FAECDD;
+    --shadow:0 1px 2px rgba(18,26,33,.06), 0 8px 24px -16px rgba(18,26,33,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --cond:"IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1216;
+      --surface:#141B21;
+      --surface-2:#19222A;
+      --ink:#E5ECF2;
+      --ink-2:#A2B1BD;
+      --ink-3:#7C8B97;
+      --rule:#27323B;
+      --rule-soft:#1F2830;
+      --comb:#71B9D9;
+      --comb-bg:#12303D;
+      --seq:#EDA85B;
+      --seq-bg:#38260F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1216;
+    --surface:#141B21;
+    --surface-2:#19222A;
+    --ink:#E5ECF2;
+    --ink-2:#A2B1BD;
+    --ink-3:#7C8B97;
+    --rule:#27323B;
+    --rule-soft:#1F2830;
+    --comb:#71B9D9;
+    --comb-bg:#12303D;
+    --seq:#EDA85B;
+    --seq-bg:#38260F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);color:var(--ink);font-family:var(--serif);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+  .masthead{border-bottom:1px solid var(--rule);padding:44px 0 28px;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6vw,54px);line-height:1.03;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-2);max-width:62ch;margin:0}
+  .wave{display:block;color:var(--seq);opacity:.85}
+
+  section{padding-top:52px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+  .sec-num{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--seq);
+    border:1px solid var(--rule);border-radius:3px;padding:2px 7px;background:var(--surface);
+    letter-spacing:.06em;flex:none;
+  }
+  h2{font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.4vw,31px);line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--cond);font-weight:600;font-size:20px;letter-spacing:-.005em;margin:34px 0 8px}
+  p{margin:0 0 16px;max-width:68ch}
+  ul,ol{max-width:66ch;padding-left:22px;margin:0 0 16px}
+  li{margin-bottom:8px}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  .term{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+    border-radius:3px;padding:1px 5px;white-space:nowrap}
+
+  .book{
+    background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--comb);
+    border-radius:4px;padding:20px 22px;margin:0 0 22px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  .book .src{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .book p{margin:0;font-style:italic;color:var(--ink)}
+  .book p + p{margin-top:12px}
+  .book .tr{border-top:1px solid var(--rule-soft);margin-top:18px;padding-top:14px}
+  .book .tr p{font-style:normal;color:var(--ink-2);font-size:16px}
+
+  .key{
+    background:var(--seq-bg);border:1px solid var(--seq);
+    border-color:color-mix(in srgb, var(--seq) 34%, var(--seq-bg));
+    border-radius:4px;padding:16px 20px;margin:0 0 22px;max-width:74ch;
+  }
+  .key .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--seq);margin-bottom:6px;font-weight:600}
+  .key p{margin:0}
+  .key p + p{margin-top:10px}
+
+  figure{margin:26px 0 30px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;box-shadow:var(--shadow);overflow:hidden}
+  .fig-body{padding:22px 20px 8px;overflow-x:auto}
+  figure svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;min-width:560px}
+  figcaption{
+    border-top:1px solid var(--rule-soft);background:var(--surface-2);
+    padding:12px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--ink-2);
+  }
+  figcaption b{color:var(--ink);font-weight:600}
+
+  .table-wrap{overflow-x:auto;margin:22px 0 28px;border:1px solid var(--rule);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td.c{color:var(--comb)}
+  td.s{color:var(--seq)}
+  .tr-word{font-family:var(--mono);font-size:14px}
+
+  /* function tables */
+  .fn table{min-width:420px;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .fn td{padding:8px 16px}
+  .fn thead th{font-size:11px}
+  .fn td.note{font-family:var(--serif);font-size:14px;color:var(--ink-3);font-style:italic}
+  .fn tr.bad td{color:var(--seq);background:var(--seq-bg)}
+  .fn-cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:-14px 0 26px;padding-left:2px}
+
+  details{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:0;margin-bottom:10px;max-width:74ch}
+  summary{cursor:pointer;padding:13px 18px;font-family:var(--cond);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:flex-start}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"?";font-family:var(--mono);font-size:12px;color:var(--seq);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex:none;margin-top:3px}
+  details[open] summary{border-bottom:1px solid var(--rule-soft)}
+  details .ans{padding:14px 18px 4px}
+  details .ans p{margin-bottom:12px}
+  summary:focus-visible{outline:2px solid var(--seq);outline-offset:-2px;border-radius:4px}
+
+  .next{margin-top:56px;border-top:1px solid var(--rule);padding-top:22px;font-family:var(--cond);font-size:18px;color:var(--ink-2)}
+  .next b{font-weight:600;color:var(--ink)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .page{padding:0 16px 72px}
+    .fig-body{padding:16px 12px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="page" lang="tr">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span lang="en">Digital Design · Mano</span><span class="dot"></span>
+      <span>Bölüm 5 — <span lang="en">Synchronous Sequential Logic</span></span><span class="dot"></span>
+      <span>Kısım 5.5</span>
+    </div>
+    <h1>Devreden Diyagrama</h1>
+    <svg class="wave" viewBox="0 0 320 22" width="320" height="22" aria-hidden="true" focusable="false">
+      <polyline points="0,18 26,18 26,5 60,5 60,18 94,18 94,5 128,5 128,18 162,18 162,5 196,5 196,18 230,18 230,5 264,5 264,18 320,18"
+        fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <p class="standfirst">Elinde flip-flop'lu bir şema var. Bu devre ne yapıyor? 5.5 bu soruyu yanıtlamanın sistemli yolunu veriyor: şemadan denkleme, denklemden tabloya, tablodan diyagrama. Dört temsil, tek davranış.</p>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Kitap tam olarak ne diyor</h2></div>
+
+    <div class="book">
+      <div class="src"><span lang="en">Mano · Section 5.5, Analysis of Clocked Sequential Circuits</span> — kısaltılmış</div>
+      <p lang="en">Analysis describes what a given circuit will do under certain operating conditions. The behavior of a clocked sequential circuit is determined from the inputs, the outputs, and the state of its flip-flops. The outputs and the next state are both a function of the inputs and the present state. The analysis of a sequential circuit consists of obtaining a table or a diagram for the time sequence of inputs, outputs, and internal states.</p>
+      <p lang="en">A logic diagram is recognized as a clocked sequential circuit if it includes flip-flops with clock inputs. The flip-flops may be of any type, and the logic diagram may or may not include combinational logic gates.</p>
+      <p lang="en">A state equation (also called a transition equation) specifies the next state as a function of the present state and inputs. […] The part of the circuit that generates the inputs to flip-flops is described algebraically by a set of Boolean functions called flip-flop input equations.</p>
+      <div class="tr">
+        <div class="src">Türkçesi</div>
+        <p>Analiz, verilen bir devrenin belirli çalışma koşullarında ne yapacağını tarif eder. Saatli bir sequential circuit'in davranışı; girişlerinden, çıkışlarından ve flip-flop'larının state'inden belirlenir. Çıkışlar ve next state'in ikisi de girişlerin ve mevcut state'in fonksiyonudur. Bir sequential circuit'i analiz etmek, girişlerin, çıkışların ve iç state'lerin zaman dizisi için bir tablo ya da diyagram elde etmektir.</p>
+        <p>Bir logic diagram, clock girişi olan flip-flop'lar içeriyorsa saatli sequential circuit olarak tanınır. Flip-flop'lar herhangi bir türden olabilir ve şemada combinational gate bulunabilir de bulunmayabilir de.</p>
+        <p>Bir <em>state equation</em> (geçiş denklemi de denir), next state'i mevcut state ve girişlerin fonksiyonu olarak belirtir. […] Devrenin flip-flop girişlerini üreten kısmı, <em>flip-flop input equation</em> denen bir Boolean fonksiyon kümesiyle cebirsel olarak tarif edilir.</p>
+      </div>
+    </div>
+
+    <p>5.2'de "outputs = f(inputs, present state)" ve "next state = g(inputs, present state)" demiştik. 5.5, bu iki fonksiyonu <strong>verilen bir şemadan çıkarmanın</strong> yöntemi.</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Dört temsil, tek davranış</h2></div>
+
+    <p>Analiz, aynı davranışın dört farklı gösterimi arasında yürümekten ibaret. Kitabın özet satırı şu:</p>
+
+    <p style="font-family:var(--mono);font-size:15px;padding-left:2px"><strong>Circuit diagram &#8594; Equations &#8594; State table &#8594; State diagram</strong></p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 240" role="img" aria-label="Dört kutuluk bir zincir: devre şeması, denklemler, state table ve state diagram. Aralarındaki oklar her adımda ne yapıldığını söylüyor: gate'leri oku, bütün kombinasyonları listele, satırları daireye çevir. Zincir soldan sağa yapıdan davranışa doğru gidiyor.">
+          <defs>
+            <marker id="p1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <rect x="20" y="70" width="170" height="72" rx="4" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.7"/>
+          <text x="105" y="100" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">Circuit</text>
+          <text x="105" y="118" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">diagram</text>
+          <text x="105" y="162" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" fill-opacity=".7">yapı</text>
+
+          <rect x="240" y="70" width="170" height="72" rx="4" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.7"/>
+          <text x="325" y="100" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">Input &amp; state</text>
+          <text x="325" y="118" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--comb)">equations</text>
+          <text x="325" y="162" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" fill-opacity=".7">cebir</text>
+
+          <rect x="460" y="70" width="170" height="72" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="545" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">State table</text>
+          <text x="545" y="162" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" fill-opacity=".7">bütün satırlar</text>
+
+          <rect x="680" y="70" width="170" height="72" rx="4" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="765" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">State diagram</text>
+          <text x="765" y="162" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" fill-opacity=".7">davranış</text>
+
+          <line x1="190" y1="106" x2="232" y2="106" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#p1)"/>
+          <text x="211" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--seq)">gate'leri</text>
+          <text x="211" y="48" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--seq)">oku</text>
+
+          <line x1="410" y1="106" x2="452" y2="106" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#p1)"/>
+          <text x="431" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--seq)">tüm kombi-</text>
+          <text x="431" y="48" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--seq)">nasyonlar</text>
+
+          <line x1="630" y1="106" x2="672" y2="106" stroke="var(--seq)" stroke-width="1.8" marker-end="url(#p1)"/>
+          <text x="651" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--seq)">satır &#8594;</text>
+          <text x="651" y="48" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--seq)">daire</text>
+
+          <path d="M 105 196 L 765 196" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#p1)"/>
+          <text x="435" y="220" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".75">yapısal gösterimden soyut davranışa</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 1 — analizin dört durağı.</b> Dördü de aynı devreyi anlatır; fark, kime hitap ettiklerinde. State table türetmesi kolaydır ve makine gibi çalışır; state diagram ise devrenin ne yaptığını <b>insana</b> gösterir. 5.8'de bu zinciri ters yönde yürüyeceğiz.</figcaption>
+    </figure>
+
+    <div class="key">
+      <div class="lab">Gösterim kuralı</div>
+      <p>Flip-flop input equation'da <strong>flip-flop tipinin harfi</strong> değişken adı, <strong>alt indis</strong> ise flip-flop'un adıdır. Yani <span class="term">D<sub>A</sub> = Ax + Bx</span>, "A adlı D flip-flop'un D girişi şu ifadeyle sürülüyor" demek. <span class="term">J<sub>B</sub></span>, <span class="term">K<sub>B</sub></span>, <span class="term">T<sub>A</sub></span> hep aynı mantık.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Örnek devre: iki D flip-flop</h2></div>
+
+    <p>Kitabın Fig. 5.15'i: iki D flip-flop (A ve B), bir giriş x, bir çıkış y. Şemadan üç denklem okunuyor — iki flip-flop input equation ve bir output equation:</p>
+
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>D<sub>A</sub> = Ax + Bx</strong><br>
+      <strong>D<sub>B</sub> = A&#8242;x</strong><br>
+      <strong>y = (A + B)x&#8242;</strong>
+    </p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 280" role="img" aria-label="İki D flip-flop'lu örnek devre. x girişi ve A, B flip-flop çıkışları combinational gate'lere gider; bir grup gate A flip-flop'unun D girişini, başka bir grup B'nin D girişini üretir; üçüncü grup y çıkışını üretir. Her iki flip-flop ortak clock ile sürülür.">
+          <defs>
+            <marker id="p2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text x="20" y="60" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">x</text>
+          <line x1="38" y1="56" x2="150" y2="56" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="150" cy="56" r="3.5" fill="currentColor"/>
+          <path d="M 150 56 L 150 200 L 190 200" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="150" cy="200" r="3.5" fill="currentColor"/>
+          <path d="M 150 56 L 190 56" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M 150 200 L 150 250 L 470 250" fill="none" stroke="currentColor" stroke-width="1.6"/>
+
+          <!-- comb block 1 -->
+          <rect x="190" y="30" width="150" height="54" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="265" y="53" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">Ax + Bx</text>
+          <text x="265" y="70" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)" fill-opacity=".85">gate'ler</text>
+          <line x1="340" y1="56" x2="390" y2="56" stroke="currentColor" stroke-width="1.6" marker-end="url(#p2)"/>
+          <text x="365" y="46" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)">D</text>
+
+          <!-- flip-flop A -->
+          <rect x="396" y="24" width="90" height="88" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="406" y="48" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">D</text>
+          <path d="M 396 76 L 408 82 L 396 88" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="441" y="70" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">A</text>
+          <line x1="486" y1="44" x2="540" y2="44" stroke="currentColor" stroke-width="1.6"/>
+          <text x="548" y="49" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">A</text>
+          <line x1="486" y1="96" x2="540" y2="96" stroke="currentColor" stroke-width="1.6"/>
+          <text x="548" y="101" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">A&#8242;</text>
+
+          <!-- comb block 2 -->
+          <rect x="190" y="174" width="150" height="54" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="265" y="197" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">A&#8242;x</text>
+          <text x="265" y="214" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)" fill-opacity=".85">gate</text>
+          <line x1="340" y1="200" x2="390" y2="200" stroke="currentColor" stroke-width="1.6" marker-end="url(#p2)"/>
+          <text x="365" y="190" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--comb)">D</text>
+
+          <!-- flip-flop B -->
+          <rect x="396" y="168" width="90" height="88" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="406" y="192" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">D</text>
+          <path d="M 396 220 L 408 226 L 396 232" fill="none" stroke="var(--seq)" stroke-width="1.5"/>
+          <text x="441" y="214" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--seq)">B</text>
+          <line x1="486" y1="188" x2="540" y2="188" stroke="currentColor" stroke-width="1.6"/>
+          <text x="548" y="193" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">B</text>
+
+          <!-- output block -->
+          <rect x="600" y="112" width="150" height="54" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="675" y="135" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">(A + B)x&#8242;</text>
+          <text x="675" y="152" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--comb)" fill-opacity=".85">gate'ler</text>
+          <line x1="750" y1="139" x2="820" y2="139" stroke="currentColor" stroke-width="1.6" marker-end="url(#p2)"/>
+          <text x="830" y="144" font-family="IBM Plex Mono, monospace" font-size="13" fill="currentColor">y</text>
+
+          <!-- feedback A, B into blocks and output -->
+          <path d="M 566 44 L 580 44 L 580 126 L 596 126" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#p2)"/>
+          <path d="M 566 188 L 588 188 L 588 152 L 596 152" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#p2)"/>
+          <path d="M 470 250 L 774 250 L 774 172" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#p2)"/>
+          <text x="620" y="266" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" fill-opacity=".75">x, output gate'lerine de gider</text>
+
+          <path d="M 560 44 L 560 12 L 176 12 L 176 42 L 186 42" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#p2)"/>
+          <circle cx="560" cy="44" r="3" fill="currentColor"/>
+          <path d="M 574 188 L 574 152 L 360 152 L 360 120 L 176 120 L 176 70 L 186 70" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#p2)"/>
+          <circle cx="574" cy="188" r="3" fill="currentColor"/>
+          <path d="M 552 96 L 552 132 L 168 132 L 168 188 L 186 188" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#p2)"/>
+          <circle cx="552" cy="96" r="3" fill="currentColor"/>
+
+          <text x="600" y="20" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">Clock: her iki flip-flop'a ortak</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 2 — kitabın Fig. 5.15'i, blok hâlinde.</b> Gate yığınları yerine ürettikleri ifadeler yazılı. Amber çizgiler A, A&#8242; ve B'nin geri beslemesi — yani <b>present state</b>. Devre bir 1'ler dizisi içindeki 0'ı algılıyor; bunu birazdan state diagram'da göreceğiz.</figcaption>
+    </figure>
+
+    <h3>State equation</h3>
+    <p>Bir D flip-flop'un D girişi next state'i belirlediğine göre (Q(t+1) = D), input equation'lar doğrudan <strong>state equation</strong>'a dönüşür:</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>A(t + 1) = A(t)x(t) + B(t)x(t)</strong><br>
+      <strong>B(t + 1) = A&#8242;(t)x(t)</strong>
+    </p>
+    <p>Denklemin sol tarafı, bir clock kenarı sonraki next state'i gösterir. Sağ tarafı ise next state'i 1 yapan mevcut state ve giriş koşullarını belirten bir Boolean ifadedir. Bütün değişkenler mevcut state'in fonksiyonu olduğu için (t) yazmayı bırakıp kısa biçimi kullanabiliriz:</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>A(t + 1) = Ax + Bx</strong> &nbsp;&nbsp; <strong>B(t + 1) = A&#8242;x</strong> &nbsp;&nbsp; <strong>y = (A + B)x&#8242;</strong>
+    </p>
+    <p>Dikkat: D flip-flop için <em>input equation ile state equation aynı ifadedir</em>. Sebebi karakteristik denklem: Q(t+1) = D<sub>Q</sub>. JK ve T'de böyle olmayacak.</p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>State table</h2></div>
+
+    <p>Girişlerin, çıkışların ve flip-flop state'lerinin zaman dizisi bir <strong>state table</strong>'da (transition table) sayılabilir. Tablo dört bölümden oluşur: <em>present state</em>, <em>input</em>, <em>next state</em>, <em>output</em>. Türetmek için mevcut state ve girişlerin bütün ikili kombinasyonlarını listelemek gerekir — burada 000'dan 111'e sekiz satır.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>A</th><th>B</th><th>x</th><th>A(t+1)</th><th>B(t+1)</th><th>y</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.2 — Fig. 5.15 devresinin state table'ı</p>
+
+    <p>Nasıl doldurulduğuna dikkat et: A sütununda üç tane 1 var — A ile x'in ikisi de 1 olduğu ya da B ile x'in ikisi de 1 olduğu satırlarda. Bu tam olarak <span class="term">A(t+1) = Ax + Bx</span>. B sütunu ise <span class="term">B(t+1) = A&#8242;x</span>'ten geliyor: A = 0 ve x = 1 olduğunda 1. y sütunu da <span class="term">y = Ax&#8242; + Bx&#8242;</span>'ten.</p>
+
+    <div class="key">
+      <div class="lab">Kaç satır olacak?</div>
+      <p><strong>m flip-flop ve n giriş varsa state table'ın 2<sup>m+n</sup> satırı olur.</strong> Present state ve input sütunlarına 0'dan 2<sup>m+n</sup>−1'e kadar ikili sayılar yazılır. Next state bölümünde her flip-flop için bir sütun, output bölümünde her çıkış değişkeni için bir sütun bulunur.</p>
+    </div>
+
+    <p>Tablonun <strong>ikinci bir biçimi</strong> de var: yalnızca üç bölüm (present state, next state, output), giriş koşulları ise next state ve output bölümlerinin içinde sayılır. Her present state için, girişin değerine göre iki olası next state ve çıkış olur. Hangi biçimin daha kullanışlı olduğu uygulamaya göre değişir.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead>
+          <tr><th>Present state<br>A B</th><th>Next state<br>x = 0</th><th>Next state<br>x = 1</th><th>Output y<br>x = 0</th><th>Output y<br>x = 1</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0 0</td><td>0 0</td><td>0 1</td><td>0</td><td>0</td></tr>
+          <tr><td>0 1</td><td>0 0</td><td>1 1</td><td>1</td><td>0</td></tr>
+          <tr><td>1 0</td><td>0 0</td><td>1 0</td><td>1</td><td>0</td></tr>
+          <tr><td>1 1</td><td>0 0</td><td>1 0</td><td>1</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.3 — aynı bilgi, ikinci biçimde</p>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>State diagram</h2></div>
+
+    <p>State table'daki bilgi grafik olarak da gösterilebilir. Bu diyagramda <strong>bir state bir daireyle</strong>, state'ler arasındaki (clock ile tetiklenen) geçişler ise daireleri birleştiren <strong>yönlü çizgilerle</strong> gösterilir. Çizgiler eğik çizgiyle ayrılmış iki ikili sayıyla etiketlenir: <strong>önce mevcut state sırasındaki giriş değeri, eğik çizgiden sonra o girişle mevcut state sırasındaki çıkış.</strong></p>
+
+    <div class="key">
+      <div class="lab">Sık yapılan hata</div>
+      <p>Çizgi üzerindeki çıkış biti, <em>mevcut state sırasında ve gösterilen girişle</em> oluşur; <strong>next state'e geçişle hiçbir ilgisi yoktur.</strong> Yani "00'dan 01'e giden ok 1/0 ile etiketliyse", bu "devre 00'dayken giriş 1 ise çıkış 0'dır, bir sonraki clock'ta 01'e gider" demektir.</p>
+    </div>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 280" role="img" aria-label="Dört daireli state diagram: 00, 01, 11 ve 10 soldan sağa dizili. Giriş 1 iken devre 00'dan 01'e, 01'den 11'e, 11'den 10'a ilerliyor ve 10'da kalıyor; bu geçişlerde çıkış 0. Giriş 0 olduğunda 01, 11 ve 10 durumlarının hepsi çıkışı 1 yapıp 00'a dönüyor; 00'da giriş 0 iken çıkış 0 kalıyor.">
+          <defs>
+            <marker id="p3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+            <marker id="p3s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <circle cx="140" cy="120" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="140" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">00</text>
+          <circle cx="350" cy="120" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="350" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">01</text>
+          <circle cx="560" cy="120" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="560" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">11</text>
+          <circle cx="770" cy="120" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="770" y="126" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">10</text>
+
+          <!-- forward chain -->
+          <line x1="174" y1="120" x2="310" y2="120" stroke="currentColor" stroke-width="1.6" marker-end="url(#p3)"/>
+          <text x="242" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1/0</text>
+          <line x1="384" y1="120" x2="520" y2="120" stroke="currentColor" stroke-width="1.6" marker-end="url(#p3)"/>
+          <text x="452" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1/0</text>
+          <line x1="594" y1="120" x2="730" y2="120" stroke="currentColor" stroke-width="1.6" marker-end="url(#p3)"/>
+          <text x="662" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1/0</text>
+
+          <!-- self loops -->
+          <path d="M 120 92 C 106 40, 174 40, 160 92" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#p3)"/>
+          <text x="140" y="42" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">0/0</text>
+          <path d="M 750 92 C 736 40, 804 40, 790 92" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#p3)"/>
+          <text x="770" y="42" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1/0</text>
+
+          <!-- returns -->
+          <path d="M 342 152 Q 240 208 152 148" fill="none" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#p3s)"/>
+          <text x="243" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">0/1</text>
+          <path d="M 552 152 Q 350 262 148 152" fill="none" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#p3s)"/>
+          <text x="350" y="234" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">0/1</text>
+          <path d="M 762 152 Q 455 320 144 154" fill="none" stroke="var(--seq)" stroke-width="1.7" marker-end="url(#p3s)"/>
+          <text x="454" y="256" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">0/1</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 3 — kitabın Fig. 5.16'sı: 0 algılayıcı.</b> Giriş 1'de kaldığı sürece devre sağa doğru ilerler ve çıkış 0'dır. Bir dizi 1'den sonra gelen <b>ilk 0</b> çıkışı 1 yapar ve devreyi başlangıç state'i 00'a döndürür (amber oklar). Makine, veri akışındaki sıfırı algılıyor.</figcaption>
+    </figure>
+
+    <p>State table ile state diagram arasında gösterim biçimi dışında hiçbir fark yok. State table verilen bir logic diagram ve state equation'dan türetmesi daha kolay; state diagram ise doğrudan state table'dan çıkar ve devrenin işleyişini <em>insanın</em> yorumlaması için daha uygun bir resim verir.</p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>D flip-flop ile analiz: ikinci örnek</h2></div>
+
+    <p>Tek bir input equation'la tarif edilen devre:</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px"><strong>D<sub>A</sub> = A &#8853; x &#8853; y</strong></p>
+    <p>D<sub>A</sub> sembolü, çıkışı A olan bir D flip-flop ima ediyor. x ve y devrenin girişleri. Output equation verilmemiş; bu da çıkışın doğrudan flip-flop çıkışından alındığı anlamına geliyor.</p>
+
+    <p>State table'da A'nın mevcut state'i için bir sütun, iki giriş için iki sütun ve A'nın next state'i için bir sütun var. Next state değerleri state equation'dan geliyor: <span class="term">A(t+1) = A &#8853; x &#8853; y</span>. Bu ifade bir <em>tek (odd) fonksiyon</em>: yalnızca bir değişken 1 olduğunda ya da üçü birden 1 olduğunda 1'e eşit.</p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>A</th><th>x</th><th>y</th><th>A(t+1)</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Fig. 5.17(b) — D<sub>A</sub> = A &#8853; x &#8853; y devresinin state table'ı</p>
+
+    <p>Devrenin bir flip-flop'u ve iki state'i var, dolayısıyla state diagram iki daireden oluşuyor. Burada <strong>eğik çizgiye gerek yok</strong>, çünkü combinational bir çıkış yok — dairelerin içindeki sayı hem state hem çıkış. İki girişin her state'te dört olası kombinasyonu var; aynı geçişi veren kombinasyonlar virgülle ayrılıp tek çizgide gösteriliyor.</p>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>JK flip-flop ile analiz</h2></div>
+
+    <p>D dışındaki flip-flop'larda bir adım daha var. D'de state equation, input equation ile aynıydı; JK ve T'de <strong>characteristic equation'a başvurmak</strong> gerekiyor. Kitabın verdiği prosedür:</p>
+
+    <ol>
+      <li>Flip-flop input equation'ları mevcut state ve giriş değişkenleri cinsinden belirle.</li>
+      <li>Input equation'ları flip-flop'un characteristic equation'ına yerine koy; böylece state equation'ları elde et.</li>
+      <li>State equation'ları kullanarak state table'daki next state değerlerini bul.</li>
+    </ol>
+
+    <p>Kitabın Fig. 5.18'indeki devre: iki JK flip-flop (A ve B), bir giriş x, çıkış yok. Input equation'lar:</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>J<sub>A</sub> = B</strong> &nbsp;&nbsp; <strong>K<sub>A</sub> = Bx&#8242;</strong><br>
+      <strong>J<sub>B</sub> = x&#8242;</strong> &nbsp;&nbsp; <strong>K<sub>B</sub> = A&#8242;x + Ax&#8242; = A &#8853; x</strong>
+    </p>
+
+    <p>JK'nın characteristic equation'ında Q yerine flip-flop adını koyuyoruz:</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>A(t + 1) = J<sub>A</sub>A&#8242; + K<sub>A</sub>&#8242;A</strong> &nbsp;&nbsp; <strong>B(t + 1) = J<sub>B</sub>B&#8242; + K<sub>B</sub>&#8242;B</strong>
+    </p>
+    <p>Input equation'ları yerine koyunca state equation'lar çıkıyor:</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>A(t + 1) = BA&#8242; + (Bx&#8242;)&#8242;A = A&#8242;B + AB&#8242; + Ax</strong><br>
+      <strong>B(t + 1) = x&#8242;B&#8242; + (A &#8853; x)&#8242;B = B&#8242;x&#8242; + ABx + A&#8242;Bx&#8242;</strong>
+    </p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>A</th><th>B</th><th>x</th><th>J<sub>A</sub></th><th>K<sub>A</sub></th><th>J<sub>B</sub></th><th>K<sub>B</sub></th><th>A(t+1)</th><th>B(t+1)</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.4 — JK devresinin state table'ı. Flip-flop input sütunları tablonun parçası değil; next state'i değerlendirmek için gerekiyor. State equation kullanırsan bu sütunlara hiç ihtiyacın yok.</p>
+
+    <p>Bir satırı elle okuyalım — kitabın kendi örneği: present state AB = 10 ve x = 0. Burada J<sub>A</sub> = K<sub>A</sub> = 0, yani A değişmez ve 1 olarak kalır. Aynı satırda J<sub>B</sub> = K<sub>B</sub> = 1; B'nin mevcut state'i 0 olduğu için tümlenir ve 1'e döner. Sonuç: 10 &#8594; 11.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 330" role="img" aria-label="Dört state'li state diagram. 00, 01, 10 ve 11 durumları bir kare düzeninde. Giriş 1 iken 00 kendinde kalıyor, 01 ile 10 arasında ve 11 kendinde geçişler var. Giriş 0 iken 00'dan 01'e, 01 ve 10'dan 11'e, 11'den 00'a geçiliyor. Oklarda yalnızca giriş değeri yazılı, çünkü devrenin ayrı bir çıkışı yok.">
+          <defs>
+            <marker id="p4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <circle cx="200" cy="90" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="200" y="96" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">00</text>
+          <circle cx="640" cy="90" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="640" y="96" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">01</text>
+          <circle cx="200" cy="250" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="200" y="256" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">10</text>
+          <circle cx="640" cy="250" r="32" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="640" y="256" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--seq)">11</text>
+
+          <!-- 00 -> 01 (x=0) -->
+          <line x1="234" y1="84" x2="600" y2="84" stroke="currentColor" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="417" y="74" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">0</text>
+          <!-- 00 self (x=1) -->
+          <path d="M 180 62 C 166 12, 234 12, 220 62" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="200" y="16" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <!-- 01 -> 11 (x=0) -->
+          <line x1="640" y1="124" x2="640" y2="210" stroke="currentColor" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="654" y="172" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">0</text>
+          <!-- 01 -> 10 (x=1) diagonal -->
+          <line x1="612" y1="114" x2="230" y2="228" stroke="currentColor" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="520" y="130" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <!-- 10 -> 11 (x=0) -->
+          <line x1="234" y1="256" x2="600" y2="256" stroke="currentColor" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="417" y="276" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">0</text>
+          <!-- 10 self (x=1) -->
+          <path d="M 180 278 C 166 322, 234 322, 220 278" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="200" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <!-- 11 -> 00 (x=0) diagonal -->
+          <line x1="612" y1="228" x2="230" y2="114" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="520" y="220" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--seq)">0</text>
+          <!-- 11 self (x=1) -->
+          <path d="M 668 232 C 716 214, 716 286, 668 268" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#p4)"/>
+          <text x="732" y="255" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 4 — kitabın Fig. 5.19'u.</b> Devrenin ayrı bir çıkışı olmadığı için oklarda tek bir ikili sayı var: yalnızca x'in değeri. Çıkış istenirse flip-flop state'lerinin kendisi çıkış sayılır — bu da bir sonraki başlığın konusu.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>T flip-flop ile analiz</h2></div>
+
+    <p>Yöntem JK ile aynı. Next state değerleri ya Table 5.1'deki characteristic table'dan ya da characteristic equation'dan bulunur: <span class="term">Q(t+1) = T &#8853; Q = T&#8242;Q + TQ&#8242;</span>.</p>
+
+    <p>Kitabın Fig. 5.20'sindeki devre: iki flip-flop (A, B), bir giriş x, bir çıkış y.</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>T<sub>A</sub> = Bx</strong> &nbsp;&nbsp; <strong>T<sub>B</sub> = x</strong> &nbsp;&nbsp; <strong>y = AB</strong>
+    </p>
+    <p>State equation'lar, T'leri characteristic equation'a koyarak:</p>
+    <p style="font-family:var(--mono);font-size:15.5px;padding-left:2px">
+      <strong>A(t + 1) = (Bx)&#8242;A + (Bx)A&#8242; = AB&#8242; + Ax&#8242; + A&#8242;Bx</strong><br>
+      <strong>B(t + 1) = x &#8853; B</strong>
+    </p>
+
+    <div class="fn table-wrap">
+      <table>
+        <thead><tr><th>A</th><th>B</th><th>x</th><th>A(t+1)</th><th>B(t+1)</th><th>y</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fn-cap">Table 5.5 — T flip-flop'lu devrenin state table'ı</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 330" role="img" aria-label="Dört state'li halka biçiminde state diagram. Giriş 1 iken devre 00, 01, 10, 11 sırasıyla ilerleyip 00'a dönüyor, yani ikili sayıcı gibi davranıyor. Giriş 0 iken her state kendinde kalıyor. Dairelerin içinde state ve çıkış eğik çizgiyle yazılı; yalnızca 11 state'inde çıkış 1.">
+          <defs>
+            <marker id="p5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <circle cx="250" cy="95" r="38" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="250" y="101" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--seq)">00/0</text>
+          <circle cx="630" cy="95" r="38" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="630" y="101" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--seq)">01/0</text>
+          <circle cx="630" cy="245" r="38" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.8"/>
+          <text x="630" y="251" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--seq)">10/0</text>
+          <circle cx="250" cy="245" r="38" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="2"/>
+          <text x="250" y="251" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--comb)">11/1</text>
+
+          <line x1="290" y1="95" x2="586" y2="95" stroke="currentColor" stroke-width="1.6" marker-end="url(#p5)"/>
+          <text x="438" y="85" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <line x1="630" y1="135" x2="630" y2="203" stroke="currentColor" stroke-width="1.6" marker-end="url(#p5)"/>
+          <text x="646" y="173" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <line x1="590" y1="245" x2="294" y2="245" stroke="currentColor" stroke-width="1.6" marker-end="url(#p5)"/>
+          <text x="438" y="265" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+          <line x1="250" y1="205" x2="250" y2="137" stroke="currentColor" stroke-width="1.6" marker-end="url(#p5)"/>
+          <text x="222" y="173" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor">1</text>
+
+          <path d="M 226 61 C 210 16, 278 16, 262 61" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#p5)"/>
+          <text x="244" y="20" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0</text>
+          <path d="M 606 61 C 590 16, 658 16, 642 61" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#p5)"/>
+          <text x="624" y="20" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0</text>
+          <path d="M 606 279 C 590 322, 658 322, 642 279" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#p5)"/>
+          <text x="624" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0</text>
+          <path d="M 226 279 C 210 322, 278 322, 262 279" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#p5)"/>
+          <text x="244" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">0</text>
+
+          <text x="440" y="180" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity=".7">x = 1 iken ikili sayıcı · x = 0 iken durur</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 5 — kitabın Fig. 5.20(b)'si.</b> Giriş x = 1 olduğu sürece devre 00 &#8594; 01 &#8594; 10 &#8594; 11 &#8594; 00 sırasıyla bir <b>binary counter</b> gibi çalışır. x = 0 iken aynı state'te kalır. Çıkış y yalnızca state 11 iken 1'dir — yani <b>çıkış girişten bağımsız</b>. Dairelerin içindeki iki değer, eğik çizgiyle ayrılmış state ve çıkış.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>Mealy ve Moore modelleri</h2></div>
+
+    <p>Bir sequential circuit'in en genel modelinde girişler, çıkışlar ve iç state'ler bulunur. Alışılmış olarak iki model ayırt edilir ve <strong>tek farkları çıkışın nasıl üretildiğidir</strong>:</p>
+
+    <ul>
+      <li><strong>Mealy modeli</strong> — çıkış, hem mevcut state'in hem de girişin fonksiyonudur.</li>
+      <li><strong>Moore modeli</strong> — çıkış yalnızca mevcut state'in fonksiyonudur.</li>
+    </ul>
+
+    <p>Bir devrede her iki tür çıkış birden bulunabilir. İki modele birlikte <strong>finite state machine (FSM)</strong> denir: Mealy FSM / Mealy machine ve Moore FSM / Moore machine.</p>
+
+    <figure>
+      <div class="fig-body">
+        <svg viewBox="0 0 880 330" role="img" aria-label="İki blok diyagram. Üstte Mealy makinesi: girişler hem next-state combinational logic'e hem de output combinational logic'e gider; state register'ın çıkışı da her ikisine gider. Altta Moore makinesi: girişler yalnızca next-state logic'e gider, output logic'i yalnızca state register'dan beslenir. Aradaki tek fark, girişten output logic'e giden bağlantı.">
+          <defs>
+            <marker id="p6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+            <marker id="p6s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--seq)"/>
+            </marker>
+          </defs>
+
+          <!-- MEALY -->
+          <text x="20" y="26" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--seq)" letter-spacing="1">MEALY</text>
+          <text x="24" y="76" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Inputs</text>
+          <line x1="24" y1="88" x2="130" y2="88" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="90" cy="88" r="3.5" fill="currentColor"/>
+          <line x1="130" y1="88" x2="176" y2="88" stroke="currentColor" stroke-width="1.6" marker-end="url(#p6)"/>
+          <rect x="182" y="52" width="150" height="72" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="257" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">Next state</text>
+          <text x="257" y="99" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">comb. logic</text>
+          <line x1="332" y1="88" x2="378" y2="88" stroke="currentColor" stroke-width="1.6" marker-end="url(#p6)"/>
+          <rect x="384" y="52" width="120" height="72" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="444" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">State</text>
+          <text x="444" y="99" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">register</text>
+          <line x1="504" y1="88" x2="580" y2="88" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#p6s)"/>
+          <circle cx="540" cy="88" r="3.5" fill="var(--seq)"/>
+          <rect x="586" y="52" width="150" height="72" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="661" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">Output</text>
+          <text x="661" y="99" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">comb. logic</text>
+          <line x1="736" y1="88" x2="796" y2="88" stroke="currentColor" stroke-width="1.6" marker-end="url(#p6)"/>
+          <text x="806" y="93" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Outputs</text>
+
+          <!-- the distinguishing edge -->
+          <path d="M 90 88 L 90 26 L 620 26 L 620 46" fill="none" stroke="var(--seq)" stroke-width="2" marker-end="url(#p6s)"/>
+          <text x="360" y="20" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">girişler çıkışı da doğrudan etkiler</text>
+          <!-- state feedback -->
+          <path d="M 540 88 L 540 152 L 150 152 L 150 110 L 176 110" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#p6s)"/>
+
+          <line x1="20" y1="186" x2="860" y2="186" stroke="currentColor" stroke-opacity=".2" stroke-dasharray="4 5"/>
+
+          <!-- MOORE -->
+          <text x="20" y="216" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--comb)" letter-spacing="1">MOORE</text>
+          <text x="24" y="256" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Inputs</text>
+          <line x1="24" y1="268" x2="176" y2="268" stroke="currentColor" stroke-width="1.6" marker-end="url(#p6)"/>
+          <rect x="182" y="232" width="150" height="72" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="257" y="262" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">Next state</text>
+          <text x="257" y="279" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">comb. logic</text>
+          <line x1="332" y1="268" x2="378" y2="268" stroke="currentColor" stroke-width="1.6" marker-end="url(#p6)"/>
+          <rect x="384" y="232" width="120" height="72" rx="3" fill="var(--seq-bg)" stroke="var(--seq)" stroke-width="1.7"/>
+          <text x="444" y="262" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">State</text>
+          <text x="444" y="279" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--seq)">register</text>
+          <line x1="504" y1="268" x2="580" y2="268" stroke="var(--seq)" stroke-width="1.6" marker-end="url(#p6s)"/>
+          <circle cx="540" cy="268" r="3.5" fill="var(--seq)"/>
+          <rect x="586" y="232" width="150" height="72" rx="3" fill="var(--comb-bg)" stroke="var(--comb)" stroke-width="1.6"/>
+          <text x="661" y="262" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">Output</text>
+          <text x="661" y="279" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--comb)">comb. logic</text>
+          <line x1="736" y1="268" x2="796" y2="268" stroke="currentColor" stroke-width="1.6" marker-end="url(#p6)"/>
+          <text x="806" y="273" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">Outputs</text>
+          <path d="M 540 268 L 540 322 L 150 322 L 150 290 L 176 290" fill="none" stroke="var(--seq)" stroke-width="1.5" marker-end="url(#p6s)"/>
+          <text x="360" y="212" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" fill-opacity=".7">o bağlantı yok — çıkış yalnızca state'ten</text>
+        </svg>
+      </div>
+      <figcaption><b>Şekil 6 — kitabın Fig. 5.21'i.</b> İki blok diyagram neredeyse aynı. Tek fark yukarıdaki kalın amber ok: Mealy'de girişler output logic'e de bağlıdır. O tek bağlantıyı silersen Mealy, Moore olur.</figcaption>
+    </figure>
+
+    <p>Örneklerimize dönersek:</p>
+    <ul>
+      <li><strong>Fig. 5.15 bir Mealy makinesi.</strong> Çıkış y hem x girişinin hem de A ve B'nin mevcut state'inin fonksiyonu. State diagram'ında (Şekil 3) oklarda hem giriş hem çıkış, eğik çizgiyle ayrılmış hâlde yazılı.</li>
+      <li><strong>Fig. 5.18 bir Moore makinesi.</strong> Çıkış yalnızca mevcut state'in fonksiyonu; state diagram'ında (Şekil 4) oklarda yalnızca giriş var, çıkışlar dairelerin içindeki flip-flop state'leri.</li>
+      <li><strong>Fig. 5.20 de Moore.</strong> Çıkış yalnızca flip-flop değerlerine bağlı. Giriş ok üzerinde, çıkış ise state ile birlikte dairenin içinde (Şekil 5).</li>
+    </ul>
+
+    <div class="key">
+      <div class="lab">Mealy'nin zamanlama tuzağı</div>
+      <p>Moore modelinde çıkışlar <strong>clock ile senkrondur</strong>, çünkü yalnızca clock ile senkron olan flip-flop çıkışlarına bağlıdırlar. Mealy modelinde ise girişler clock döngüsü içinde değişirse <strong>çıkışlar da değişebilir</strong>; üstelik girişin değişmesiyle flip-flop çıkışlarının değişmesi arasındaki gecikme yüzünden çıkışlar <em>anlık yanlış değerler</em> alabilir. Mealy devresini senkronize etmek için girişler clock ile senkronlanmalı ve çıkışlar clock kenarından hemen önce örneklenmelidir. Girişler, flip-flop girişlerinin aktif kenar gelmeden oturması için clock'un <em>etkisiz</em> kenarında değiştirilir.</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>Yan yana</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th lang="en">Mealy</th><th lang="en">Moore</th></tr></thead>
+        <tbody>
+          <tr><td>Çıkış neye bağlı</td><td class="s">mevcut state + girişler</td><td class="c">yalnızca mevcut state</td></tr>
+          <tr><td>State diagram'da çıkış</td><td class="s">okun üzerinde, giriş/çıkış</td><td class="c">dairenin içinde</td></tr>
+          <tr><td>Clock ile senkron mu</td><td class="s">değil — giriş değişince değişebilir</td><td class="c">evet</td></tr>
+          <tr><td>Anlık yanlış değer</td><td class="s">olabilir (gecikme kaynaklı)</td><td class="c">yok</td></tr>
+          <tr><td>Kitaptaki örnek</td><td class="s">Fig. 5.15 (0 algılayıcı)</td><td class="c">Fig. 5.18 ve Fig. 5.20</td></tr>
+          <tr><td>Genelde</td><td class="s">daha az state gerekebilir</td><td class="c">zamanlaması daha güvenli</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">11</span><h2>Hemen karşılaşacağın terimler</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>İngilizce terim</th><th>Türkçe karşılığı</th><th>Burada ne demek</th></tr></thead>
+        <tbody>
+          <tr><td class="tr-word">analysis</td><td class="tr-word">analiz</td><td>Verilen devrenin ne yapacağını çıkarmak.</td></tr>
+          <tr><td class="tr-word">state equation</td><td class="tr-word">durum denklemi</td><td>Next state'i mevcut state ve girişler cinsinden verir.</td></tr>
+          <tr><td class="tr-word">transition equation</td><td class="tr-word">geçiş denklemi</td><td>State equation'ın diğer adı.</td></tr>
+          <tr><td class="tr-word">flip-flop input equation</td><td class="tr-word">flip-flop giriş denklemi</td><td>Flip-flop girişlerini üreten combinational kısmı tarif eder.</td></tr>
+          <tr><td class="tr-word">excitation equation</td><td class="tr-word">uyarma denklemi</td><td>Input equation'ın diğer adı.</td></tr>
+          <tr><td class="tr-word">output equation</td><td class="tr-word">çıkış denklemi</td><td>Dış çıkışları üreten kısmı tarif eder.</td></tr>
+          <tr><td class="tr-word">state table</td><td class="tr-word">durum tablosu</td><td>Present state, input, next state, output bölümlerinden oluşur.</td></tr>
+          <tr><td class="tr-word">transition table</td><td class="tr-word">geçiş tablosu</td><td>State table'ın diğer adı.</td></tr>
+          <tr><td class="tr-word">state diagram</td><td class="tr-word">durum diyagramı</td><td>State'ler daire, geçişler yönlü çizgi.</td></tr>
+          <tr><td class="tr-word">finite state machine (FSM)</td><td class="tr-word">sonlu durum makinesi</td><td>Sequential circuit'in soyut modeli.</td></tr>
+          <tr><td class="tr-word">Mealy machine</td><td class="tr-word">Mealy makinesi</td><td>Çıkış = f(state, giriş).</td></tr>
+          <tr><td class="tr-word">Moore machine</td><td class="tr-word">Moore makinesi</td><td>Çıkış = f(state).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">12</span><h2>Kendini test et</h2></div>
+
+    <details>
+      <summary>Bir logic diagram'a bakıp onun saatli sequential circuit olduğunu nasıl anlarsın?</summary>
+      <div class="ans"><p>Clock girişi olan flip-flop içeriyorsa. Flip-flop'lar herhangi bir türden olabilir ve şemada hiç combinational gate bulunmayabilir de — belirleyici olan clock'lu flip-flop'ların varlığı.</p></div>
+    </details>
+
+    <details>
+      <summary>D flip-flop'ta input equation ile state equation neden aynı ifade? JK'da neden değil?</summary>
+      <div class="ans"><p>D'nin characteristic equation'ı Q(t+1) = D<sub>Q</sub>; yani D girişine ne yazarsan next state odur. JK'da ise Q(t+1) = JQ&#8242; + K&#8242;Q — next state, J ve K'nın yanı sıra mevcut state'e de bağlı. Bu yüzden JK ve T'de input equation'ları characteristic equation'a <em>yerine koymak</em> gerekir.</p></div>
+    </details>
+
+    <details>
+      <summary>3 flip-flop ve 2 girişi olan bir devrenin state table'ında kaç satır olur?</summary>
+      <div class="ans"><p>2<sup>m+n</sup> = 2<sup>3+2</sup> = <strong>32 satır</strong>. Next state bölümünde 3 sütun (her flip-flop için bir tane), output bölümünde ise çıkış değişkeni sayısı kadar sütun olur.</p></div>
+    </details>
+
+    <details>
+      <summary>State diagram'da 01 dairesinden çıkan ok "0/1" ile etiketli. Bu tam olarak ne anlatıyor?</summary>
+      <div class="ans"><p>Devre <em>şu anda</em> 01 state'inde ve giriş 0 ise, çıkış <em>şu anda</em> 1'dir. Bir sonraki clock kenarında okun gösterdiği state'e geçilir. Çıkış biti mevcut state'e aittir; geçişle ya da varılan state ile ilgisi yoktur — bu ayrım sınavda en çok hata yapılan yer.</p></div>
+    </details>
+
+    <details>
+      <summary>Şekil 3'teki makine ne yapıyor?</summary>
+      <div class="ans"><p>1'ler dizisi içindeki sıfırı algılıyor. 00'dan başlayarak giriş 1'de kaldığı sürece çıkış 0 kalır ve devre zincirde ilerler. Bir dizi 1'den sonra gelen <em>ilk 0</em> çıkışı 1 yapar ve devreyi başlangıç state'i 00'a döndürür.</p></div>
+    </details>
+
+    <details>
+      <summary>Elindeki state diagram'ın Mealy mi Moore mu olduğunu tek bakışta nasıl anlarsın?</summary>
+      <div class="ans"><p>Çıkışın nerede yazdığına bak. Ok üzerinde, girişten sonra eğik çizgiyle yazılıysa <strong>Mealy</strong> (çıkış girişe de bağlı). Dairenin içinde, state ile birlikte yazılıysa <strong>Moore</strong> (çıkış yalnızca state'e bağlı).</p></div>
+    </details>
+  </section>
+
+  <!-- ============ 13 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">13</span><h2>5.5'in açık bıraktıkları</h2></div>
+
+    <p>Artık verilen bir devreden state diagram'a inebiliyorsun. Geriye ters yön kaldı — ve orada iki yeni sorun çıkıyor:</p>
+
+    <ul>
+      <li><strong>Fazla state'ler.</strong> İki devre aynı giriş–çıkış davranışını gösterip farklı sayıda iç state'e sahip olabilir. Kısım 5.7 gereksiz state'leri elemeyi (state reduction) ve state'lere ikili değer atamayı (state assignment) anlatıyor.</li>
+      <li><strong>Tasarım prosedürü.</strong> İstenen davranıştan flip-flop input equation'larına nasıl gidilir? Kısım 5.8: D, JK ve T ile sentez — ve characteristic table'ın tersi olan <em>excitation table</em>.</li>
+      <li><strong>Atladığımız kısım:</strong> 5.6 aynı makineleri Verilog HDL ile modellemeyi anlatıyor. Dersin HDL istiyorsa oraya ayrıca bakman gerekir.</li>
+    </ul>
+
+    <p class="next">Sırada: <b>5.7 State Reduction and Assignment</b> — eşdeğer state'leri bulup tabloyu küçültmek, sonra state'lere binary, Gray ya da one-hot kod atamak.</p>
+  </section>
+
+</div>
+<style>.site-back{position:fixed;top:14px;right:16px;z-index:99;font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 11px;box-shadow:var(--shadow)}.site-back:hover{color:var(--seq);border-color:var(--seq)}@media(max-width:640px){.site-back{position:static;display:inline-block;margin:12px 0 0 16px}}</style><a class="site-back" href="../index.html">&#8592; İçindekiler</a>
+</body>
+</html>
